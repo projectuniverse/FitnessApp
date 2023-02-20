@@ -1,4 +1,4 @@
-package com.codecamp.fitnessapp.data
+package com.codecamp.fitnessapp.data.weather
 
 import androidx.room.*
 import com.codecamp.fitnessapp.model.Weather

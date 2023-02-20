@@ -1,5 +1,6 @@
-package com.codecamp.fitnessapp.data
+package com.codecamp.fitnessapp.data.weather
 
+import com.codecamp.fitnessapp.data.weather.WeatherDao
 import com.codecamp.fitnessapp.model.Weather
 import com.codecamp.fitnessapp.network.WeatherApiService
 import kotlinx.coroutines.flow.first
