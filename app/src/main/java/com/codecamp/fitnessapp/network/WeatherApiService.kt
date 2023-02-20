@@ -7,7 +7,7 @@ import retrofit2.http.Query
 /*
  * Makes the request to the weather server
  */
-//Hallo
+//Hallod
 interface WeatherApiService {
     @GET("data/2.5/weather")
     suspend fun getWeather(
