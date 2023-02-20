@@ -1,4 +1,4 @@
-package com.codecamp.fitnessapp.data
+package com.codecamp.fitnessapp.data.weather
 
 import android.content.Context
 import androidx.room.Database
@@ -9,7 +9,7 @@ import com.codecamp.fitnessapp.model.*
 /*
  * Acts as the Room database for offline weather
  */
-@Database(entities = [Weather::class], version = 4, exportSchema = false)
+@Database(entities = [Weather::class], version = 1, exportSchema = false)
 abstract class WeatherDatabase : RoomDatabase() {
     abstract fun weatherDao(): WeatherDao
     companion object {
@@ -20,7 +20,7 @@ abstract class WeatherDatabase : RoomDatabase() {
                 Room.databaseBuilder(context, WeatherDatabase::class.java, "weather_database")
                     .fallbackToDestructiveMigration()
                     .build()
-                    .also {Instance = it}
+                    .also { Instance = it}
             }
         }
     }
