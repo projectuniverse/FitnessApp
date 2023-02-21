@@ -1,6 +1,7 @@
 package com.codecamp.fitnessapp
 
 import android.app.PendingIntent
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -23,7 +24,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //val pendingIntent = PendingIntent.getB
+        //val intent = Intent(this, )
+        //val pendingIntent = PendingIntent.getActivity(this,1, ,PendingIntent.FLAG_UPDATE_CURRENT)
 
         //list of activity transitions to listen to
         /*val transitions = mutableListOf<ActivityTransition>()
