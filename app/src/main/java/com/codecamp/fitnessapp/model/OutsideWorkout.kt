@@ -13,11 +13,11 @@ data class OutsideWorkout(
     val id: Int = 0,
     val name: String,
     // First value of LatLng tuple: latitude, second: longitude
-    val gpsPoints: MutableList<LatLng>,
+    //val gpsPoints: MutableList<LatLng>,
     // Average pace
     val pace: Double,
     // First value of pair: UTC time, second: pace in km/h
-    val pacePerKm: MutableList<Pair<Int, Double>>,
+    //val pacePerKm: MutableList<Pair<Int, Double>>,
     val steps: Int,
     val distance: Double,
     //Time in unix, UTC
@@ -25,6 +25,6 @@ data class OutsideWorkout(
     //Time in unix, UTC
     val endTime: Int,
     // First value of pair: UTC time, second: height (z-axis)
-    val altitudeProfile: MutableList<Pair<Int, Double>>,
+    //val altitudeProfile: MutableList<Pair<Int, Double>>,
     val kcal: Int
 )
