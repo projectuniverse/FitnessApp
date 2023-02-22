@@ -1,15 +1,8 @@
 package com.codecamp.fitnessapp
 
-import androidx.activity.ComponentActivity
-import androidx.health.connect.client.HealthConnectClient
-import androidx.health.connect.client.PermissionController
-import androidx.health.connect.client.permission.HealthPermission
-import androidx.health.connect.client.records.StepsRecord
-import androidx.health.connect.client.response.ReadRecordsResponse
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.codecamp.fitnessapp.model.StepRecord
+import com.codecamp.fitnessapp.model.healthconnect.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.Instant
@@ -19,24 +12,129 @@ import javax.inject.Inject
 class HealthConnectViewModel @Inject constructor(
     val healthConnect: HealthConnect
 ): ViewModel() {
-    val stepRecordList = mutableListOf<StepRecord>()
+    val stepList = mutableListOf<Step>()
+    val activeCaloriesBurnedList = mutableListOf<ActiveCaloriesBurned>()
+    val distanceList = mutableListOf<Distance>()
+    val heightList = mutableListOf<Height>()
+    val weightList = mutableListOf<Weight>()
+    val exerciseList = mutableListOf<Exercise>()
 
     init {
-        //healthConnect.getHealthConnectClient()
+        healthConnect.getHealthConnectClient()
     }
 
-    fun getStepsRecords() {
+    fun updateStepsList(startTime: Instant, endTime:Instant) {
         viewModelScope.launch {
-            val response = healthConnect.getStepsRecords(Instant.now(), Instant.now())
+            val response = healthConnect.getStepsRecords(startTime, endTime)
             if (response != null) {
                 for (record in response.records) {
-                    stepRecordList.add(StepRecord(
+                    stepList.add(
+                        Step(
                         record.count,
                         record.startTime,
                         record.endTime,
                         record.startZoneOffset,
                         record.endZoneOffset,
-                        record.metadata))
+                        record.metadata)
+                    )
+                }
+            }
+        }
+    }
+
+    fun updateActiveCaloriesBurnedList(startTime: Instant, endTime: Instant) {
+        viewModelScope.launch {
+            val response = healthConnect.getActiveCaloriesBurnedRecords(startTime, endTime)
+            if (response != null) {
+                for (record in response.records) {
+                    activeCaloriesBurnedList.add(
+                        ActiveCaloriesBurned(
+                            record.energy,
+                            record.startTime,
+                            record.endTime,
+                            record.startZoneOffset,
+                            record.endZoneOffset,
+                            record.metadata
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    fun updateDistanceList(startTime: Instant, endTime: Instant) {
+        viewModelScope.launch {
+            val response = healthConnect.getDistanceRecords(startTime, endTime)
+            if (response != null) {
+                for (record in response.records) {
+                    distanceList.add(
+                        Distance(
+                            record.distance,
+                            record.startTime,
+                            record.endTime,
+                            record.startZoneOffset,
+                            record.endZoneOffset,
+                            record.metadata
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    fun updateHeightList(startTime: Instant, endTime: Instant) {
+        viewModelScope.launch {
+            val response = healthConnect.getHeightRecords(startTime, endTime)
+            if (response != null) {
+                for (record in response.records) {
+                    heightList.add(
+                        Height(
+                            record.height,
+                            record.time,
+                            record.zoneOffset,
+                            record.metadata
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    fun updateWeightList(startTime: Instant, endTime: Instant) {
+        viewModelScope.launch {
+            val response = healthConnect.getWeightRecords(startTime, endTime)
+            if (response != null) {
+                for (record in response.records) {
+                    weightList.add(
+                        Weight(
+                            record.weight,
+                            record.time,
+                            record.zoneOffset,
+                            record.metadata
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    fun updateExerciseList(startTime: Instant, endTime: Instant) {
+        viewModelScope.launch {
+            val response = healthConnect.getExerciseSessionRecords(startTime, endTime)
+            if (response != null) {
+                for (record in response.records) {
+                    exerciseList.add(
+                        Exercise(
+                            record.exerciseType,
+                            record.title,
+                            record.notes,
+                            record.startTime,
+                            record.endTime,
+                            record.startZoneOffset,
+                            record.endZoneOffset,
+                            record.metadata
+                        )
+                    )
                 }
             }
         }
