@@ -2,7 +2,7 @@ package com.codecamp.fitnessapp.ui
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Scaffold
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -12,7 +12,9 @@ import androidx.navigation.compose.rememberNavController
 import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.OutsideWorkout
+import com.codecamp.fitnessapp.ui.screens.Screen
 import com.codecamp.fitnessapp.ui.screens.dashboard.DashboardScreen
+import com.codecamp.fitnessapp.ui.screens.dashboard.StartButton
 import com.codecamp.fitnessapp.ui.screens.inside.InsideScreen
 import com.codecamp.fitnessapp.ui.screens.result.ResultScreen
 import com.codecamp.fitnessapp.ui.screens.settings.SettingScreen
@@ -26,7 +28,7 @@ enum class AppScreen(@StringRes val title: Int) {
 }
 
 @Composable
-fun Navigationssss(
+fun FitnessApp(
     navController: NavHostController = rememberNavController(),
 ) {
     val firstInit = false
@@ -41,6 +43,16 @@ fun Navigationssss(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        floatingActionButton = {
+            StartButton(
+                startNewInside = { newInside ->
+                    insideWorkout = newInside
+                    navController.navigate(AppScreen.Inside.name) },
+                startNewOutside = { newOutside ->
+                    outsideWorkout = newOutside
+                    navController.navigate(AppScreen.Outside.name) }
+            )
+        }
     ) { padding ->
         NavHost(
             navController = navController,
@@ -49,12 +61,6 @@ fun Navigationssss(
             composable(route = AppScreen.Dashboard.name) {
                 DashboardScreen(
                     showSettings = { navController.navigate(AppScreen.Settings.name) },
-                    startNewInside = { newInside ->
-                        insideWorkout = newInside
-                        navController.navigate(AppScreen.Inside.name) },
-                    startNewOutside = { newOutside ->
-                        outsideWorkout = newOutside
-                        navController.navigate(AppScreen.Outside.name) },
                     showOldInside = { oldInside ->
                         insideWorkout = oldInside
                         navController.navigate(AppScreen.Result.name) },

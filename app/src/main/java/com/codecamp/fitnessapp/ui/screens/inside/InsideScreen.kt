@@ -1,22 +1,20 @@
 package com.codecamp.fitnessapp.ui.screens.inside
 
+// import com.codecamp.fitnessapp.model.UnitConverter
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.InsideWorkout
-// import com.codecamp.fitnessapp.model.UnitConverter
 import com.codecamp.fitnessapp.model.User
 
 @Composable
@@ -78,7 +76,7 @@ fun InsideScreen(
             ) {
                 Text(
                     text = buttontext,
-                    color = MaterialTheme.colors.onPrimary,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 20.sp
                 )
                 Spacer(modifier = Modifier.width(4.dp))
