@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 
 private val LightColorPalette = lightColorScheme(
     primary = Turquoise,
-    secondary = BlueBlack,
+    secondary = TurquoiseAlt,
     onPrimary = BlueBlack,
     surface = WhiteBlue,
     surfaceVariant = LightGray
