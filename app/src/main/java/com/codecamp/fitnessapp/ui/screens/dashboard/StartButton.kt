@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.NearMe
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -12,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.OutsideWorkout
@@ -39,6 +41,13 @@ fun StartButton(
         ) {
             outsideActivities.forEachIndexed { index, name ->
                 DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = name,
+                            fontSize = 25.sp,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    },
                     modifier = Modifier.height(40.dp),
                     onClick = {
                         startNewOutside(
@@ -55,37 +64,38 @@ fun StartButton(
                         ) //TODO wie erstellen
                         selectedIndex = index
                         expanded = false
-                    }) {
-                    Text(text = name)
-                }
+                    })
             }
             insideActivities.forEachIndexed { index, name ->
-                DropdownMenuItem(onClick = {
-                    startNewInside(InsideWorkout(0, name, 0, 0, 0, 0))//TODO hier auch
-                    selectedIndex = index + 3
-                    expanded = false
-                }) {
-                    Text(text = name, color = MaterialTheme.colorScheme.onPrimary)
-                }
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = name,
+                            fontSize = 25.sp,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    },
+                    onClick = {
+                        startNewInside(InsideWorkout(0, name, 0, 0, 0, 0))
+                        selectedIndex = index + 3
+                        expanded = false
+                    }
+                ) //TODO hier auch
             }
         }
-
-        ExtendedFloatingActionButton(
-            text = {
-                Text(text = "Start Workout", color = Color.White)
-            },
-            icon = {
-                Icon(
-                    imageVector = Icons.Rounded.NearMe,
-                    contentDescription = "",
-                    tint = Color.White,
-                )
-            },
-            onClick = { expanded = !expanded },
-        )
-
-
     }
 
-
+    ExtendedFloatingActionButton(
+        text = {
+            Text(text = "Start Workout", color = Color.White)
+        },
+        icon = {
+            Icon(
+                imageVector = Icons.Rounded.Menu,
+                contentDescription = "",
+                tint = Color.White,
+            )
+        },
+        onClick = { expanded = !expanded },
+    )
 }

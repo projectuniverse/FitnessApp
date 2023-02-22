@@ -20,7 +20,7 @@ import com.codecamp.fitnessapp.ui.screens.ScreenViewModel
 
 @Composable
 fun WeatherScreen(
-    viewModel: ScreenViewModel = hiltViewModel()
+    viewModel: WeatherViewModel = hiltViewModel()
 ) {
     val weather = viewModel.weather.collectAsState(initial = null).value
 
@@ -29,7 +29,7 @@ fun WeatherScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (weather != null) {
+        if (weather != null && viewModel.weatherUpToDate(weather)) {
             WeatherInfos(weather)
             Spacer(modifier = Modifier.height(10.dp))
             WeatherForecast(weather.weatherForecast)
@@ -39,7 +39,6 @@ fun WeatherScreen(
 
 @Composable
 fun WeatherInfos(weather: Weather) {
-    // TODO Check if weather is null and show blank screen
     Row(
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
@@ -101,12 +100,14 @@ fun WeatherForecast(forecast: String) {
             modifier = Modifier.width(32.dp),
             verticalArrangement = Arrangement.Center
         ) {
-            Icon(
-                Icons.Default.Warning,
-                contentDescription = "",
-                modifier = Modifier.size(32.dp),
-                tint = Color.Red
-            )
+            if(!(forecast == "Clear" || forecast == "Clouds")) {
+                Icon(
+                    Icons.Default.Warning,
+                    contentDescription = "",
+                    modifier = Modifier.size(32.dp),
+                    tint = Color.Red
+                )
+            }
         }
 
         Spacer(modifier = Modifier.width(5.dp))

@@ -1,7 +1,9 @@
 package com.codecamp.fitnessapp.ui
 
+import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -27,6 +29,8 @@ enum class AppScreen(@StringRes val title: Int) {
     Result(title = R.string.Result)
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FitnessApp(
     navController: NavHostController = rememberNavController(),
@@ -53,7 +57,7 @@ fun FitnessApp(
                     navController.navigate(AppScreen.Outside.name) }
             )
         }
-    ) { padding ->
+    ) {
         NavHost(
             navController = navController,
             startDestination = firstscreen
@@ -80,8 +84,7 @@ fun FitnessApp(
                     stopWorkout = { newInside ->
                     insideWorkout = newInside
                     navController.navigate(AppScreen.Result.name) },
-                    navigateBack = { navController.popBackStack() },
-                    System.currentTimeMillis()
+                    navigateBack = { navController.popBackStack() }
                 )
             }
 
