@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PropertyRow(text: String, value: String, onChange: (Int) -> Unit) {
+fun PropertyRow(text: String, value: String, onChange: (String) -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -29,7 +29,7 @@ fun PropertyRow(text: String, value: String, onChange: (Int) -> Unit) {
         }
         TextField(
             value = value,
-            onValueChange = {onChange(it.toInt())},
+            onValueChange = {onChange(it)},
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
     }
