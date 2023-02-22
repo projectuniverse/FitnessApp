@@ -25,6 +25,8 @@ fun outsideScreen(outsideWorkoutType: String) {
         Text(text = outsideWorkoutType)
         backButton(name = "back", {})
 
+        
+
         map()
 
     }

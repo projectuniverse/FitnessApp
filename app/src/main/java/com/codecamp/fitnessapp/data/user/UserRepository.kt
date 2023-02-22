@@ -18,7 +18,7 @@ class DefaultUserRepository(
      * Acts as a reference to the weather stored in the database.
      * This state flow is viewed by the viewmodel.
      */
-    val user = userDao.getUser()
+    val user = userDao.getUser(0)
 
     override suspend fun insertUser(user: User) = userDao.insert(user)
 }
