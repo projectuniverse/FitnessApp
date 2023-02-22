@@ -10,6 +10,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.health.connect.client.HealthConnectClient
+import androidx.health.connect.client.PermissionController
+import androidx.health.connect.client.permission.HealthPermission
+import androidx.health.connect.client.records.StepsRecord
+import com.codecamp.fitnessapp.HealthConnect
+import com.codecamp.fitnessapp.HealthConnectViewModel
 import com.codecamp.fitnessapp.ui.viewModels.WeatherViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
@@ -18,7 +24,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun WeatherCard() {
+fun WeatherCard(healthConnectViewModel: HealthConnectViewModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -35,7 +41,7 @@ fun WeatherCard() {
         )
 
         if (locationPermission.status.isGranted) {
-            WeatherDataDummy()
+            WeatherDataDummy(healthConnectViewModel)
         } else {
             LocationPermissionCard(locationPermission)
         }
@@ -43,8 +49,16 @@ fun WeatherCard() {
 }
 
 @Composable
-fun WeatherDataDummy() {
+fun WeatherDataDummy(healthConnectViewModel: HealthConnectViewModel) {
     Text(text = "Weather Data")
+
+
+    healthConnectViewModel.getStepsRecords()
+    Column() {
+        for (entry in healthConnectViewModel.stepRecordList) {
+            Text(text = "${entry.count}")
+        }
+    }
 }
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -72,8 +86,14 @@ fun LocationPermissionCard(permissionState: PermissionState) {
     }
 }
 
-@Preview
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun ReadStepsPermissionCard(permissionState: PermissionState) {
+
+}
+
+/*@Preview
 @Composable
 fun WeatherPreview() {
     WeatherCard()
-}
+}*/
