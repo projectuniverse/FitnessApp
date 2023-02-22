@@ -4,9 +4,20 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
+    <uses-permission android:name="android.permission.health.READ_STEPS"/>
+    <uses-permission android:name="android.permission.health.READ_ACTIVE_CALORIES_BURNED" />
+    <uses-permission android:name="androidx.health.permission.READ_WEIGHT" />
+    <uses-permission android:name="androidx.health.permission.READ_HEIGHT" />
+    <uses-permission android:name="android.permission.health.READ_DISTANCE" />
+    <uses-permission android:name="android.permission.health.READ_EXERCISE" />
+
+    <queries>
+        <package android:name="com.google.android.apps.healthdata" />
+    </queries>
 
     <application
-        android:name = ".FitnessApplication"
+        android:name=".FitnessApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -23,7 +34,7 @@
             android:theme="@style/Theme.FitnessApp" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
@@ -31,6 +42,10 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="Insert your API key"
+            />
     </application>
 
 </manifest>
