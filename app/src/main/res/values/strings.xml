@@ -1,9 +1,60 @@
 <resources>
     <string name="app_name">Fitness App</string>
-    <string name="jogging">Jogging</string>
-    <string name="biking">Biking</string>
-    <string name="hiking">Hiking</string>
-    <string name="squats">Squats</string>
-    <string name="pushups">Pushups</string>
-    <string name="situps">Situps</string>
+
+    <string-array
+        name="outsideActivities">
+        <item>running</item>
+        <item>hiking</item>
+        <item>biking</item>
+    </string-array>
+
+    <string-array
+        name="insideActivities">
+        <item>squats</item>
+        <item>pushups</item>
+        <item>situps</item>
+    </string-array>
+
+    <string-array
+        name="oldWorkout">
+        <item>Distance: </item>
+        <item>Repetitions: </item>
+        <item>Time: </item>
+        <item>km</item>
+        <item>Rep.</item>
+        <item>h</item>
+    </string-array>
+
+    <string-array
+        name="settings">
+        <item>Age:</item>
+        <item>Height:</item>
+        <item>Weight:</item>
+        <item>Sync with Google Health Connect</item>
+    </string-array>
+
+    <string name="settingWarning">Warning Invalid Inputs. Please change them</string>
+
+    <string-array
+        name="WorkoutStats">
+        <item>Time</item>
+        <item>Distance</item>
+        <item>Repetitions</item>
+        <item>Pace</item>
+        <item>Pace/km</item>
+        <item>kCal</item>
+        <item>Steps</item>
+        <item>Start Workout</item>
+        <item>Stop Workout</item>
+    </string-array>
+
+    <string name="timer">"00:00:00.0"</string>
+
+    <string name="Dashboard">Dashboard</string>
+    <string name="Settings">Settings</string>
+    <string name="Select">Select</string>
+    <string name="Inside">Inside</string>
+    <string name="Outside">Outside</string>
+    <string name="Result">Result</string>
+
 </resources>
