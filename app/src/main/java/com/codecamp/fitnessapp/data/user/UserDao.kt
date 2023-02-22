@@ -9,9 +9,15 @@ import kotlinx.coroutines.flow.Flow
  */
 @Dao
 interface UserDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(user: User)
 
-    @Query("SELECT * FROM user WHERE id = 0")
-    fun getUser(): Flow<User>
+    @Update
+    suspend fun update(user: User)
+
+    @Query("SELECT * FROM user WHERE id = :id")
+    fun getUser(id: Int): Flow<User>
+
+    @Query("SELECT EXISTS(SELECT * FROM user)")
+    fun userExists(): Flow<Boolean>
 }
