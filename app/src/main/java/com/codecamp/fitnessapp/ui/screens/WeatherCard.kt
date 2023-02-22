@@ -2,9 +2,9 @@ package com.codecamp.fitnessapp.ui.screens
 
 import android.Manifest
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Card
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,7 +22,7 @@ fun WeatherCard(healthConnectViewModel: HealthConnectViewModel) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(20.dp),
-        elevation = 10.dp
+        //elevation = 10.dp
     ) {
         val locationPermission = rememberPermissionState(
             permission = Manifest.permission.ACCESS_COARSE_LOCATION,
