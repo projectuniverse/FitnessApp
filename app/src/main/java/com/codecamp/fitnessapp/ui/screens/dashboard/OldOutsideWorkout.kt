@@ -1,14 +1,13 @@
 package com.codecamp.fitnessapp.ui.screens.dashboard
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DirectionsRun
 import androidx.compose.material.icons.filled.Hiking
 import androidx.compose.material.icons.filled.PedalBike
-import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,16 +19,20 @@ import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.OutsideWorkout
 
 @Composable
-fun OldOutsideWorkout(outsideWorkout: OutsideWorkout, showOldWorkout: (outsideWorkout: OutsideWorkout) -> Unit ) {
+fun OldOutsideWorkout(
+    outsideWorkout: OutsideWorkout,
+    showOldWorkout: (outsideWorkout: OutsideWorkout) -> Unit
+) {
 
     val workoutNames = stringArrayResource(R.array.outsideActivities)
     val workoutInfos = stringArrayResource(R.array.oldWorkout)
 
     Card(
-        modifier = Modifier.fillMaxWidth(0.8f).height(80.dp),
-            //.clickable { showOldWorkout(outsideWorkout) },TODO sofort in eine Klasse
+        modifier = Modifier.fillMaxWidth(0.8f).height(80.dp).clickable { showOldWorkout(outsideWorkout) },
         border = BorderStroke(4.dp, Color.Blue),
-        backgroundColor = Color.LightGray
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+        )
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -41,10 +44,12 @@ fun OldOutsideWorkout(outsideWorkout: OutsideWorkout, showOldWorkout: (outsideWo
                 modifier = Modifier.width(64.dp),
                 verticalArrangement = Arrangement.Center
             ) {
-                val icon = when(outsideWorkout.name) {//TODO ACTGUNG
+                val icon = when (outsideWorkout.name) {//TODO ACTGUNG
                     workoutNames[0] -> Icons.Default.DirectionsRun
                     workoutNames[1] -> Icons.Default.Hiking
-                    else -> { Icons.Default.PedalBike }
+                    else -> {
+                        Icons.Default.PedalBike
+                    }
                 }
 
                 Icon(icon, contentDescription = "", modifier = Modifier.size(64.dp))
@@ -54,9 +59,15 @@ fun OldOutsideWorkout(outsideWorkout: OutsideWorkout, showOldWorkout: (outsideWo
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = workoutInfos[0] + outsideWorkout.distance.toString() + workoutInfos[3], fontSize = 25.sp)
+                Text(
+                    text = workoutInfos[0] + outsideWorkout.distance.toString() + workoutInfos[3],
+                    fontSize = 25.sp
+                )
                 Spacer(modifier = Modifier.height(3.dp))
-                Text(text = workoutInfos[2] + (outsideWorkout.endTime-outsideWorkout.startTime) + workoutInfos[5], fontSize = 25.sp)
+                Text(
+                    text = workoutInfos[2] + (outsideWorkout.endTime - outsideWorkout.startTime) + workoutInfos[5],
+                    fontSize = 25.sp
+                )
             }
         }
     }

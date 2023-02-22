@@ -21,10 +21,7 @@ import com.codecamp.fitnessapp.model.User
 fun InsideScreen(
     newInside: InsideWorkout,
     stopWorkout: (newInside: InsideWorkout) -> Unit,
-    navigateBack: () -> Boolean,
-    startTime: Long,
-    //workoutViewmodel: WorkoutViewModel = viewModel(factory = WeatherViewModel.Factory),
-    //userViewmodel: UserViewModel = viewModel(factory = WeatherViewModel.Factory)
+    navigateBack: () -> Boolean
 ) {
     // val unitConverter = UnitConverter()
     val workoutStats = stringArrayResource(R.array.WorkoutStats)
