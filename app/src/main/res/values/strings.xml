@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Fitness App</string>
+    <string name="jogging">Jogging</string>
+    <string name="biking">Biking</string>
+    <string name="hiking">Hiking</string>
+    <string name="squats">Squats</string>
+    <string name="pushups">Pushups</string>
+    <string name="situps">Situps</string>
+</resources>
