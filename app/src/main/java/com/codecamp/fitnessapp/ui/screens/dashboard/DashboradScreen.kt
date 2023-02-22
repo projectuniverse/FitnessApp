@@ -22,17 +22,9 @@ import com.codecamp.fitnessapp.model.OutsideWorkout
 @Composable
 fun DashboardScreen(
     showSettings: () -> Unit,
-    startNewInside: (insideWorkout: InsideWorkout) -> Unit,
-    startNewOutside: (outsideWorkout: OutsideWorkout) -> Unit,
     showOldInside: (insideWorkout: InsideWorkout) -> Unit,
     showOldOutside: (outsideWorkout: OutsideWorkout) -> Unit
 ) {
-    var expanded by remember { mutableStateOf(false) }
-    var selectedIndex by remember { mutableStateOf(0) }
-
-    val outsideActivities = stringArrayResource(R.array.outsideActivities)
-    val insideActivities = stringArrayResource(R.array.insideActivities)
-
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
@@ -48,6 +40,3 @@ fun DashboardScreen(
         }
     }
 }
-
-
-//

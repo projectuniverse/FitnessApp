@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.NearMe
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,16 +21,6 @@ fun StartButton(
     startNewInside: (insideWorkout: InsideWorkout) -> Unit,
     startNewOutside: (outsideWorkout: OutsideWorkout) -> Unit,
 ) {
-//    Surface(color = MaterialTheme.colors.surface) {
-//        Scaffold(
-//            modifier = Modifier.fillMaxSize(),
-//            floatingActionButton = { StartButton({}, {}) } ,
-//            floatingActionButtonPosition = FabPosition.Center
-//        ) {it ->
-//            DashboardScreen({}, {}, {}, {}, {})
-//        }
-//    }
-
     var expanded by remember { mutableStateOf(false) }
     var selectedIndex by remember { mutableStateOf(0) }
 
@@ -44,7 +35,7 @@ fun StartButton(
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier.fillMaxWidth(0.5f).background(MaterialTheme.colors.primary)
+            modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.primary)
         ) {
             outsideActivities.forEachIndexed { index, name ->
                 DropdownMenuItem(
@@ -74,7 +65,7 @@ fun StartButton(
                     selectedIndex = index + 3
                     expanded = false
                 }) {
-                    Text(text = name, color = MaterialTheme.colors.onPrimary)
+                    Text(text = name, color = MaterialTheme.colorScheme.onPrimary)
                 }
             }
         }
