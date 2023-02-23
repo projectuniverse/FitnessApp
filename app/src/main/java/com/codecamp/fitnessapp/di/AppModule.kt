@@ -61,7 +61,7 @@ object AppModule {
     @Singleton
     fun provideUserRepository(
         db: UserDatabase
-    ): UserRepository {
+    ): DefaultUserRepository {
         return DefaultUserRepository(db.userDao())
     }
 
@@ -109,7 +109,7 @@ object AppModule {
     fun provideWorkoutRepository(
         insideWorkoutDatabase: InsideWorkoutDatabase,
         outsideWorkoutDatabase: OutsideWorkoutDatabase
-    ): WorkoutRepository {
+    ): DefaultWorkoutRepository {
         return DefaultWorkoutRepository(
             insideWorkoutDatabase.insideWorkoutDao(),
             outsideWorkoutDatabase.outsideWorkoutDao()
