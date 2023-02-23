@@ -3,14 +3,9 @@ package com.codecamp.fitnessapp.ui.screens.dashboard
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DirectionsRun
 import androidx.compose.material.icons.filled.FitnessCenter
-import androidx.compose.material.icons.filled.Hiking
-import androidx.compose.material.icons.filled.PedalBike
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,7 +28,9 @@ fun OldInsideWorkout(insideWorkout: InsideWorkout, showOldWorkout: (insideWorkou
             .height(80.dp)
             .clickable { showOldWorkout(insideWorkout) },
         border = BorderStroke(4.dp, Color.Blue),
-        backgroundColor = Color.LightGray
+        colors = CardDefaults.cardColors(
+            containerColor =  MaterialTheme.colorScheme.surfaceVariant,
+        )
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),

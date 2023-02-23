@@ -2,21 +2,14 @@ package com.codecamp.fitnessapp.ui.screens
 
 import android.Manifest
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Card
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.health.connect.client.HealthConnectClient
-import androidx.health.connect.client.PermissionController
-import androidx.health.connect.client.permission.HealthPermission
-import androidx.health.connect.client.records.StepsRecord
-import com.codecamp.fitnessapp.HealthConnect
 import com.codecamp.fitnessapp.HealthConnectViewModel
-import com.codecamp.fitnessapp.ui.viewModels.WeatherViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
@@ -29,7 +22,7 @@ fun WeatherCard(healthConnectViewModel: HealthConnectViewModel) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(20.dp),
-        elevation = 10.dp
+        //elevation = 10.dp
     ) {
         val locationPermission = rememberPermissionState(
             permission = Manifest.permission.ACCESS_COARSE_LOCATION,

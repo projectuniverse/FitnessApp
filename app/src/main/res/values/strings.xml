@@ -3,16 +3,16 @@
 
     <string-array
         name="outsideActivities">
-        <item>running</item>
-        <item>hiking</item>
-        <item>biking</item>
+        <item>Running</item>
+        <item>Hiking</item>
+        <item>Biking</item>
     </string-array>
 
     <string-array
         name="insideActivities">
-        <item>squats</item>
-        <item>pushups</item>
-        <item>situps</item>
+        <item>Squats</item>
+        <item>Pushups</item>
+        <item>Situps</item>
     </string-array>
 
     <string-array
@@ -28,8 +28,8 @@
     <string-array
         name="settings">
         <item>Age:</item>
-        <item>Height:</item>
-        <item>Weight:</item>
+        <item>Height (in cm):</item>
+        <item>Weight (in kg):</item>
         <item>Sync with Google Health Connect</item>
     </string-array>
 

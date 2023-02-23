@@ -1,11 +1,11 @@
 package com.codecamp.fitnessapp.ui.screens.inside
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowCircleLeft
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,55 +15,36 @@ import androidx.compose.ui.unit.sp
 import com.codecamp.fitnessapp.R
 
 @Composable
-fun WorkoutStats(time: String, repetitions: Int, kCal: Int, onClick: () -> Unit, ) {
+fun WorkoutStats(time: String, repetitions: Int, kCal: Int) {
 
     val workoutStats = stringArrayResource(R.array.WorkoutStats)
 
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Spacer(modifier = Modifier.height(40.dp))
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(text = repetitions.toString(), fontSize = 140.sp)
+        Text(text = workoutStats[2], fontSize = 25.sp)
+    }
+
+    Spacer(modifier = Modifier.height(40.dp))
+
+    Row(
+        modifier = Modifier.fillMaxWidth(0.9f),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(modifier = Modifier.fillMaxWidth(0.9f)) {
-            IconButton(
-                onClick = { onClick() }
-            ) {
-                Icon(
-                    Icons.Default.ArrowCircleLeft,
-                    contentDescription = "",
-                    modifier = Modifier.size(32.dp)
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(40.dp))
-
-        Column() {
-            Text(text = repetitions.toString(), fontSize = 80.sp)
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(text = time, fontSize = 35.sp)
             Spacer(modifier = Modifier.height(5.dp))
-            Text(text = workoutStats[2])
+            Text(text = workoutStats[0])
         }
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.width(40.dp))
 
-        Row(
-            modifier = Modifier.fillMaxWidth(0.9f),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column() {
-                Text(text = time)
-                Spacer(modifier = Modifier.height(5.dp))
-                Text(text = workoutStats[0])
-            }
-
-            Spacer(modifier = Modifier.width(40.dp))
-
-            Column() {
-                Text(text = kCal.toString())
-                Spacer(modifier = Modifier.height(5.dp))
-                Text(text = workoutStats[5])
-            }
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(text = kCal.toString(), fontSize = 35.sp)
+            Spacer(modifier = Modifier.height(5.dp))
+            Text(text = workoutStats[5])
         }
     }
 }

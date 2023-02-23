@@ -1,32 +1,30 @@
 package com.codecamp.fitnessapp.ui.screens.inside
 
+// import com.codecamp.fitnessapp.model.UnitConverter
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowCircleLeft
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.InsideWorkout
-// import com.codecamp.fitnessapp.model.UnitConverter
 import com.codecamp.fitnessapp.model.User
+import com.codecamp.fitnessapp.ui.FitnessApp
 
 @Composable
 fun InsideScreen(
     newInside: InsideWorkout,
     stopWorkout: (newInside: InsideWorkout) -> Unit,
-    navigateBack: () -> Boolean,
-    startTime: Long,
-    //workoutViewmodel: WorkoutViewModel = viewModel(factory = WeatherViewModel.Factory),
-    //userViewmodel: UserViewModel = viewModel(factory = WeatherViewModel.Factory)
+    navigateBack: () -> Unit
 ) {
     // val unitConverter = UnitConverter()
     val workoutStats = stringArrayResource(R.array.WorkoutStats)
@@ -47,19 +45,42 @@ fun InsideScreen(
     //    repetitions++
     //    kCal = unitConverter.calculateKCal(newInside.name, repetitions, currentUser)
     //}
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(0.9f),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(
+                modifier = Modifier.width(100.dp),
+                onClick = {
+                    time = timerDefaultText
+                    kCal = 0
+                    repetitions = 0
+                    navigateBack()
+                }
+            ) {
+                Icon(
+                    Icons.Default.ArrowCircleLeft,
+                    contentDescription = "",
+                    modifier = Modifier.size(100.dp)
+                )
+            }
+            Text(text = newInside.name, fontSize = 60.sp)
+        }
 
-    WorkoutStats(time, repetitions, kCal) {
-        time = timerDefaultText
-        kCal = 0
-        repetitions = 0
-        navigateBack()
-    }
+        WorkoutStats(time, repetitions, kCal)
+        
+        Spacer(modifier = Modifier.height(100.dp))
 
-    BottomAppBar {
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f, false)
         ) {
             Button(
                 onClick = {
@@ -74,15 +95,28 @@ fun InsideScreen(
 
                 },
                 shape = RoundedCornerShape(10.dp),
-                modifier = Modifier.padding(bottom = 50.dp)
+                modifier = Modifier.padding(bottom = 30.dp)
             ) {
                 Text(
                     text = buttontext,
-                    color = MaterialTheme.colors.onPrimary,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 20.sp
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Icon(Icons.Filled.ArrowForward,"")
+            }
+        }
+    }
+
+}
+
+@Preview
+@Composable
+fun Default() {
+    MaterialTheme() {
+        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.surface) {
+            InsideScreen(newInside = InsideWorkout(0, "",0,0,0,0), stopWorkout = {}) {
+
             }
         }
     }
