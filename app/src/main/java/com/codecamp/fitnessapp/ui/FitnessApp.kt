@@ -8,6 +8,7 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -16,7 +17,8 @@ import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.OutsideWorkout
 import com.codecamp.fitnessapp.ui.screens.dashboard.DashboardScreen
-import com.codecamp.fitnessapp.ui.screens.dashboard.StartButton
+import com.codecamp.fitnessapp.ui.screens.StartButton
+import com.codecamp.fitnessapp.ui.screens.TopBar
 import com.codecamp.fitnessapp.ui.screens.inside.InsideScreen
 import com.codecamp.fitnessapp.ui.screens.result.ResultScreen
 import com.codecamp.fitnessapp.ui.screens.settings.SettingScreen
@@ -36,6 +38,7 @@ fun FitnessApp(
     navController: NavHostController = rememberNavController(),
 ) {
     var isVisible by remember { mutableStateOf(true) }
+    var title by remember { mutableStateOf(stringResource(R.string.app_name)) }
     val firstInit = false
     var insideWorkout: InsideWorkout = InsideWorkout(0, "",0,0,0,0)
     var outsideWorkout: OutsideWorkout = OutsideWorkout(0,"",0.0,0,0.0, 0, 0, 0)
@@ -48,17 +51,42 @@ fun FitnessApp(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        topBar = {
+            TopBar(
+                title,
+                navController.currentDestination?.route == AppScreen.Dashboard.name,
+                isVisible,
+            showSettings = {
+                navController.navigate(AppScreen.Settings.name)
+                isVisible = false
+                title = AppScreen.Settings.name
+            },
+            navigateBack = {
+                    if (navController.currentDestination?.route == AppScreen.Result.name) {
+                        navController.navigate(AppScreen.Dashboard.name)
+                    } else {
+                        navController.popBackStack()
+                    }
+                    if (navController.currentDestination?.route == AppScreen.Dashboard.name) {
+                        isVisible = true
+                    }
+                    title = navController.currentDestination?.route.toString()
+                }
+            )
+        },
         floatingActionButton = {
             StartButton(
                 isVisible,
                 startNewInside = { newInside ->
                     isVisible = false
                     insideWorkout = newInside
-                    navController.navigate(AppScreen.Inside.name) },
+                    navController.navigate(AppScreen.Inside.name)
+                    title = AppScreen.Inside.name},
                 startNewOutside = { newOutside ->
                     isVisible = false
                     outsideWorkout = newOutside
                     navController.navigate(AppScreen.Outside.name)
+                    title = AppScreen.Outside.name
                 }
             )
         },
@@ -70,16 +98,14 @@ fun FitnessApp(
         ) {
             composable(route = AppScreen.Dashboard.name) {
                 DashboardScreen(
-                    showSettings = {
-                        navController.navigate(AppScreen.Settings.name)
-                        isVisible = false
-                                   },
                     showOldInside = { oldInside ->
                         insideWorkout = oldInside
-                        navController.navigate(AppScreen.Result.name) },
+                        navController.navigate(AppScreen.Result.name)
+                        title = AppScreen.Result.name },
                     showOldOutside = { oldOutside ->
                         outsideWorkout = oldOutside
-                        navController.navigate(AppScreen.Result.name) }
+                        navController.navigate(AppScreen.Result.name)
+                        title = AppScreen.Result.name }
                 )
             }
 
@@ -97,13 +123,8 @@ fun FitnessApp(
                     insideWorkout,
                     stopWorkout = { newInside ->
                     insideWorkout = newInside
-                    navController.navigate(AppScreen.Result.name) },
-                    navigateBack = {
-                        navController.popBackStack()
-                        if(navController.currentDestination?.route == AppScreen.Dashboard.name) {
-                            isVisible = true
-                        }
-                    }
+                    navController.navigate(AppScreen.Result.name)
+                        title = AppScreen.Result.name}
                 )
             }
 
@@ -114,8 +135,7 @@ fun FitnessApp(
             composable(route = AppScreen.Result.name) {
                 ResultScreen(
                     insideWorkout = insideWorkout,
-                    outsideWorkout = outsideWorkout,
-                    backToDashboard = { navController.navigate(AppScreen.Dashboard.name) }
+                    outsideWorkout = outsideWorkout
                 )
             }
         }

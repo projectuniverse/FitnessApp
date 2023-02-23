@@ -12,8 +12,7 @@ import com.codecamp.fitnessapp.model.OutsideWorkout
 @Composable
 fun ResultScreen(
     insideWorkout: InsideWorkout,
-    outsideWorkout: OutsideWorkout,
-    backToDashboard: () -> Unit
+    outsideWorkout: OutsideWorkout
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -21,9 +20,9 @@ fun ResultScreen(
         verticalArrangement = Arrangement.Center
     ) {
         if (insideWorkout.endTime < outsideWorkout.endTime || insideWorkout.endTime == 0) {
-            OutsideResult(outsideWorkout, backToDashboard)
+            OutsideResult(outsideWorkout)
         } else {
-            InsideResult(insideWorkout, backToDashboard)
+            InsideResult(insideWorkout)
         }
     }
 }

@@ -24,7 +24,7 @@ import com.patrykandpatrick.vico.compose.component.textComponent
 import com.patrykandpatrick.vico.core.entry.entryModelOf
 
 @Composable
-fun OutsideResult(outsideWorkout: OutsideWorkout, backToDashboard: () -> Unit) {
+fun OutsideResult(outsideWorkout: OutsideWorkout) {
     val workoutStats = stringArrayResource(R.array.WorkoutStats)
     val time = stringResource(R.string.timer) //unitConverter.millisecondsToTimer((insideWorkout.endTime-insideWorkout.startTime).toLong())
 
@@ -35,19 +35,8 @@ fun OutsideResult(outsideWorkout: OutsideWorkout, backToDashboard: () -> Unit) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(modifier = Modifier.fillMaxWidth(0.9f)) {
-            IconButton(
-                onClick = { backToDashboard() }
-            ) {
-                Icon(
-                    Icons.Default.ArrowCircleLeft,
-                    contentDescription = "",
-                    modifier = Modifier.size(32.dp)
-                )
-            }
-        }
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(50.dp))
 
         Text(text = outsideWorkout.name, fontSize = 42.sp)
 

@@ -1,6 +1,5 @@
 package com.codecamp.fitnessapp.ui.screens.inside
 
-// import com.codecamp.fitnessapp.model.UnitConverter
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -18,13 +17,11 @@ import androidx.compose.ui.unit.sp
 import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.User
-import com.codecamp.fitnessapp.ui.FitnessApp
 
 @Composable
 fun InsideScreen(
     newInside: InsideWorkout,
-    stopWorkout: (newInside: InsideWorkout) -> Unit,
-    navigateBack: () -> Unit
+    stopWorkout: (newInside: InsideWorkout) -> Unit
 ) {
     // val unitConverter = UnitConverter()
     val workoutStats = stringArrayResource(R.array.WorkoutStats)
@@ -49,27 +46,7 @@ fun InsideScreen(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(0.9f),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(
-                modifier = Modifier.width(100.dp),
-                onClick = {
-                    time = timerDefaultText
-                    kCal = 0
-                    repetitions = 0
-                    navigateBack()
-                }
-            ) {
-                Icon(
-                    Icons.Default.ArrowCircleLeft,
-                    contentDescription = "",
-                    modifier = Modifier.size(100.dp)
-                )
-            }
-            Text(text = newInside.name, fontSize = 60.sp)
-        }
+        Spacer(modifier = Modifier.height(50.dp))
 
         WorkoutStats(time, repetitions, kCal)
         
@@ -108,16 +85,4 @@ fun InsideScreen(
         }
     }
 
-}
-
-@Preview
-@Composable
-fun Default() {
-    MaterialTheme() {
-        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.surface) {
-            InsideScreen(newInside = InsideWorkout(0, "",0,0,0,0), stopWorkout = {}) {
-
-            }
-        }
-    }
 }
