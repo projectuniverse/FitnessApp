@@ -2,6 +2,8 @@ package com.codecamp.fitnessapp.ui.screens.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.codecamp.fitnessapp.data.user.DefaultUserRepository
+import com.codecamp.fitnessapp.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -9,11 +11,11 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel
 @Inject constructor(
-    //private val userRepository: DefaultUserRepository,
+    private val userRepository: DefaultUserRepository,
 ) : ViewModel() {
+    val user = userRepository.user
 
     private fun isValidNumber(case: Int, input: String): Boolean {
-
         val inputNumber = input.toIntOrNull()
 
         return if(inputNumber != null) {
@@ -35,16 +37,16 @@ class SettingsViewModel
     }
 
     fun isValidUser(age: String, height: String, weight: String): Boolean {
-        return (isValidNumber(0, age)
-                && isValidNumber(1, height)
-                && isValidNumber(2, weight))
-    }
-
-    //val user = userRepository.user
-
-    init {
-        viewModelScope.launch {
-
+        // Write to database
+        if (isValidNumber(0, age)
+            && isValidNumber(1, height)
+            && isValidNumber(2, weight)) {
+            val user = User(0, age.toInt(), height.toInt(), weight.toInt())
+            viewModelScope.launch {
+                userRepository.insertUser(user)
+            }
+            return true
         }
+        return false
     }
 }
