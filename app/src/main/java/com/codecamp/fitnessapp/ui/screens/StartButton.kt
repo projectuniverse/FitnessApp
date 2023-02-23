@@ -1,4 +1,4 @@
-package com.codecamp.fitnessapp.ui.screens.dashboard
+package com.codecamp.fitnessapp.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -8,7 +8,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,7 +24,6 @@ fun StartButton(
     var expanded by remember { mutableStateOf(false) }
     val text = stringArrayResource(R.array.WorkoutStats)[7]
 
-
     Column(
         modifier = Modifier
             .fillMaxWidth(0.6f)
@@ -41,6 +39,7 @@ fun StartButton(
                 text = {
                     Text(text = text, fontSize = 20.sp)
                 },
+                shape = MaterialTheme.shapes.medium,
                 icon = {
                     Icon(
                         imageVector = Icons.Rounded.Menu,

@@ -18,7 +18,7 @@ import com.codecamp.fitnessapp.model.InsideWorkout
 
 @Composable
 fun InsideResult(
-    insideWorkout: InsideWorkout, backToDashboard: () -> Unit
+    insideWorkout: InsideWorkout
 ) {
     //val unitConverter = UnitConverter()
     val workoutStats = stringArrayResource(R.array.WorkoutStats)
@@ -31,19 +31,8 @@ fun InsideResult(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(modifier = Modifier.fillMaxWidth(0.9f)) {
-            IconButton(
-                onClick = { backToDashboard() }
-            ) {
-                Icon(
-                    Icons.Default.ArrowCircleLeft,
-                    contentDescription = "",
-                    modifier = Modifier.size(32.dp)
-                )
-            }
-        }
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(50.dp))
 
         Text(text = insideWorkout.name, fontSize = 42.sp)
 

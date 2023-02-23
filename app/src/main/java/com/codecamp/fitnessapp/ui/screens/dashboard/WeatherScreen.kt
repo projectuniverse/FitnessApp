@@ -83,7 +83,7 @@ fun WeatherInfos(weather: Weather) {
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = weather.temperature.toString() + " °C", fontSize = 32.sp)
+            Text(text = (weather.temperature-273.1).toString() + " °C", fontSize = 32.sp)
             Spacer(modifier = Modifier.height(5.dp))
             Text(text = weather.windSpeed.toString() + " km/h", fontSize = 20.sp)
         }

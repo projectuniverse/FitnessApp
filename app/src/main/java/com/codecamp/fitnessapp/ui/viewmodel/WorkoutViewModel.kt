@@ -2,9 +2,11 @@ package com.codecamp.fitnessapp.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.codecamp.fitnessapp.data.weather.DefaultWeatherRepository
 import com.codecamp.fitnessapp.data.workout.DefaultWorkoutRepository
 import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.OutsideWorkout
+import com.codecamp.fitnessapp.model.Weather
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

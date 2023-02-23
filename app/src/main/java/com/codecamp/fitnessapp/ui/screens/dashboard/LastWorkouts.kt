@@ -26,7 +26,7 @@ fun LastWorkouts(
 //        InsideWorkout(0, "Situps",567,0,12,999),
 //        InsideWorkout(0, "Squats",90,0,56,314159),
 //    )
-
+//
 //    val oldOutsides = mutableListOf(
 //        OutsideWorkout(0,"Biking",12.7,3000,60.4, 0, 1, 0),
 //        OutsideWorkout(0,"Biking",40.5,4000,12.5, 0, 2, 0),
@@ -36,6 +36,7 @@ fun LastWorkouts(
 //    )
 
     val indexSequence: List<Int> = workoutViewModel.getSortedSequenz(oldInsides, oldOutsides)
+//    val indexSequence: List<Int> = workoutViewModel.getSortedSequenz(listOf(), listOf())
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -49,5 +50,6 @@ fun LastWorkouts(
             }
             Spacer(modifier = Modifier.height(5.dp))
         }
+        Spacer(modifier = Modifier.height(80.dp))
     }
 }
