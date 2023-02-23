@@ -6,7 +6,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 
-class MovementSensor(
+abstract class MovementSensor(
     private val context: Context,
     private val sensorType: Int,
     private val sensorFeature: String
@@ -46,6 +46,7 @@ class MovementSensor(
             return
         }
 
+        onValueChange?.invoke(event.values.toList())
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) = Unit
