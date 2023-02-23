@@ -1,9 +1,12 @@
 package com.codecamp.fitnessapp.ui
 
+import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Scaffold
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -13,6 +16,7 @@ import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.OutsideWorkout
 import com.codecamp.fitnessapp.ui.screens.dashboard.DashboardScreen
+import com.codecamp.fitnessapp.ui.screens.dashboard.StartButton
 import com.codecamp.fitnessapp.ui.screens.inside.InsideScreen
 import com.codecamp.fitnessapp.ui.screens.result.ResultScreen
 import com.codecamp.fitnessapp.ui.screens.settings.SettingScreen
@@ -25,10 +29,13 @@ enum class AppScreen(@StringRes val title: Int) {
     Result(title = R.string.Result)
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Navigationssss(
+fun FitnessApp(
     navController: NavHostController = rememberNavController(),
 ) {
+    var isVisible by remember { mutableStateOf(true) }
     val firstInit = false
     var insideWorkout: InsideWorkout = InsideWorkout(0, "",0,0,0,0)
     var outsideWorkout: OutsideWorkout = OutsideWorkout(0,"",0.0,0,0.0, 0, 0, 0)
@@ -41,20 +48,32 @@ fun Navigationssss(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-    ) { padding ->
+        floatingActionButton = {
+            StartButton(
+                isVisible,
+                startNewInside = { newInside ->
+                    isVisible = false
+                    insideWorkout = newInside
+                    navController.navigate(AppScreen.Inside.name) },
+                startNewOutside = { newOutside ->
+                    isVisible = false
+                    outsideWorkout = newOutside
+                    navController.navigate(AppScreen.Outside.name)
+                }
+            )
+        },
+        floatingActionButtonPosition = FabPosition.Center
+    ) {
         NavHost(
             navController = navController,
             startDestination = firstscreen
         ) {
             composable(route = AppScreen.Dashboard.name) {
                 DashboardScreen(
-                    showSettings = { navController.navigate(AppScreen.Settings.name) },
-                    startNewInside = { newInside ->
-                        insideWorkout = newInside
-                        navController.navigate(AppScreen.Inside.name) },
-                    startNewOutside = { newOutside ->
-                        outsideWorkout = newOutside
-                        navController.navigate(AppScreen.Outside.name) },
+                    showSettings = {
+                        navController.navigate(AppScreen.Settings.name)
+                        isVisible = false
+                                   },
                     showOldInside = { oldInside ->
                         insideWorkout = oldInside
                         navController.navigate(AppScreen.Result.name) },
@@ -65,7 +84,12 @@ fun Navigationssss(
             }
 
             composable(route = AppScreen.Settings.name) {
-                SettingScreen(navigateBack = { navController.popBackStack() })
+                SettingScreen(navigateBack = {
+                    navController.popBackStack()
+                    if(navController.currentDestination?.route == AppScreen.Dashboard.name) {
+                        isVisible = true
+                    }
+                })
             }
 
             composable(route = AppScreen.Inside.name) {
@@ -74,8 +98,12 @@ fun Navigationssss(
                     stopWorkout = { newInside ->
                     insideWorkout = newInside
                     navController.navigate(AppScreen.Result.name) },
-                    navigateBack = { navController.popBackStack() },
-                    System.currentTimeMillis()
+                    navigateBack = {
+                        navController.popBackStack()
+                        if(navController.currentDestination?.route == AppScreen.Dashboard.name) {
+                            isVisible = true
+                        }
+                    }
                 )
             }
 

@@ -1,38 +1,20 @@
 package com.codecamp.fitnessapp.ui.screens.dashboard
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.rounded.NearMe
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.OutsideWorkout
 
 @Composable
 fun DashboardScreen(
     showSettings: () -> Unit,
-    startNewInside: (insideWorkout: InsideWorkout) -> Unit,
-    startNewOutside: (outsideWorkout: OutsideWorkout) -> Unit,
     showOldInside: (insideWorkout: InsideWorkout) -> Unit,
     showOldOutside: (outsideWorkout: OutsideWorkout) -> Unit
 ) {
-    var expanded by remember { mutableStateOf(false) }
-    var selectedIndex by remember { mutableStateOf(0) }
-
-    val outsideActivities = stringArrayResource(R.array.outsideActivities)
-    val insideActivities = stringArrayResource(R.array.insideActivities)
-
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
@@ -48,6 +30,3 @@ fun DashboardScreen(
         }
     }
 }
-
-
-//
