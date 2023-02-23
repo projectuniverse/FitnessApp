@@ -44,7 +44,7 @@ fun OldOutsideWorkout(
                 modifier = Modifier.width(64.dp),
                 verticalArrangement = Arrangement.Center
             ) {
-                val icon = when (outsideWorkout.name) {//TODO ACTGUNG
+                val icon = when (outsideWorkout.name) {
                     workoutNames[0] -> Icons.Default.DirectionsRun
                     workoutNames[1] -> Icons.Default.Hiking
                     else -> {
@@ -65,7 +65,7 @@ fun OldOutsideWorkout(
                 )
                 Spacer(modifier = Modifier.height(3.dp))
                 Text(
-                    text = workoutInfos[2] + (outsideWorkout.endTime - outsideWorkout.startTime) + workoutInfos[5],
+                    text = workoutInfos[2] + outsideWorkout.endTime + workoutInfos[5],
                     fontSize = 25.sp
                 )
             }
