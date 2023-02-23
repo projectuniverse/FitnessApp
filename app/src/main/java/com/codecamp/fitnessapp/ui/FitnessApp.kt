@@ -37,8 +37,9 @@ enum class AppScreen(@StringRes val title: Int) {
 fun FitnessApp(
     navController: NavHostController = rememberNavController(),
 ) {
+    val appName = stringResource(R.string.Dashboard)
     var isVisible by remember { mutableStateOf(true) }
-    var title by remember { mutableStateOf(stringResource(R.string.app_name)) }
+    var title by remember { mutableStateOf(appName) }
     val firstInit = false
     var insideWorkout: InsideWorkout = InsideWorkout(0, "",0,0,0,0)
     var outsideWorkout: OutsideWorkout = OutsideWorkout(0,"",0.0,0,0.0, 0, 0, 0)
