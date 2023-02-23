@@ -12,13 +12,15 @@ class PushupUtil {
     var state = mutableStateOf(PushupState.START)
     val repetitions = MutableStateFlow(0)
     private val threshold = 1.0f
-    val x = 0
+    var x = MutableStateFlow(0.0f)
+
     fun name() {
-        when(state.value) {
+        repetitions.value++
+        /*when(state.value) {
             PushupState.START -> {
                 //check if sensor data falls under threshold
                 // yes -> change state to DOWN
-                if (x < threshold) {
+                if (x.value < threshold) {
                     state.value = PushupState.DOWN
                 }
             }
@@ -26,11 +28,11 @@ class PushupUtil {
                 //check if sensor data falls above threshold
                 // yes -> change state to START
                 //        increase repetitions
-                if (x >= threshold) {
+                if (x.value >= threshold) {
                     state.value = PushupState.START
                     repetitions.value++
                 }
             }
-        }
+        }*/
     }
 }

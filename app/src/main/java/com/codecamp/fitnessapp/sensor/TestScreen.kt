@@ -12,11 +12,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 fun TestScreen(
     sensorViewModel: SensorViewModel = hiltViewModel()
 ) {
-    val dis = sensorViewModel.proximitySensorData.collectAsState().value
-    //val rep = sensorViewModel.checkState()
+    val proxVM = sensorViewModel.proximitySensorData.collectAsState().value
+    val proxPU = sensorViewModel.pushupUtil.x.collectAsState().value
+    val rep = sensorViewModel.repetitions.collectAsState().value
+    //val test = sensorViewModel.test.collectAsState().value
+
     Column() {
-        //Text(text = "Rep: $rep")
-        Text(text = "Prox. Sensor: ${dis.toInt()}")
+        //Text(text = "$test")
+        Text(text = "Repetitions: $rep")
+        Text(text = "Prox. Data (PU): ${proxPU.toInt()}")
+        Text(text = "Prox. Sensor(VM): ${proxVM.toInt()}")
         Button(onClick = { sensorViewModel.start() }) {
             Text(text = "Start")
         }
