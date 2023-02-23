@@ -111,12 +111,7 @@ fun FitnessApp(
             }
 
             composable(route = AppScreen.Settings.name) {
-                SettingScreen(navigateBack = {
-                    navController.popBackStack()
-                    if(navController.currentDestination?.route == AppScreen.Dashboard.name) {
-                        isVisible = true
-                    }
-                })
+                SettingScreen()
             }
 
             composable(route = AppScreen.Inside.name) {

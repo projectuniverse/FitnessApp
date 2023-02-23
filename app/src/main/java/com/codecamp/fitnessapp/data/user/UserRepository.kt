@@ -1,7 +1,6 @@
 package com.codecamp.fitnessapp.data.user
 
 import com.codecamp.fitnessapp.model.User
-import kotlinx.coroutines.flow.first
 
 /*
  * Acts as a single source of truth. Returns user data.

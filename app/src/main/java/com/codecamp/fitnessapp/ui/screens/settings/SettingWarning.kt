@@ -11,28 +11,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.codecamp.fitnessapp.R
 
 @Composable
 fun SettingWarning() {
     Row(
-        horizontalArrangement = Arrangement.Start,
+        horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(
-            modifier = Modifier.width(24.dp),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                Icons.Default.Warning,
-                contentDescription = "",
-                modifier = Modifier.size(24.dp),
-                tint = Color.Red
-            )
-        }
-
-        Spacer(modifier = Modifier.width(5.dp))
-
-        Text(text = stringResource(R.string.settingWarning))
+        Icon(
+            Icons.Default.Warning,
+            contentDescription = "",
+            modifier = Modifier.size(40.dp),
+            tint = Color.Red
+        )
+        Spacer(modifier = Modifier.width(10.dp))
+        Text(
+            text = stringResource(R.string.settingWarning),
+            fontSize = 20.sp
+        )
     }
 }

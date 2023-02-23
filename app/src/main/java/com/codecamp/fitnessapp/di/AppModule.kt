@@ -2,6 +2,8 @@ package com.codecamp.fitnessapp.di
 
 import android.app.Application
 import androidx.room.Room
+import com.codecamp.fitnessapp.data.track.DefaultTrackRepository
+import com.codecamp.fitnessapp.data.track.TrackDatabase
 import com.codecamp.fitnessapp.data.user.DefaultUserRepository
 import com.codecamp.fitnessapp.data.user.UserDatabase
 import com.codecamp.fitnessapp.data.user.UserRepository
@@ -114,5 +116,23 @@ object AppModule {
             insideWorkoutDatabase.insideWorkoutDao(),
             outsideWorkoutDatabase.outsideWorkoutDao()
         )
+    }
+
+    @Provides
+    @Singleton
+    fun provideTrackDatabase(app: Application): TrackDatabase {
+        return Room.databaseBuilder(
+            app,
+            TrackDatabase::class.java,
+            "track_database"
+        ).fallbackToDestructiveMigration().build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideTrackRepository(
+        db: TrackDatabase
+    ): DefaultTrackRepository {
+        return DefaultTrackRepository(db.trackDao())
     }
 }

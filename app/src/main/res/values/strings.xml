@@ -33,7 +33,7 @@
         <item>Sync with Google Health Connect</item>
     </string-array>
 
-    <string name="settingWarning">Warning Invalid Inputs. Please change them</string>
+    <string name="settingWarning">Warning: Invalid Inputs. Please change them.</string>
 
     <string-array
         name="WorkoutStats">
