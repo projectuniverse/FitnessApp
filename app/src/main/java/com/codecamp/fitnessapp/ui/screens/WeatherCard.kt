@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.codecamp.fitnessapp.HealthConnectViewModel
+import com.codecamp.fitnessapp.healthconnect.HealthConnectViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
@@ -46,7 +46,7 @@ fun WeatherDataDummy(healthConnectViewModel: HealthConnectViewModel) {
     Text(text = "Weather Data")
 
 
-    healthConnectViewModel.getStepsRecords()
+    healthConnectViewModel.updateStepList()
     Column() {
         for (entry in healthConnectViewModel.stepRecordList) {
             Text(text = "${entry.count}")
