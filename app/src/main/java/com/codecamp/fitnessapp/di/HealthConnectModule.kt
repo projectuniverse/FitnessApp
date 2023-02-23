@@ -1,7 +1,7 @@
 package com.codecamp.fitnessapp.di
 
 import android.app.Application
-import com.codecamp.fitnessapp.HealthConnect
+import com.codecamp.fitnessapp.healthconnect.HealthConnect
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +15,7 @@ object HealthConnectModule {
 
     @Provides
     @Singleton
-    fun provideHealthConnect(app: Application) :HealthConnect {
+    fun provideHealthConnect(app: Application) : HealthConnect {
         return HealthConnect(app)
     }
 }
