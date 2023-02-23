@@ -11,16 +11,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SensorViewModel @Inject constructor(
-    private val insideWorkoutRepository: InsideWorkoutRepositoryInterface
+    private val insideWorkoutRepository: InsideWorkoutRepositoryInterface,
+    private val pushupUtil: PushupUtil
 ): ViewModel() {
-    private var proximitySensor = insideWorkoutRepository.getProximitySensor()
+    val proximitySensorData = insideWorkoutRepository.proximitySensorData
 
-    var proximity by mutableStateOf(0.0f)
+    val repetitions = pushupUtil.repetitions
 
-    init {
-        proximitySensor.setOnValueChange {values ->
-            proximity = values[0]
-        }
-        proximitySensor.startListening()
+    fun cool() {
+    }
+
+    fun start() {
+        insideWorkoutRepository.startListening()
+    }
+
+    fun stop() {
+        insideWorkoutRepository.stopListening()
     }
 }

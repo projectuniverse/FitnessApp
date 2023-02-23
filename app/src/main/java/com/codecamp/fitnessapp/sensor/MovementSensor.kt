@@ -20,10 +20,12 @@ abstract class MovementSensor(
 
     private var onValueChange: ((List<Float>) -> Unit)? = null
 
-    fun startListening() {
+    fun startListening(listener: ((List<Float>) -> Unit)) {
         if (!sensorExists) {
             return
         }
+
+        onValueChange = listener
 
         if (sensor == null) {
             sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -35,10 +37,6 @@ abstract class MovementSensor(
 
     fun stopListening() {
         sensorManager.unregisterListener(this)
-    }
-
-    fun setOnValueChange(listener: ((List<Float>) -> Unit)) {
-        onValueChange = listener
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
