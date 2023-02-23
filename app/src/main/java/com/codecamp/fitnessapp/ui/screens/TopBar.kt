@@ -5,11 +5,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
-import com.codecamp.fitnessapp.R
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -17,8 +15,6 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun TopBar(
     title: String,
-    isOnDashboard: Boolean,
-    isVisible: Boolean,
     showSettings: () -> Unit,
     navigateBack: () -> Unit
 ) {
@@ -31,7 +27,7 @@ fun TopBar(
             )
         },
         navigationIcon = {
-            if (!isOnDashboard) {
+            if (title != "Dashboard") {
                 IconButton(
                     modifier = Modifier.width(100.dp),
                     onClick = { navigateBack() }
@@ -45,7 +41,7 @@ fun TopBar(
             }
         },
         actions = {
-            if (isVisible) {
+            if (title == "Dashboard") {
                 IconButton(onClick = showSettings) {
                     Icon(
                         Icons.Default.Settings,

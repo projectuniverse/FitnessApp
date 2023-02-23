@@ -16,9 +16,9 @@ import androidx.navigation.compose.rememberNavController
 import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.OutsideWorkout
-import com.codecamp.fitnessapp.ui.screens.dashboard.DashboardScreen
 import com.codecamp.fitnessapp.ui.screens.StartButton
 import com.codecamp.fitnessapp.ui.screens.TopBar
+import com.codecamp.fitnessapp.ui.screens.dashboard.DashboardScreen
 import com.codecamp.fitnessapp.ui.screens.inside.InsideScreen
 import com.codecamp.fitnessapp.ui.screens.result.ResultScreen
 import com.codecamp.fitnessapp.ui.screens.settings.SettingScreen
@@ -38,7 +38,6 @@ fun FitnessApp(
     navController: NavHostController = rememberNavController(),
 ) {
     val appName = stringResource(R.string.Dashboard)
-    var isVisible by remember { mutableStateOf(true) }
     var title by remember { mutableStateOf(appName) }
     val firstInit = false
     var insideWorkout: InsideWorkout = InsideWorkout(0, "",0,0,0,0)
@@ -55,41 +54,33 @@ fun FitnessApp(
         topBar = {
             TopBar(
                 title,
-                navController.currentDestination?.route == AppScreen.Dashboard.name,
-                isVisible,
             showSettings = {
                 navController.navigate(AppScreen.Settings.name)
-                isVisible = false
                 title = AppScreen.Settings.name
             },
-            navigateBack = {
-                    if (navController.currentDestination?.route == AppScreen.Result.name) {
+                navigateBack = {
+                    if (title == AppScreen.Result.name) {
                         navController.navigate(AppScreen.Dashboard.name)
                     } else {
                         navController.popBackStack()
-                    }
-                    if (navController.currentDestination?.route == AppScreen.Dashboard.name) {
-                        isVisible = true
                     }
                     title = navController.currentDestination?.route.toString()
                 }
             )
         },
         floatingActionButton = {
-            StartButton(
-                isVisible,
-                startNewInside = { newInside ->
-                    isVisible = false
-                    insideWorkout = newInside
-                    navController.navigate(AppScreen.Inside.name)
-                    title = AppScreen.Inside.name},
-                startNewOutside = { newOutside ->
-                    isVisible = false
-                    outsideWorkout = newOutside
-                    navController.navigate(AppScreen.Outside.name)
-                    title = AppScreen.Outside.name
-                }
-            )
+                StartButton(
+                    title,
+                    startNewInside = { newInside ->
+                        insideWorkout = newInside
+                        navController.navigate(AppScreen.Inside.name)
+                        title = AppScreen.Inside.name},
+                    startNewOutside = { newOutside ->
+                        outsideWorkout = newOutside
+                        navController.navigate(AppScreen.Outside.name)
+                        title = AppScreen.Outside.name
+                    }
+                )
         },
         floatingActionButtonPosition = FabPosition.Center
     ) {
@@ -113,9 +104,6 @@ fun FitnessApp(
             composable(route = AppScreen.Settings.name) {
                 SettingScreen(navigateBack = {
                     navController.popBackStack()
-                    if(navController.currentDestination?.route == AppScreen.Dashboard.name) {
-                        isVisible = true
-                    }
                 })
             }
 
@@ -125,7 +113,7 @@ fun FitnessApp(
                     stopWorkout = { newInside ->
                     insideWorkout = newInside
                     navController.navigate(AppScreen.Result.name)
-                        title = AppScreen.Result.name}
+                    title = AppScreen.Result.name }
                 )
             }
 
