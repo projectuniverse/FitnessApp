@@ -20,7 +20,13 @@ object SensorModule {
 
     @Provides
     @Singleton
-    fun provideInsideWorkoutImpl(app: Application): InsideWorkoutRepositoryImpl {
-        return InsideWorkoutRepositoryImpl(app)
+    fun provideInsideWorkoutImpl(proximitySensor: ProximitySensor): InsideWorkoutRepositoryImpl {
+        return InsideWorkoutRepositoryImpl(proximitySensor)
+    }
+
+    @Provides
+    @Singleton
+    fun providePushupUtil(): PushupUtil {
+        return PushupUtil()
     }
 }
