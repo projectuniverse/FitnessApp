@@ -43,7 +43,7 @@ fun OldInsideWorkout(insideWorkout: InsideWorkout, showOldWorkout: (insideWorkou
                 verticalArrangement = Arrangement.Center
             ) {
                 //TODO oder val icon = Icons.Default.FitnessCenter
-                val icon = when(insideWorkout.name) {//TODO ACTGUNG
+                val icon = when(insideWorkout.name) {
                     workoutNames[0] -> Icons.Default.FitnessCenter
                     workoutNames[1] -> Icons.Default.FitnessCenter
                     else -> { Icons.Default.FitnessCenter }
@@ -56,9 +56,9 @@ fun OldInsideWorkout(insideWorkout: InsideWorkout, showOldWorkout: (insideWorkou
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = workoutInfos[1] + insideWorkout.repetitions + workoutInfos[4], fontSize = 25.sp)
+                Text(text = workoutInfos[1] + " " + insideWorkout.repetitions, fontSize = 25.sp)
                 Spacer(modifier = Modifier.height(3.dp))
-                Text(text = workoutInfos[2] + (insideWorkout.endTime-insideWorkout.startTime) + workoutInfos[5], fontSize = 25.sp)
+                Text(text = workoutInfos[2] + " " + (insideWorkout.endTime-insideWorkout.startTime) + workoutInfos[5], fontSize = 25.sp)
             }
         }
     }
