@@ -1,6 +1,8 @@
 package com.codecamp.fitnessapp.ui.screens.dashboard
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -18,14 +20,14 @@ fun LastWorkouts(
     workoutViewModel: WorkoutViewModel = hiltViewModel()
 ) {
     val oldOutsides = workoutViewModel.oldOutsideWorkouts.collectAsState(initial = mutableListOf()).value
-    val oldInsides = workoutViewModel.oldInsideWorkouts.collectAsState(initial = mutableListOf()).value
-//    val oldInsides = mutableListOf(
-//        InsideWorkout(0, "Squats",34,0,3,500),
-//        InsideWorkout(0, "Pushups",576,0,4, 900),
-//        InsideWorkout(0, "Squats",890,0,9,1400),
-//        InsideWorkout(0, "Situps",567,0,12,999),
-//        InsideWorkout(0, "Squats",90,0,56,314159),
-//    )
+//    val oldInsides = workoutViewModel.oldInsideWorkouts.collectAsState(initial = mutableListOf()).value
+    val oldInsides = mutableListOf(
+        InsideWorkout(0, "Squats",34,0,3,500),
+        InsideWorkout(0, "Pushups",576,0,4, 900),
+        InsideWorkout(0, "Squats",890,0,9,1400),
+        InsideWorkout(0, "Situps",567,0,12,999),
+        InsideWorkout(0, "Squats",90,0,56,314159),
+    )
 //
 //    val oldOutsides = mutableListOf(
 //        OutsideWorkout(0,"Biking",12.7,3000,60.4, 0, 1, 0),
@@ -36,20 +38,23 @@ fun LastWorkouts(
 //    )
 
     val indexSequence: List<Int> = workoutViewModel.getSortedSequenz(oldInsides, oldOutsides)
-//    val indexSequence: List<Int> = workoutViewModel.getSortedSequenz(listOf(), listOf())
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        for (endTime in indexSequence) {
-            for (inside in oldInsides) {
-                if (inside.endTime == endTime) OldInsideWorkout(inside, showOldInside)
+    if (oldOutsides.isNotEmpty() || oldInsides.isNotEmpty()) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            for (endTime in indexSequence) {
+                for (inside in oldInsides) {
+                    if (inside.endTime == endTime) OldInsideWorkout(inside, showOldInside)
+                }
+                for (outside in oldOutsides) {
+                    if (outside.endTime == endTime) OldOutsideWorkout(outside, showOldOutside)
+                }
+                Spacer(modifier = Modifier.height(10.dp))
             }
-            for (outside in oldOutsides) {
-                if (outside.endTime == endTime) OldOutsideWorkout(outside, showOldOutside)
-            }
-            Spacer(modifier = Modifier.height(5.dp))
+            Spacer(modifier = Modifier.height(80.dp))
         }
-        Spacer(modifier = Modifier.height(80.dp))
+    } else {
+        NoWorkoutsWarning()
     }
 }

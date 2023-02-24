@@ -34,6 +34,10 @@
     </string-array>
 
     <string name="settingWarning">Warning Invalid Inputs. Please change them</string>
+    <string name="weatherWarning">Warning! No current Weather available!
+        Please consider restarting or give permissions to the app.</string>
+    <string name="workoutWarning">No workouts done yet.
+        Start your first workout by clicking the button below.</string>
 
     <string-array
         name="WorkoutStats">

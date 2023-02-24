@@ -40,8 +40,8 @@ fun FitnessApp(
     val appName = stringResource(R.string.Dashboard)
     var title by remember { mutableStateOf(appName) }
     val firstInit = false
-    var insideWorkout: InsideWorkout = InsideWorkout(0, "",0,0,0,0)
-    var outsideWorkout: OutsideWorkout = OutsideWorkout(0,"",0.0,0,0.0, 0, 0, 0)
+    var insideWorkout: InsideWorkout? = null
+    var outsideWorkout: OutsideWorkout? = null
 
     val firstscreen = if(firstInit) {
         AppScreen.Settings.name
@@ -59,12 +59,11 @@ fun FitnessApp(
                 title = AppScreen.Settings.name
             },
                 navigateBack = {
-                    if (title == AppScreen.Result.name) {
+                    if (title.contains(AppScreen.Result.name)) {
                         navController.navigate(AppScreen.Dashboard.name)
                     } else {
                         navController.popBackStack()
                     }
-                    title = navController.currentDestination?.route.toString()
                 }
             )
         },
@@ -89,39 +88,44 @@ fun FitnessApp(
             startDestination = firstscreen
         ) {
             composable(route = AppScreen.Dashboard.name) {
+                title = navController.currentDestination?.route.toString()
                 DashboardScreen(
                     showOldInside = { oldInside ->
                         insideWorkout = oldInside
-                        navController.navigate(AppScreen.Result.name)
-                        title = AppScreen.Result.name },
+                        navController.navigate(AppScreen.Result.name)},
                     showOldOutside = { oldOutside ->
                         outsideWorkout = oldOutside
-                        navController.navigate(AppScreen.Result.name)
-                        title = AppScreen.Result.name }
+                        navController.navigate(AppScreen.Result.name)}
                 )
             }
 
             composable(route = AppScreen.Settings.name) {
+                title = navController.currentDestination?.route.toString()
                 SettingScreen(navigateBack = {
                     navController.popBackStack()
                 })
             }
 
             composable(route = AppScreen.Inside.name) {
+                outsideWorkout = null
+                title = insideWorkout!!.name
                 InsideScreen(
-                    insideWorkout,
+                    insideWorkout!!,
                     stopWorkout = { newInside ->
                     insideWorkout = newInside
-                    navController.navigate(AppScreen.Result.name)
-                    title = AppScreen.Result.name }
+                    navController.navigate(AppScreen.Result.name)}
                 )
             }
 
             composable(route = AppScreen.Outside.name) {
+                insideWorkout = null
+                title = outsideWorkout!!.name
 
             }
 
             composable(route = AppScreen.Result.name) {
+                val workoutName = outsideWorkout?.name ?: insideWorkout?.name
+                title = navController.currentDestination?.route.toString() + ": " + workoutName
                 ResultScreen(
                     insideWorkout = insideWorkout,
                     outsideWorkout = outsideWorkout

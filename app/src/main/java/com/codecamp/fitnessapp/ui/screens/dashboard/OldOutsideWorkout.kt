@@ -1,6 +1,5 @@
 package com.codecamp.fitnessapp.ui.screens.dashboard
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -11,8 +10,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.codecamp.fitnessapp.R
@@ -28,14 +27,19 @@ fun OldOutsideWorkout(
     val workoutInfos = stringArrayResource(R.array.oldWorkout)
 
     Card(
-        modifier = Modifier.fillMaxWidth(0.8f).height(80.dp).clickable { showOldWorkout(outsideWorkout) },
-        border = BorderStroke(4.dp, Color.Blue),
+        modifier = Modifier
+            .fillMaxWidth(0.8f)
+            .height(80.dp)
+            .clickable { showOldWorkout(outsideWorkout) },
+        shape = MaterialTheme.shapes.medium,
+        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            contentColor = MaterialTheme.colorScheme.onSurface,
         )
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxSize(),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -55,18 +59,19 @@ fun OldOutsideWorkout(
                 Icon(icon, contentDescription = "", modifier = Modifier.size(64.dp))
             }
 
+            val workoutDetails = workoutInfos[0] + " " + outsideWorkout.distance.toString() + workoutInfos[3] + "\n" +
+                    workoutInfos[2] + " " + outsideWorkout.endTime + workoutInfos[5]
+
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = workoutInfos[0] + outsideWorkout.distance.toString() + workoutInfos[3],
-                    fontSize = 25.sp
-                )
-                Spacer(modifier = Modifier.height(3.dp))
-                Text(
-                    text = workoutInfos[2] + outsideWorkout.endTime + workoutInfos[5],
-                    fontSize = 25.sp
+                    text = workoutDetails,
+                    fontSize = 22.sp,
+                    textAlign = TextAlign.Center,
+                    lineHeight = 25.sp
                 )
             }
         }
