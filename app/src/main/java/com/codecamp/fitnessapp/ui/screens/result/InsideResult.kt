@@ -1,20 +1,13 @@
 package com.codecamp.fitnessapp.ui.screens.result
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowCircleLeft
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.InsideWorkout
-// import com.codecamp.fitnessapp.model.UnitConverter
 
 @Composable
 fun InsideResult(
@@ -28,21 +21,18 @@ fun InsideResult(
         modifier = Modifier
             .fillMaxWidth(0.95f)
             .fillMaxHeight(),
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        Spacer(modifier = Modifier.height(50.dp))
-
-        Text(text = insideWorkout.name, fontSize = 42.sp)
+        Spacer(modifier = Modifier.height(60.dp))
 
         ResultCard(name = workoutStats[2], value = insideWorkout.repetitions.toString())
 
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         ResultCard(name = workoutStats[0], value = time)
 
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         ResultCard(name = workoutStats[5], value = insideWorkout.kcal.toString())
 
