@@ -7,6 +7,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.codecamp.fitnessapp.ui.screens.dashboard.WeatherInfos
 import com.codecamp.fitnessapp.ui.screens.dashboard.WeatherViewModel
 
 @Composable

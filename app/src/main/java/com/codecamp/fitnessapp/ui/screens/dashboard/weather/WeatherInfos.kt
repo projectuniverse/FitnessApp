@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.Weather
+import java.math.RoundingMode
 
 @Composable
 fun WeatherInfos(weather: Weather) {
