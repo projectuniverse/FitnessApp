@@ -28,8 +28,8 @@
     <string-array
         name="settings">
         <item>Age:</item>
-        <item>Height (in cm):</item>
-        <item>Weight (in kg):</item>
+        <item>Height (cm):</item>
+        <item>Weight (kg):</item>
         <item>Sync with Google Health Connect</item>
     </string-array>
 
