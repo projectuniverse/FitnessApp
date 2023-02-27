@@ -3,6 +3,7 @@ package com.codecamp.fitnessapp.ui
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
@@ -16,9 +17,9 @@ import androidx.navigation.compose.rememberNavController
 import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.OutsideWorkout
-import com.codecamp.fitnessapp.ui.screens.dashboard.DashboardScreen
 import com.codecamp.fitnessapp.ui.screens.StartButton
 import com.codecamp.fitnessapp.ui.screens.TopBar
+import com.codecamp.fitnessapp.ui.screens.dashboard.DashboardScreen
 import com.codecamp.fitnessapp.ui.screens.inside.InsideScreen
 import com.codecamp.fitnessapp.ui.screens.result.ResultScreen
 import com.codecamp.fitnessapp.ui.screens.settings.SettingScreen
@@ -92,8 +93,11 @@ fun FitnessApp(
             )
         },
         floatingActionButtonPosition = FabPosition.Center
-    ) {
+    ) { innerPadding ->
         NavHost(
+            // This line is necessary for the top bar to not overlay the content below it
+            // See: https://www.youtube.com/watch?v=hQJpd78RUVg
+            modifier = Modifier.padding(top = innerPadding.calculateTopPadding()),
             navController = navController,
             startDestination = firstscreen
         ) {
