@@ -17,7 +17,7 @@ import com.codecamp.fitnessapp.model.OutsideWorkout
 
 @Composable
 fun StartButton(
-    isVisible: Boolean,
+    title: String,
     startNewInside: (insideWorkout: InsideWorkout) -> Unit,
     startNewOutside: (outsideWorkout: OutsideWorkout) -> Unit,
 ) {
@@ -31,7 +31,7 @@ fun StartButton(
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if(isVisible) {
+        if(title == "Dashboard") {
             ExtendedFloatingActionButton(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -53,7 +53,6 @@ fun StartButton(
 
             DropUpMenu(expanded, startNewInside, startNewOutside) { expanded = false }
         }
-
     }
 }
 

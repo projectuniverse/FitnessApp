@@ -10,26 +10,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.codecamp.fitnessapp.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
     title: String,
-    isOnDashboard: Boolean,
-    isVisible: Boolean,
     showSettings: () -> Unit,
     navigateBack: () -> Unit
 ) {
+    val dashboard = stringResource(R.string.Dashboard)
     CenterAlignedTopAppBar(
         title = {
             Text(
                 text = title,
-                fontSize = 40.sp,
+                fontSize = 35.sp,
                 color = MaterialTheme.colorScheme.onPrimary
             )
         },
         navigationIcon = {
-            if (!isOnDashboard) {
+            if (title != dashboard) {
                 IconButton(
                     modifier = Modifier.width(100.dp),
                     onClick = { navigateBack() }
@@ -43,7 +43,7 @@ fun TopBar(
             }
         },
         actions = {
-            if (isVisible) {
+            if (title == dashboard) {
                 IconButton(onClick = showSettings) {
                     Icon(
                         Icons.Default.Settings,

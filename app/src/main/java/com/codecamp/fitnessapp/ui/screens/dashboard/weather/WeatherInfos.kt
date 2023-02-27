@@ -2,11 +2,10 @@ package com.codecamp.fitnessapp.ui.screens.dashboard
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,26 +15,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.Weather
-import java.math.RoundingMode
-
-@Composable
-fun WeatherScreen(
-    viewModel: WeatherViewModel = hiltViewModel()
-) {
-    val weather = viewModel.weather.collectAsState(initial = null).value
-
-    Column(
-        modifier = Modifier.fillMaxWidth(0.7f),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        if (weather != null && viewModel.weatherUpToDate(weather)) {
-            WeatherInfos(weather)
-            Spacer(modifier = Modifier.height(10.dp))
-            WeatherForecast(weather.weatherForecast)
-        }
-    }
-}
 
 @Composable
 fun WeatherInfos(weather: Weather) {
@@ -93,30 +72,5 @@ fun WeatherInfos(weather: Weather) {
                 fontSize = 20.sp
             )
         }
-    }
-}
-
-@Composable
-fun WeatherForecast(forecast: String) {
-    Row(
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column(
-            modifier = Modifier.width(32.dp),
-            verticalArrangement = Arrangement.Center
-        ) {
-            if(!(forecast == "Clear" || forecast == "Clouds")) {
-                Icon(
-                    Icons.Default.Warning,
-                    contentDescription = "",
-                    modifier = Modifier.size(32.dp),
-                    tint = Color.Red
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.width(5.dp))
-        Text(text = "Forecast: $forecast")
     }
 }

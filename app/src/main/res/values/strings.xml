@@ -33,7 +33,11 @@
         <item>Sync with Google Health Connect</item>
     </string-array>
 
-    <string name="settingWarning">Warning: Invalid inputs. Please change them.</string>
+    <string name="settingWarning">Warning Invalid Inputs. Please change them</string>
+    <string name="weatherWarning">Warning! No current Weather available!
+        Please consider restarting or give permissions to the app.</string>
+    <string name="workoutWarning">No workouts done yet.
+        Start your first workout by clicking the button below.</string>
 
     <string-array
         name="WorkoutStats">
@@ -50,7 +54,7 @@
 
     <string name="timer">"00:00:00.0"</string>
 
-    <string name="Dashboard">Fitness App</string>
+    <string name="Dashboard">Dashboard</string>
     <string name="Settings">Settings</string>
     <string name="Select">Select</string>
     <string name="Inside">Inside</string>

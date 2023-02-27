@@ -11,17 +11,17 @@ import com.codecamp.fitnessapp.model.OutsideWorkout
 
 @Composable
 fun ResultScreen(
-    insideWorkout: InsideWorkout,
-    outsideWorkout: OutsideWorkout
+    insideWorkout: InsideWorkout?,
+    outsideWorkout: OutsideWorkout?
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        if (insideWorkout.endTime < outsideWorkout.endTime || insideWorkout.endTime == 0) {
+        if (outsideWorkout != null) {
             OutsideResult(outsideWorkout)
-        } else {
+        } else if (insideWorkout != null) {
             InsideResult(insideWorkout)
         }
     }

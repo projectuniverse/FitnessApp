@@ -15,8 +15,6 @@ fun WorkoutStats(time: String, repetitions: Int, kCal: Int) {
 
     val workoutStats = stringArrayResource(R.array.WorkoutStats)
 
-    Spacer(modifier = Modifier.height(40.dp))
-
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = repetitions.toString(), fontSize = 140.sp)
         Text(text = workoutStats[2], fontSize = 25.sp)
