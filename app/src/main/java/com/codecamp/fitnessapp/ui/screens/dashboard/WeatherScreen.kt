@@ -2,7 +2,7 @@ package com.codecamp.fitnessapp.ui.screens.dashboard
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.Weather
-import com.codecamp.fitnessapp.ui.screens.ScreenViewModel
+import java.math.RoundingMode
 
 @Composable
 fun WeatherScreen(
@@ -83,9 +83,15 @@ fun WeatherInfos(weather: Weather) {
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = (weather.temperature-273.1).toString() + " °C", fontSize = 32.sp)
+            Text(
+                text = (weather.temperature - 273.15).toBigDecimal().setScale(2, RoundingMode.UP).toDouble().toString() + " ℃",
+                fontSize = 32.sp
+            )
             Spacer(modifier = Modifier.height(5.dp))
-            Text(text = weather.windSpeed.toString() + " km/h", fontSize = 20.sp)
+            Text(
+                text = (weather.windSpeed * 3.6).toBigDecimal().setScale(2, RoundingMode.UP).toDouble().toString() + " km/h",
+                fontSize = 20.sp
+            )
         }
     }
 }

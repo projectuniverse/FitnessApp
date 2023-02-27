@@ -35,10 +35,8 @@ fun SettingScreen(
             .fillMaxSize()
             .padding(start = 30.dp, end = 30.dp)
     ) {
-        Spacer(modifier = Modifier.height(40.dp))
         if(!validValues) {
             SettingWarning()
-            Spacer(modifier = Modifier.height(40.dp))
         }
         PropertyRow(stringSettings[0], age) {
             age = it
