@@ -3,6 +3,7 @@ package com.codecamp.fitnessapp.ui
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
