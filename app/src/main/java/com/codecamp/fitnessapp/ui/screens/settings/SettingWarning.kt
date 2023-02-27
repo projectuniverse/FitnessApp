@@ -17,16 +17,17 @@ import com.codecamp.fitnessapp.R
 @Composable
 fun SettingWarning() {
     Row(
+        modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             Icons.Default.Warning,
             contentDescription = "",
-            modifier = Modifier.size(40.dp),
+            modifier = Modifier.size(50.dp),
             tint = Color.Red
         )
-        Spacer(modifier = Modifier.width(10.dp))
+        Spacer(modifier = Modifier.width(20.dp))
         Text(
             text = stringResource(R.string.settingWarning),
             fontSize = 20.sp
