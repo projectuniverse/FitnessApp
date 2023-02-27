@@ -17,9 +17,11 @@ import com.codecamp.fitnessapp.R
 @Composable
 fun SettingWarning() {
     Row(
-        modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 20.dp, bottom =  20.dp)
     ) {
         Icon(
             Icons.Default.Warning,
