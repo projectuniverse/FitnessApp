@@ -21,23 +21,22 @@ class SettingsViewModel
         return if(inputNumber != null) {
             when (case) {
                 0 -> {
-                    !(inputNumber < 0 || inputNumber > 100)
+                    !(inputNumber < 1 || inputNumber > 120)
                 }
                 1 -> {
                     !(inputNumber < 50 || inputNumber > 300)
                 }
                 else -> {
-                    !(inputNumber < 20 || inputNumber > 400)
+                    !(inputNumber < 10 || inputNumber > 400)
                 }
             }
         } else {
             false
         }
-
     }
 
     fun isValidUser(age: String, height: String, weight: String): Boolean {
-        // Write to database
+        // Writes to database if all three entered values are correct
         if (isValidNumber(0, age)
             && isValidNumber(1, height)
             && isValidNumber(2, weight)) {

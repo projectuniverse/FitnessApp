@@ -25,20 +25,20 @@ fun TopBar(
         title = {
             Text(
                 text = title,
-                fontSize = 35.sp,
+                fontSize = 32.sp,
                 color = MaterialTheme.colorScheme.onPrimary
             )
         },
         navigationIcon = {
             if (title != dashboard) {
                 IconButton(
-                    modifier = Modifier.width(100.dp),
+                    modifier = Modifier.width(75.dp),
                     onClick = { navigateBack() }
                 ) {
                     Icon(
                         Icons.Default.ArrowBack,
                         contentDescription = "",
-                        modifier = Modifier.size(100.dp)
+                        modifier = Modifier.size(75.dp)
                     )
                 }
             }
@@ -49,7 +49,7 @@ fun TopBar(
                     Icon(
                         Icons.Default.Settings,
                         contentDescription = "",
-                        modifier = Modifier.size(30.dp),
+                        modifier = Modifier.size(35.dp),
                         tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
