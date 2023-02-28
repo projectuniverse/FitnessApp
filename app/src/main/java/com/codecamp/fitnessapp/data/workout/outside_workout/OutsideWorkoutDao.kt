@@ -1,7 +1,6 @@
 package com.codecamp.fitnessapp.data.workout.outside_workout
 
 import androidx.room.*
-import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.OutsideWorkout
 import kotlinx.coroutines.flow.Flow
 
@@ -10,7 +9,6 @@ import kotlinx.coroutines.flow.Flow
  */
 @Dao
 interface OutsideWorkoutDao {
-    //TODO Conflicts ignorieren?
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(outsideWorkout: OutsideWorkout)
 

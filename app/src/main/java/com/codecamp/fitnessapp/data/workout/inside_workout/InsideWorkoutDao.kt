@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.Flow
  */
 @Dao
 interface InsideWorkoutDao {
-    //TODO Conflicts ignorieren?
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(insideWorkout: InsideWorkout)
 
