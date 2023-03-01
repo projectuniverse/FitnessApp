@@ -1,14 +1,13 @@
-package com.codecamp.fitnessapp.sensor
+package com.codecamp.fitnessapp.sensor.pushup
 
-import android.content.Context
-import androidx.compose.runtime.mutableStateOf
+import com.codecamp.fitnessapp.sensor.ProximitySensor
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
-class InsideWorkoutRepositoryImpl @Inject constructor(
+class PushUpRepositoryImpl @Inject constructor(
     private val proximitySensor: ProximitySensor,
-): InsideWorkoutRepositoryInterface {
-    override val proximitySensorData: MutableStateFlow<Float> = MutableStateFlow(0.0f)
+): PushUpRepository {
+    override val proximitySensorData: MutableStateFlow<Float> = MutableStateFlow(2.0f)
 
     override fun startListening() {
         proximitySensor.startListening {values ->

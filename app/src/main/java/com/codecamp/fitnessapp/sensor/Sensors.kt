@@ -11,3 +11,11 @@ class ProximitySensor(
     sensorType = Sensor.TYPE_PROXIMITY,
     sensorFeature = PackageManager.FEATURE_SENSOR_PROXIMITY
 )
+
+class Accelerometer(
+    context: Context
+): MovementSensor(
+    context = context,
+    sensorType = Sensor.TYPE_ACCELEROMETER,
+    sensorFeature = PackageManager.FEATURE_SENSOR_ACCELEROMETER
+)
