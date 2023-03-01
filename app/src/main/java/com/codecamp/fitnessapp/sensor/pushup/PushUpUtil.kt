@@ -1,4 +1,4 @@
-package com.codecamp.fitnessapp.sensor
+package com.codecamp.fitnessapp.sensor.pushup
 
 import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -8,19 +8,19 @@ enum class PushupState {
     START,
     DOWN
 }
-class PushupUtil {
+class PushUpUtil {
     var state = mutableStateOf(PushupState.START)
     val repetitions = MutableStateFlow(0)
     private val threshold = 1.0f
-    var x = MutableStateFlow(0.0f)
+    //var x = MutableStateFlow(0.0f)
 
-    fun name() {
-        repetitions.value++
-        /*when(state.value) {
+    fun checkPushUp(sensorValue: Float): Int {
+        //repetitions.value++
+        when(state.value) {
             PushupState.START -> {
                 //check if sensor data falls under threshold
                 // yes -> change state to DOWN
-                if (x.value < threshold) {
+                if (sensorValue < threshold) {
                     state.value = PushupState.DOWN
                 }
             }
@@ -28,11 +28,12 @@ class PushupUtil {
                 //check if sensor data falls above threshold
                 // yes -> change state to START
                 //        increase repetitions
-                if (x.value >= threshold) {
+                if (sensorValue >= threshold) {
                     state.value = PushupState.START
                     repetitions.value++
                 }
             }
-        }*/
+        }
+        return repetitions.value
     }
 }
