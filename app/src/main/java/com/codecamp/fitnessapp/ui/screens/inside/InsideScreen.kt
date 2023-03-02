@@ -7,18 +7,22 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.User
+import com.codecamp.fitnessapp.ui.viewmodel.WorkoutViewModel
 
 @Composable
 fun InsideScreen(
     newInside: InsideWorkout,
-    stopWorkout: (newInside: InsideWorkout) -> Unit
+    stopWorkout: (newInside: InsideWorkout) -> Unit,
+    workoutViewModel: WorkoutViewModel = hiltViewModel()
 ) {
     // val unitConverter = UnitConverter()
     val workoutStats = stringArrayResource(R.array.WorkoutStats)
@@ -31,19 +35,20 @@ fun InsideScreen(
     var kCal by remember { mutableStateOf(0) }
     var repetitions by remember { mutableStateOf(0) }
 
-    //workoutViewmodel.timePassed.observe(LocalLifecycleOwner.current) {
-    //    time = unitConverter.millisecondsToTimer(it - startTime)
-    //}
 
-    //workoutViewmodel.repetitions.observe(LocalLifecycleOwner.current) {
-    //    repetitions++
-    //    kCal = unitConverter.calculateKCal(newInside.name, repetitions, currentUser)
-    //}
+    workoutViewModel.timePassed.observe(LocalLifecycleOwner.current) {
+        time = it
+    }
+
+    workoutViewModel.repetitions.observe(LocalLifecycleOwner.current) {
+        repetitions = it
+        kCal = workoutViewModel.calculateKCalInside(newInside.name, repetitions, currentUser)
+    }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(60.dp))
 
         WorkoutStats(time, repetitions, kCal)
         
@@ -60,10 +65,10 @@ fun InsideScreen(
                 onClick = {
                     if(workoutActive) {
                         stopWorkout(newInside)
-                        //workoutViewmodel.addInsideWorkout(newInside)
+                        workoutViewModel.switchWorkingOut()
                     } else {
                         buttontext = workoutStats[8]
-                        //workoutViewmodel.startTimer(newInside.name)
+                        workoutViewModel.switchWorkingOut()
                         workoutActive = true
                     }
 
