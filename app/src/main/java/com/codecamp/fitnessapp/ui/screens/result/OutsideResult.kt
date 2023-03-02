@@ -25,7 +25,7 @@ fun OutsideResult(outsideWorkout: OutsideWorkout) {
     ) {
         LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
             items(count = 1) {
-                Spacer(modifier = Modifier.height(100.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 ResultCard(name = workoutStats[1], value = outsideWorkout.distance.toString())
 

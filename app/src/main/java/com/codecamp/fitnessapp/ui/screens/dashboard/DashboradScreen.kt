@@ -21,7 +21,7 @@ fun DashboardScreen(
     ) {
         LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
             items(count = 1) {
-                Spacer(modifier = Modifier.height(100.dp))
+                Spacer(modifier = Modifier.height(40.dp))
                 WeatherLabel()
                 Spacer(modifier = Modifier.height(60.dp))
                 LastWorkouts(showOldInside, showOldOutside)

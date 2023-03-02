@@ -24,7 +24,7 @@ fun InsideResult(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(60.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         ResultCard(name = workoutStats[2], value = insideWorkout.repetitions.toString())
 
