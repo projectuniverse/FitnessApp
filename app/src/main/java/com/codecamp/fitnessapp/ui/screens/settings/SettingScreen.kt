@@ -1,10 +1,10 @@
 package com.codecamp.fitnessapp.ui.screens.settings
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
@@ -13,10 +13,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.codecamp.fitnessapp.R
+import com.codecamp.fitnessapp.ui.screens.result.AltitudeResult
 import kotlinx.coroutines.flow.MutableStateFlow
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import kotlinx.coroutines.flow.asStateFlow
 
 @Composable
 fun SettingScreen(

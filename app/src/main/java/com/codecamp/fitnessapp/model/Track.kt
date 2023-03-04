@@ -24,7 +24,11 @@ import androidx.room.PrimaryKey
 data class Track(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    //TODO Foreign key für automatisches löschen, sodass alle daten mit dem key gelöscht werden wenn workout gelöscht wird
+    /*
+     * Foreign key pointing to the outsideWorkout with this id.
+     * If outsideWorkout is deleted, all Tracks with this workoutId automatically
+     * get deleted.
+     */
     val workoutId: Int,
     // lat and long must later manually be converted to LatLng for using google maps
     // Also used for calculating pace per km in combination with timestamp
