@@ -21,6 +21,7 @@ import com.codecamp.fitnessapp.ui.screens.StartButton
 import com.codecamp.fitnessapp.ui.screens.TopBar
 import com.codecamp.fitnessapp.ui.screens.dashboard.DashboardScreen
 import com.codecamp.fitnessapp.ui.screens.inside.InsideScreen
+import com.codecamp.fitnessapp.ui.screens.result.AltitudeResult
 import com.codecamp.fitnessapp.ui.screens.result.ResultScreen
 import com.codecamp.fitnessapp.ui.screens.settings.SettingScreen
 
@@ -44,6 +45,8 @@ fun FitnessApp(
     var insideWorkout: InsideWorkout? = null
     var outsideWorkout: OutsideWorkout? = null
 
+    // TODO Needs to be updated/changed.
+    // TODO Use: https://developer.android.com/topic/libraries/architecture/datastore
     val firstscreen = if(firstInit) {
         AppScreen.Settings.name
     } else {
