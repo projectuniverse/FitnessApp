@@ -18,10 +18,14 @@ import com.patrykandpatrick.vico.compose.component.textComponent
 import com.patrykandpatrick.vico.compose.style.ChartStyle
 import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
 import com.patrykandpatrick.vico.compose.style.currentChartStyle
+import com.patrykandpatrick.vico.core.axis.Axis
 import com.patrykandpatrick.vico.core.axis.AxisPosition
 import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
 import com.patrykandpatrick.vico.core.axis.horizontal.HorizontalAxis
 import com.patrykandpatrick.vico.core.chart.copy
+import com.patrykandpatrick.vico.core.chart.values.AxisValuesOverrider
+import com.patrykandpatrick.vico.core.component.shape.LineComponent
+import com.patrykandpatrick.vico.core.dimensions.Dimensions
 import com.patrykandpatrick.vico.core.entry.ChartEntry
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import java.math.RoundingMode
@@ -30,14 +34,16 @@ import kotlin.math.ceil
 /*
  * For this chart to work correctly, Track objects must
  * be created every 10 seconds during an outside workout.
+ *
+ * Created with help: https://github.com/patrykandpatrick/vico/issues/192
  */
 @Composable
 fun AltitudeResult(
     //values: List<Pair<Int, Float>>
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth(1f),
+        // TODO might need to adjust the fraction
+        modifier = Modifier.fillMaxWidth(1f),
         shape = MaterialTheme.shapes.medium,
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
         colors = CardDefaults.cardColors(
@@ -50,8 +56,8 @@ fun AltitudeResult(
          */
         val values: MutableList<Pair<Int, Float>> = mutableListOf()
         val start = 1677633370
-        for (i in 0 until 720) {
-            values.add(start + i*10 to (0..20).random().toFloat())
+        for (i in 0 until 180) {
+            values.add(start + i*10 to (167..300).random().toFloat())
         }
 
         class Entry(
@@ -117,7 +123,8 @@ fun AltitudeResult(
             Chart(
                 chart = lineChart(
                     lines = remember(defaultLines) { listOf(defaultLines.first().copy(pointSizeDp = 1f)) },
-                    spacing = 3.dp
+                    spacing = 3.dp,
+                    axisValuesOverrider = AxisValuesOverrider.adaptiveYValues(yFraction = 1f)
                 ),
                 model = chartEntryModel.getModel(),
                 startAxis = startAxis(
