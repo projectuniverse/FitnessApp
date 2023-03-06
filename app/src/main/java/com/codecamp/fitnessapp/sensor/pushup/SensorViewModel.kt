@@ -14,7 +14,7 @@ class SensorViewModel @Inject constructor(
 
     //val test = MutableStateFlow(0)
 
-    //val repetitions = pushupUtil.repetitions
+    val repetitions = pushupUtil.repetitions
 
     //init {
         //pushupUtil.x = proximitySensorData
@@ -30,12 +30,12 @@ class SensorViewModel @Inject constructor(
         return pushupUtil.checkPushUp(proximitySensorData.value)
     }
 
-    fun start() {
+    fun startListening() {
         insideWorkoutRepository.startListening()
 
     }
 
-    fun stop() {
+    fun stopListening() {
         insideWorkoutRepository.stopListening()
     }
 }

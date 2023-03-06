@@ -16,6 +16,14 @@ class Accelerometer(
     context: Context
 ): MovementSensor(
     context = context,
-    sensorType = Sensor.TYPE_ACCELEROMETER,
+    sensorType = Sensor.TYPE_LINEAR_ACCELERATION,
     sensorFeature = PackageManager.FEATURE_SENSOR_ACCELEROMETER
+)
+
+class Gyroscope(
+    context: Context
+): MovementSensor(
+    context = context,
+    sensorType = Sensor.TYPE_ROTATION_VECTOR,
+    sensorFeature = PackageManager.FEATURE_SENSOR_GYROSCOPE
 )

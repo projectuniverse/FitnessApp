@@ -32,7 +32,7 @@ abstract class MovementSensor(
             sensor = sensorManager.getDefaultSensor(sensorType)
         }
 
-        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI)
     }
 
     fun stopListening() {
