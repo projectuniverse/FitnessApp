@@ -16,16 +16,6 @@ class SensorViewModel @Inject constructor(
 
     val repetitions = pushupUtil.repetitions
 
-    //init {
-        //pushupUtil.x = proximitySensorData
-        /*viewModelScope.launch {
-            while(true) {
-                test.value++
-                delay(1000)
-            }
-        }*/
-    //}
-
     fun updateRepetitions(): Int {
         return pushupUtil.checkPushUp(proximitySensorData.value)
     }

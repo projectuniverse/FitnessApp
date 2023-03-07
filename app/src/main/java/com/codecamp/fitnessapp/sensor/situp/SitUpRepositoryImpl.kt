@@ -7,7 +7,7 @@ import javax.inject.Inject
 class SitUpRepositoryImpl @Inject constructor(
     private val gyroscope: Gyroscope
 ): SitUpRepository {
-    override val gyroscopeData: MutableStateFlow<List<Float>> = MutableStateFlow(mutableListOf())
+    override val gyroscopeData: MutableStateFlow<List<Float>> = MutableStateFlow(mutableListOf(0f, 0f, 0f))
 
     override fun startListening() {
         gyroscope.startListening { values ->
