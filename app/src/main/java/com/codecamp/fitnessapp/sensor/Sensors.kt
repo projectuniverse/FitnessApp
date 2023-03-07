@@ -24,6 +24,6 @@ class Gyroscope(
     context: Context
 ): MovementSensor(
     context = context,
-    sensorType = Sensor.TYPE_ROTATION_VECTOR,
+    sensorType = Sensor.TYPE_GYROSCOPE,
     sensorFeature = PackageManager.FEATURE_SENSOR_GYROSCOPE
 )

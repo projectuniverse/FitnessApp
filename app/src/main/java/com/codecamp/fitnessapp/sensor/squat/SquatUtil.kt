@@ -12,7 +12,7 @@ enum class SquatState {
 }
 
 class SquatUtil {
-    var state = mutableStateOf(SquatState.START)
+    private val state = mutableStateOf(SquatState.START)
     val repetitions = MutableStateFlow(0)
     private val threshold = 10
     var counter = 0f

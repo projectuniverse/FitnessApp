@@ -7,6 +7,19 @@ import javax.inject.Inject
 @HiltViewModel
 class SitUpViewModel @Inject constructor(
     private val sitUpRepository: SitUpRepository,
-    private val sitUpUtil: SitUpUtil
+    val sitUpUtil: SitUpUtil
 ): ViewModel() {
+    val gyroscopeData = sitUpRepository.gyroscopeData
+
+    fun checkSitUp() {
+        sitUpUtil.checkRepetition(gyroscopeData.value)
+    }
+
+    fun startListening() {
+        sitUpRepository.startListening()
+    }
+
+    fun stopListening() {
+        sitUpRepository.stopListening()
+    }
 }
