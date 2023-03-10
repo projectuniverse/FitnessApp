@@ -36,7 +36,7 @@ fun TestScreen(
         Text(text = "RotY: ${sensorViewModel.gyroscopeData.collectAsState().value[1]}")
         Text(text = "RotZ: ${sensorViewModel.gyroscopeData.collectAsState().value[2]}")
         Text(text = "State: ${sensorViewModel.sitUpUtil.state.value.name}")
-        Text(text = "Rep: ${sensorViewModel.sitUpUtil.repetition}")
+        //Text(text = "Rep: ${sensorViewModel.sitUpUtil.repetition}")
         Button(onClick = {
             sensorViewModel.startListening()
         }) {
