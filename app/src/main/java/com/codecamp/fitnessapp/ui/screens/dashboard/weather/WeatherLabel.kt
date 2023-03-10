@@ -1,6 +1,9 @@
 package com.codecamp.fitnessapp.ui.screens.dashboard.weather
 
+import android.Manifest
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -9,24 +12,62 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.codecamp.fitnessapp.ui.screens.dashboard.WeatherInfos
 import com.codecamp.fitnessapp.ui.screens.dashboard.WeatherViewModel
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionState
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun WeatherLabel(
     viewModel: WeatherViewModel = hiltViewModel()
 ) {
     val weather = viewModel.weather.collectAsState(initial = null).value
 
-    Column(
-        modifier = Modifier.fillMaxWidth(0.7f),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+    val locationPermission = rememberPermissionState(
+        permission = Manifest.permission.ACCESS_COARSE_LOCATION
+    )
+
+    if (locationPermission.status.isGranted) {
+        Column(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (weather != null && viewModel.weatherUpToDate(weather)) {
+                WeatherInfos(weather)
+                Spacer(modifier = Modifier.height(10.dp))
+                WeatherForecast(weather.weatherForecast)
+            } else {
+                WeatherWarning()
+            }
+        }
+    } else {
+        LocationPermission(locationPermission)
+    }
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun LocationPermission(permissionState: PermissionState) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(20.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        if (weather != null && viewModel.weatherUpToDate(weather)) {
-            WeatherInfos(weather)
-            Spacer(modifier = Modifier.height(10.dp))
-            WeatherForecast(weather.weatherForecast)
-        } else {
-            WeatherWarning()
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(text = "Missing Permissions")
+            Text(text = "Grant access to your location?")
+        }
+        Spacer(modifier = Modifier.padding(20.dp))
+        Button(onClick = {
+            permissionState.launchPermissionRequest()
+        }) {
+            Text(text = "Yes")
         }
     }
 }
