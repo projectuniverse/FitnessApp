@@ -3,10 +3,18 @@ package com.codecamp.fitnessapp.ui.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codecamp.fitnessapp.data.workout.DefaultWorkoutRepository
 import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.OutsideWorkout
 import com.codecamp.fitnessapp.model.User
+import com.codecamp.fitnessapp.sensor.pushup.PushUpRepository
+import com.codecamp.fitnessapp.sensor.pushup.PushUpUtil
+import com.codecamp.fitnessapp.sensor.situp.SitUpRepository
+import com.codecamp.fitnessapp.sensor.situp.SitUpUtil
+import com.codecamp.fitnessapp.sensor.situp.SitUpViewModel
+import com.codecamp.fitnessapp.sensor.squat.SquatRepository
+import com.codecamp.fitnessapp.sensor.squat.SquatUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,9 +23,19 @@ import javax.inject.Inject
 class WorkoutViewModel
 @Inject constructor(
     private val workoutRepository: DefaultWorkoutRepository,
+    private val sitUpUtil: SitUpUtil,
+    private val squatUtil: SquatUtil,
+    private val pushUpUtil: PushUpUtil,
+    private val squatRepository: SquatRepository,
+    private val sitUpRepository: SitUpRepository,
+    private val pushUpRepository: PushUpRepository
 ) : ViewModel() {
     val oldInsideWorkouts = workoutRepository.insideWorkouts
     val oldOutsideWorkouts = workoutRepository.outsideWorkouts
+
+    private val squatSensorData = squatRepository.accelerometerData
+    private val sitUpSensorData = sitUpRepository.gyroscopeData
+    private val pushUpSensorData = pushUpRepository.proximitySensorData
 
     val timePassed: MutableLiveData<String> by lazy { MutableLiveData("00:00:00") }
     var workingOut = false
@@ -25,6 +43,48 @@ class WorkoutViewModel
     var startTime = 0L
 
     val repetitions: MutableLiveData<Int> by lazy { MutableLiveData(0) }
+
+    fun startListening(workoutType: String) {
+        when (workoutType) {
+            "Pushups" -> {
+                pushUpRepository.startListening()
+                sitUpRepository.stopListening()
+                squatRepository.stopListening()
+            }
+            "Situps" -> {
+                sitUpRepository.startListening()
+                pushUpRepository.stopListening()
+                squatRepository.stopListening()
+            }
+            else -> {
+                squatRepository.startListening()
+                sitUpRepository.stopListening()
+                pushUpRepository.stopListening()
+            }
+        }
+    }
+
+    fun stopListening() {
+        pushUpRepository.stopListening()
+        sitUpRepository.stopListening()
+        squatRepository.stopListening()
+    }
+
+    fun updateRepetitions(workoutType: String) {
+        repetitions.value =
+            when (workoutType) {
+                "Pushups" -> {
+                    pushUpUtil.checkPushUp(pushUpSensorData.value)
+                }
+                "Situps" -> {
+                    sitUpUtil.checkRepetition(sitUpSensorData.value)
+                }
+                else -> {
+                    squatUtil.checkSquat(squatSensorData.value)
+                }
+            }
+    }
+
     fun getSortedSequenz(oldInsides: List<InsideWorkout>, oldOutsides: List<OutsideWorkout>): List<Int> {
         val sequence = mutableListOf<Int>()
 

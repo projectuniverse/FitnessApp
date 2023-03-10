@@ -16,6 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.User
+import com.codecamp.fitnessapp.ui.FitnessApp
 import com.codecamp.fitnessapp.ui.viewmodel.WorkoutViewModel
 
 @Composable
@@ -35,9 +36,9 @@ fun InsideScreen(
     var kCal by remember { mutableStateOf(0) }
     var repetitions by remember { mutableStateOf(0) }
 
-
     workoutViewModel.timePassed.observe(LocalLifecycleOwner.current) {
         time = it
+        workoutViewModel.updateRepetitions(newInside.name)
     }
 
     workoutViewModel.repetitions.observe(LocalLifecycleOwner.current) {
@@ -64,11 +65,14 @@ fun InsideScreen(
             Button(
                 onClick = {
                     if(workoutActive) {
-                        stopWorkout(newInside)
+                        val result = InsideWorkout(newInside.id, newInside.name, workoutViewModel.repetitions.value!!, newInside.startTime, newInside.endTime, kCal)
+                        stopWorkout(result)
                         workoutViewModel.switchWorkingOut()
+                        workoutViewModel.stopListening()
                     } else {
                         buttontext = workoutStats[8]
                         workoutViewModel.switchWorkingOut()
+                        workoutViewModel.startListening(newInside.name)
                         workoutActive = true
                     }
 

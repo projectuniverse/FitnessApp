@@ -63,7 +63,6 @@ class SquatUtil {
             }
         }
 
-
         return repetitions.value
     }
 }

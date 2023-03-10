@@ -36,6 +36,9 @@ abstract class MovementSensor(
     }
 
     fun stopListening() {
+        if (sensor == null) {
+            return
+        }
         sensorManager.unregisterListener(this)
     }
 
