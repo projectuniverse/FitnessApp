@@ -14,13 +14,16 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.OutsideWorkout
+import com.codecamp.fitnessapp.ui.viewmodel.WorkoutViewModel
 
 @Composable
 fun OldOutsideWorkout(
     outsideWorkout: OutsideWorkout,
-    showOldWorkout: (outsideWorkout: OutsideWorkout) -> Unit
+    showOldWorkout: (outsideWorkout: OutsideWorkout) -> Unit,
+    workoutViewModel: WorkoutViewModel = hiltViewModel()
 ) {
 
     val workoutNames = stringArrayResource(R.array.outsideActivities)
@@ -60,7 +63,7 @@ fun OldOutsideWorkout(
             }
 
             val workoutDetails = workoutInfos[0] + " " + outsideWorkout.distance.toString() + workoutInfos[3] + "\n" +
-                    workoutInfos[2] + " " + outsideWorkout.endTime + workoutInfos[5]
+                    workoutInfos[2] + " " + workoutViewModel.getElapsedTime(outsideWorkout.endTime, outsideWorkout.startTime)
 
             Column(
                 modifier = Modifier.fillMaxWidth(),

@@ -3,7 +3,7 @@ package com.codecamp.fitnessapp.ui.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.codecamp.fitnessapp.data.user.DefaultUserRepository
 import com.codecamp.fitnessapp.data.workout.DefaultWorkoutRepository
 import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.OutsideWorkout
@@ -12,10 +12,10 @@ import com.codecamp.fitnessapp.sensor.pushup.PushUpRepository
 import com.codecamp.fitnessapp.sensor.pushup.PushUpUtil
 import com.codecamp.fitnessapp.sensor.situp.SitUpRepository
 import com.codecamp.fitnessapp.sensor.situp.SitUpUtil
-import com.codecamp.fitnessapp.sensor.situp.SitUpViewModel
 import com.codecamp.fitnessapp.sensor.squat.SquatRepository
 import com.codecamp.fitnessapp.sensor.squat.SquatUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,10 +28,12 @@ class WorkoutViewModel
     private val pushUpUtil: PushUpUtil,
     private val squatRepository: SquatRepository,
     private val sitUpRepository: SitUpRepository,
-    private val pushUpRepository: PushUpRepository
+    private val pushUpRepository: PushUpRepository,
+    private val userRepository: DefaultUserRepository
 ) : ViewModel() {
     val oldInsideWorkouts = workoutRepository.insideWorkouts
     val oldOutsideWorkouts = workoutRepository.outsideWorkouts
+    val user = userRepository.user
 
     private val squatSensorData = squatRepository.accelerometerData
     private val sitUpSensorData = sitUpRepository.gyroscopeData
@@ -118,7 +120,7 @@ class WorkoutViewModel
         return kCal.toInt()
     }
 
-    fun calculateKCalOutside(workoutName: String, distance: Double, timeInHours:Int, user: User): Int {
+    fun calculateKCalOutside(workoutName: String, distance: Double, timeInHours: Int, user: User): Int {
         val kCal:Double = when (workoutName) {
             "Running" -> {6.5 * user.weight * timeInHours}
             "Biking" -> {7.0 * user.weight * timeInHours}
@@ -127,13 +129,37 @@ class WorkoutViewModel
         return kCal.toInt()
     }
 
+    fun saveWorkout(result: InsideWorkout) {
+        viewModelScope.launch {
+//            val id = workoutRepository.insideWorkouts.count()
+            //TODO richtige ID waehlen
+            val workout = InsideWorkout(0, result.name, result.repetitions, result.startTime, result.endTime, result.kcal)
+            workoutRepository.insertInsideWorkout(workout)
+        }
+    }
+
+    fun getElapsedTime(endTime: Int, startTime: Int): String {
+        val elapsedSeconds = endTime - startTime
+        val elapsedMinutes = elapsedSeconds / 60
+        val elapsedHours = elapsedMinutes / 60
+
+        val secondsDisplay = if(elapsedSeconds % 60 < 10) { "0" + elapsedSeconds % 60 }
+        else { elapsedSeconds % 60 }
+        val minutsDisplay = if(elapsedMinutes % 60 < 10) { "0" + elapsedMinutes % 60 }
+        else { elapsedMinutes % 60 }
+        val hoursDisplay = if(elapsedHours < 10) { "0" + elapsedHours % 60 }
+        else { ""+elapsedHours }
+
+        return "$hoursDisplay:$minutsDisplay:$secondsDisplay"
+    }
+
     init {
         viewModelScope.launch {
             Thread {
                 run {
                     while (timerRunning) {
                         if(workingOut){
-                            val elapsedTime = System.currentTimeMillis() - startTime;
+                            val elapsedTime = System.currentTimeMillis() - startTime
                             val elapsedSeconds = elapsedTime / 1000
                             val elapsedMinutes = elapsedSeconds / 60
                             val elapsedHours = elapsedMinutes / 60
@@ -151,7 +177,7 @@ class WorkoutViewModel
                         Thread.sleep(200)
                     }
                 }
-            }.start();
+            }.start()
         }
     }
 

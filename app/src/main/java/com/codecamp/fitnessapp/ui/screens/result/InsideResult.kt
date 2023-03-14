@@ -6,16 +6,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.InsideWorkout
+import com.codecamp.fitnessapp.ui.viewmodel.WorkoutViewModel
 
 @Composable
 fun InsideResult(
-    insideWorkout: InsideWorkout
+    insideWorkout: InsideWorkout,
+    workoutViewModel: WorkoutViewModel = hiltViewModel()
 ) {
-    //val unitConverter = UnitConverter()
     val workoutStats = stringArrayResource(R.array.WorkoutStats)
-    val time = "10" //unitConverter.millisecondsToTimer((insideWorkout.endTime-insideWorkout.startTime).toLong())
+    val time = workoutViewModel.getElapsedTime(insideWorkout.endTime, insideWorkout.startTime)
 
     Column(
         modifier = Modifier

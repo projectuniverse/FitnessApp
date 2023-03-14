@@ -21,7 +21,6 @@ import com.codecamp.fitnessapp.ui.screens.StartButton
 import com.codecamp.fitnessapp.ui.screens.TopBar
 import com.codecamp.fitnessapp.ui.screens.dashboard.DashboardScreen
 import com.codecamp.fitnessapp.ui.screens.inside.InsideScreen
-import com.codecamp.fitnessapp.ui.screens.result.AltitudeResult
 import com.codecamp.fitnessapp.ui.screens.result.ResultScreen
 import com.codecamp.fitnessapp.ui.screens.settings.SettingScreen
 
@@ -41,6 +40,7 @@ fun FitnessApp(
 ) {
     val appName = stringResource(R.string.Dashboard)
     var title by remember { mutableStateOf(appName) }
+    var workoutName = ""
     val firstInit = false
     var insideWorkout: InsideWorkout? = null
     var outsideWorkout: OutsideWorkout? = null
@@ -74,14 +74,13 @@ fun FitnessApp(
         floatingActionButton = {
                 StartButton(
                     title,
-                    startNewInside = { newInside ->
-                        insideWorkout = newInside
+                    startNewInside = { name ->
+                        workoutName = name
                         navController.navigate(AppScreen.Inside.name)
-                        title = AppScreen.Inside.name},
-                    startNewOutside = { newOutside ->
-                        outsideWorkout = newOutside
+                    },
+                    startNewOutside = { name ->
+                        workoutName = name
                         navController.navigate(AppScreen.Outside.name)
-                        title = AppScreen.Outside.name
                     }
                 )
         },
@@ -96,6 +95,7 @@ fun FitnessApp(
         ) {
             composable(route = AppScreen.Dashboard.name) {
                 title = navController.currentDestination?.route.toString()
+
                 DashboardScreen(
                     showOldInside = { oldInside ->
                         insideWorkout = oldInside
@@ -112,9 +112,9 @@ fun FitnessApp(
 
             composable(route = AppScreen.Inside.name) {
                 outsideWorkout = null
-                title = insideWorkout!!.name
+                title = workoutName
                 InsideScreen(
-                    insideWorkout!!,
+                    title,
                     stopWorkout = { newInside ->
                     insideWorkout = newInside
                     navController.navigate(AppScreen.Result.name)}
@@ -123,12 +123,11 @@ fun FitnessApp(
 
             composable(route = AppScreen.Outside.name) {
                 insideWorkout = null
-                title = outsideWorkout!!.name
+                title = workoutName
 
             }
 
             composable(route = AppScreen.Result.name) {
-                val workoutName = outsideWorkout?.name ?: insideWorkout?.name
                 title = navController.currentDestination?.route.toString() + ": " + workoutName
                 ResultScreen(
                     insideWorkout = insideWorkout,

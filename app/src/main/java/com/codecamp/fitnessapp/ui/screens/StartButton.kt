@@ -12,14 +12,12 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.codecamp.fitnessapp.R
-import com.codecamp.fitnessapp.model.InsideWorkout
-import com.codecamp.fitnessapp.model.OutsideWorkout
 
 @Composable
 fun StartButton(
     title: String,
-    startNewInside: (insideWorkout: InsideWorkout) -> Unit,
-    startNewOutside: (outsideWorkout: OutsideWorkout) -> Unit,
+    startNewInside: (name: String) -> Unit,
+    startNewOutside: (name: String) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
     val text = stringArrayResource(R.array.WorkoutStats)[7]
@@ -59,8 +57,8 @@ fun StartButton(
 @Composable
 fun DropUpMenu(
     expanded: Boolean,
-    startNewInside: (insideWorkout: InsideWorkout) -> Unit,
-    startNewOutside: (outsideWorkout: OutsideWorkout) -> Unit,
+    startNewInside: (name: String) -> Unit,
+    startNewOutside: (name: String) -> Unit,
     changeExpanded: () -> Unit
 ) {
     var selectedIndex by remember { mutableStateOf(0) }
@@ -93,18 +91,7 @@ fun DropUpMenu(
                     .height(40.dp)
                     .background(backgroundColor),
                 onClick = {
-                    startNewOutside(
-                        OutsideWorkout(
-                            0,
-                            name,
-                            0.0,
-                            0,
-                            0.0,
-                            0,
-                            0,
-                            0
-                        )
-                    ) //TODO wie erstellen
+                    startNewOutside(name)
                     selectedIndex = index
                     changeExpanded()
                 })
@@ -127,11 +114,11 @@ fun DropUpMenu(
                     .height(40.dp)
                     .background(backgroundColor),
                 onClick = {
-                    startNewInside(InsideWorkout(0, name, 0, 0, 0, 0))
+                    startNewInside(name)
                     selectedIndex = index + 3
                     changeExpanded()
                 }
-            ) //TODO hier auch
+            )
         }
     }
 }

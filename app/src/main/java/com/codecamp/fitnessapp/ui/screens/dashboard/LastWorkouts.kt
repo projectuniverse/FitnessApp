@@ -20,22 +20,7 @@ fun LastWorkouts(
     workoutViewModel: WorkoutViewModel = hiltViewModel()
 ) {
     val oldOutsides = workoutViewModel.oldOutsideWorkouts.collectAsState(initial = mutableListOf()).value
-//    val oldInsides = workoutViewModel.oldInsideWorkouts.collectAsState(initial = mutableListOf()).value
-    val oldInsides = mutableListOf(
-        InsideWorkout(0, "Squats",34,0,3,500),
-        InsideWorkout(0, "Pushups",576,0,4, 900),
-        InsideWorkout(0, "Squats",890,0,9,1400),
-        InsideWorkout(0, "Situps",567,0,12,999),
-        InsideWorkout(0, "Squats",90,0,56,314159),
-    )
-//
-//    val oldOutsides = mutableListOf(
-//        OutsideWorkout(0,"Biking",12.7,3000,60.4, 0, 1, 0),
-//        OutsideWorkout(0,"Biking",40.5,4000,12.5, 0, 2, 0),
-//        OutsideWorkout(0,"Running",13.5,400,324.6, 0, 14, 0),
-//        OutsideWorkout(0,"Running",40.5,424,34.7, 0, 30, 0),
-//        OutsideWorkout(0,"Hiking",5.7,0,92.7, 0, 60, 0)
-//    )
+    val oldInsides = workoutViewModel.oldInsideWorkouts.collectAsState(initial = mutableListOf()).value
 
     val indexSequence: List<Int> = workoutViewModel.getSortedSequenz(oldInsides, oldOutsides)
 
