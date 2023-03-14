@@ -16,34 +16,33 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.User
-import com.codecamp.fitnessapp.ui.FitnessApp
 import com.codecamp.fitnessapp.ui.viewmodel.WorkoutViewModel
 
 @Composable
 fun InsideScreen(
-    newInside: InsideWorkout,
+    workoutName: String,
     stopWorkout: (newInside: InsideWorkout) -> Unit,
     workoutViewModel: WorkoutViewModel = hiltViewModel()
 ) {
-    // val unitConverter = UnitConverter()
     val workoutStats = stringArrayResource(R.array.WorkoutStats)
     val timerDefaultText = stringResource(R.string.timer)
-    val currentUser = User(0, 18, 180, 80)
+    val currentUser = workoutViewModel.user.collectAsState(initial = User(0, 0, 0, 0))
 
     var workoutActive by remember { mutableStateOf(false) }
     var buttontext by remember { mutableStateOf(workoutStats[7]) }
     var time by remember { mutableStateOf(timerDefaultText) }
     var kCal by remember { mutableStateOf(0) }
     var repetitions by remember { mutableStateOf(0) }
+    var startTime by remember { mutableStateOf(0) }
 
     workoutViewModel.timePassed.observe(LocalLifecycleOwner.current) {
         time = it
-        workoutViewModel.updateRepetitions(newInside.name)
+        workoutViewModel.updateRepetitions(workoutName)
     }
 
     workoutViewModel.repetitions.observe(LocalLifecycleOwner.current) {
         repetitions = it
-        kCal = workoutViewModel.calculateKCalInside(newInside.name, repetitions, currentUser)
+        kCal = workoutViewModel.calculateKCalInside(workoutName, repetitions, currentUser.value)
     }
 
     Column(
@@ -65,15 +64,18 @@ fun InsideScreen(
             Button(
                 onClick = {
                     if(workoutActive) {
-                        val result = InsideWorkout(newInside.id, newInside.name, workoutViewModel.repetitions.value!!, newInside.startTime, newInside.endTime, kCal)
-                        stopWorkout(result)
+                        val endTime = (System.currentTimeMillis()/1000).toInt()
+                        val result = InsideWorkout(0, workoutName, repetitions, startTime, endTime, kCal)
                         workoutViewModel.switchWorkingOut()
                         workoutViewModel.stopListening()
+                        workoutViewModel.saveWorkout(result)
+                        stopWorkout(result)
                     } else {
                         buttontext = workoutStats[8]
                         workoutViewModel.switchWorkingOut()
-                        workoutViewModel.startListening(newInside.name)
+                        workoutViewModel.startListening(workoutName)
                         workoutActive = true
+                        startTime = (System.currentTimeMillis()/1000).toInt()
                     }
 
                 },

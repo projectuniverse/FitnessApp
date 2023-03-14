@@ -11,11 +11,17 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.InsideWorkout
+import com.codecamp.fitnessapp.ui.viewmodel.WorkoutViewModel
 
 @Composable
-fun OldInsideWorkout(insideWorkout: InsideWorkout, showOldWorkout: (insideWorkout: InsideWorkout) -> Unit ) {
+fun OldInsideWorkout(
+    insideWorkout: InsideWorkout,
+    showOldWorkout: (insideWorkout: InsideWorkout) -> Unit,
+    workoutViewModel: WorkoutViewModel = hiltViewModel()
+) {
 
     val workoutNames = stringArrayResource(R.array.insideActivities)
     val workoutInfos = stringArrayResource(R.array.oldWorkout)
@@ -42,7 +48,6 @@ fun OldInsideWorkout(insideWorkout: InsideWorkout, showOldWorkout: (insideWorkou
                 modifier = Modifier.width(64.dp),
                 verticalArrangement = Arrangement.Center
             ) {
-                //TODO oder val icon = Icons.Default.FitnessCenter
                 val icon = when(insideWorkout.name) {
                     workoutNames[0] -> painterResource(R.drawable.squats)
                     workoutNames[1] -> painterResource(R.drawable.pushups)
@@ -53,7 +58,7 @@ fun OldInsideWorkout(insideWorkout: InsideWorkout, showOldWorkout: (insideWorkou
             }
 
             val workoutDetails = workoutInfos[1] + " " + insideWorkout.repetitions + "\n" +
-                    workoutInfos[2] + " " + (insideWorkout.endTime-insideWorkout.startTime) + workoutInfos[5]
+                    workoutInfos[2] + " " + workoutViewModel.getElapsedTime(insideWorkout.endTime, insideWorkout.startTime)
 
             Column(
                 modifier = Modifier.fillMaxWidth(),
