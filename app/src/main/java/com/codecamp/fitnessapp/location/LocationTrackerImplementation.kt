@@ -23,18 +23,18 @@ import kotlin.coroutines.resume
 import kotlinx.coroutines.suspendCancellableCoroutine
 
 class LocationTrackerImplementation @Inject constructor(
-    private var fusedLocationClient: FusedLocationProviderClient,
-    private val app: Application
+    private val context: Context,
+    private var fusedLocationClient: FusedLocationProviderClient
 ): LocationTrackerInterface {
 
     private fun hasPermissions(): Boolean {
-        val locationManager = app.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val gpsEnabled = locationManager.isProviderEnabled(Context.LOCATION_SERVICE) or
                 locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         val fineLocationPermission = ContextCompat.
-        checkSelfPermission(app, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
         val coarseLocationPermission = ContextCompat.
-        checkSelfPermission(app, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
         if (!gpsEnabled || !fineLocationPermission || !coarseLocationPermission) {
             return false
@@ -90,7 +90,7 @@ class LocationTrackerImplementation @Inject constructor(
                 throw Exception("Missing location permissions")
             }
 
-            val locationManager = app.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
             val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
             val isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
 
