@@ -21,6 +21,8 @@ import com.codecamp.fitnessapp.ui.screens.StartButton
 import com.codecamp.fitnessapp.ui.screens.TopBar
 import com.codecamp.fitnessapp.ui.screens.dashboard.DashboardScreen
 import com.codecamp.fitnessapp.ui.screens.inside.InsideScreen
+import com.codecamp.fitnessapp.ui.screens.outside.OutsideScreen
+import com.codecamp.fitnessapp.ui.screens.result.AltitudeResult
 import com.codecamp.fitnessapp.ui.screens.result.ResultScreen
 import com.codecamp.fitnessapp.ui.screens.settings.SettingScreen
 
@@ -124,7 +126,12 @@ fun FitnessApp(
             composable(route = AppScreen.Outside.name) {
                 insideWorkout = null
                 title = workoutName
-
+                OutsideScreen(
+                    title,
+                    stopWorkout = { newOutside ->
+                    outsideWorkout = newOutside
+                    navController.navigate(AppScreen.Result.name)}
+                )
             }
 
             composable(route = AppScreen.Result.name) {
