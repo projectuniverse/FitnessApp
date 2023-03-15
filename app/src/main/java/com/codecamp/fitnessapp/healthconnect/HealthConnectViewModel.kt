@@ -2,8 +2,6 @@ package com.codecamp.fitnessapp.healthconnect
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.codecamp.fitnessapp.healthconnect.HealthConnect
-import com.codecamp.fitnessapp.model.StepRecord
 import com.codecamp.fitnessapp.model.healthconnect.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -99,7 +97,7 @@ class HealthConnectViewModel @Inject constructor(
 
     fun updateExerciseList(startTime: Instant, endTime: Instant) {
         viewModelScope.launch {
-            val response = healthConnect.getExerciseSessionRecords(startTime, endTime)
+            val response = healthConnect.getExerciseSessionRecords()
             if (response != null) {
                 for (record in response.records) {
                     exerciseList.add(
