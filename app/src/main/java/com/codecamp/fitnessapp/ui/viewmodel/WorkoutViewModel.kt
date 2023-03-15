@@ -15,7 +15,6 @@ import com.codecamp.fitnessapp.sensor.situp.SitUpUtil
 import com.codecamp.fitnessapp.sensor.squat.SquatRepository
 import com.codecamp.fitnessapp.sensor.squat.SquatUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -131,10 +130,7 @@ class WorkoutViewModel
 
     fun saveWorkout(result: InsideWorkout) {
         viewModelScope.launch {
-//            val id = workoutRepository.insideWorkouts.count()
-            //TODO richtige ID waehlen
-            val workout = InsideWorkout(0, result.name, result.repetitions, result.startTime, result.endTime, result.kcal)
-            workoutRepository.insertInsideWorkout(workout)
+            workoutRepository.insertInsideWorkout(result)
         }
     }
 
@@ -159,19 +155,11 @@ class WorkoutViewModel
                 run {
                     while (timerRunning) {
                         if(workingOut){
-                            val elapsedTime = System.currentTimeMillis() - startTime
-                            val elapsedSeconds = elapsedTime / 1000
-                            val elapsedMinutes = elapsedSeconds / 60
-                            val elapsedHours = elapsedMinutes / 60
-
-                            val secondsDisplay = if(elapsedSeconds % 60 < 10) { "0" + elapsedSeconds % 60 }
-                            else { elapsedSeconds % 60 }
-                            val minutsDisplay = if(elapsedMinutes % 60 < 10) { "0" + elapsedMinutes % 60 }
-                            else { elapsedMinutes % 60 }
-                            val hoursDisplay = if(elapsedHours < 10) { "0" + elapsedHours % 60 }
-                            else { ""+elapsedHours }
-
-                            timePassed.postValue("$hoursDisplay:$minutsDisplay:$secondsDisplay")
+                            timePassed.postValue(
+                                getElapsedTime(
+                                    (System.currentTimeMillis()/1000).toInt(),
+                                    (startTime/1000).toInt()
+                            ))
                         }
 
                         Thread.sleep(200)

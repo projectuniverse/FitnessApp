@@ -65,7 +65,15 @@ fun InsideScreen(
                 onClick = {
                     if(workoutActive) {
                         val endTime = (System.currentTimeMillis()/1000).toInt()
-                        val result = InsideWorkout(0, workoutName, repetitions, startTime, endTime, kCal)
+
+                        val result = InsideWorkout(
+                            name = workoutName,
+                            repetitions = repetitions,
+                            startTime =  startTime,
+                            endTime = endTime,
+                            kcal = kCal
+                        )
+
                         workoutViewModel.switchWorkingOut()
                         workoutViewModel.stopListening()
                         workoutViewModel.saveWorkout(result)
