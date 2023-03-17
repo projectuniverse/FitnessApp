@@ -27,11 +27,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FitnessApp"
         tools:targetApi="31">
-        <activity
-            android:name=".healthconnect.PermissionHealthConnectActivity"
-            android:exported="false"
-            android:label="@string/title_activity_permission_health_connect"
-            android:theme="@style/Theme.FitnessApp" />
 
         <service
             android:name=".foregroundservice.ForegroundLocationService"

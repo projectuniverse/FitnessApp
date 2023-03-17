@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val healthConnectViewModel: HealthConnectViewModel by viewModels()
-    private val hcUsage = healthConnectViewModel.hcUsage
+    //private val hcUsage = healthConnectViewModel.hcUsage
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,8 +99,8 @@ class MainActivity : ComponentActivity() {
         val granted = healthConnectClient.permissionController.getGrantedPermissions()
         if (granted.containsAll(PERMISSIONS)) {
             // already has permission form previous launch
-            val usage = hcUsage.first().useHealthConnect
-            healthConnectViewModel.updatePermissionGranted(usage, true)
+            //val usage = hcUsage.first().useHealthConnect
+            healthConnectViewModel.updatePermissionGranted(false, true)
         } else {
             // has no permission yet
             requestPermissions.launch(PERMISSIONS)
