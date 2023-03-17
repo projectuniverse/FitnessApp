@@ -47,8 +47,8 @@ class SettingsViewModel
 
     fun updateHealthConnectUsage() {
         viewModelScope.launch {
-            val permission = hcPermission.first().hasPermission
-            hcUsageRepository.insertHealthConnectUsage(HealthConnectUsage(0, true, permission))
+            //val permission = hcPermission.first().hasPermission
+            hcUsageRepository.insertHealthConnectUsage(HealthConnectUsage(0, true, true))
         }
     }
 
