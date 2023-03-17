@@ -17,6 +17,10 @@ class HealthConnectRepositoryImpl @Inject constructor(
     override val hikingExercises: MutableStateFlow<List<OutsideWorkout>> = MutableStateFlow(emptyList())
     override val bikingExercises: MutableStateFlow<List<OutsideWorkout>> = MutableStateFlow(emptyList())
 
+    //User Data
+    override val weight: MutableStateFlow<Int> = MutableStateFlow(-1)
+    override val height: MutableStateFlow<Int> = MutableStateFlow(-1)
+
     override suspend fun loadExercises() {
         //get session records
         val exerciseRecords = healthConnect.getExerciseSessionRecords() ?: return
@@ -44,6 +48,18 @@ class HealthConnectRepositoryImpl @Inject constructor(
                 }
                 else -> { }
             }
+        }
+    }
+
+    override suspend fun loadUserData() {
+        val weightRecords = healthConnect.getWeightRecords()
+        val heightRecords = healthConnect.getHeightRecords()
+
+        if (weightRecords != null) {
+            weight.value = weightRecords.records.last().weight.inKilograms.toInt()
+        }
+        if (heightRecords != null) {
+            height.value = heightRecords.records.last().height.inMeters.toInt() / 100
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.codecamp.fitnessapp.ui.screens.settings
 
+import android.content.Intent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -7,20 +8,33 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
+import androidx.health.connect.client.permission.HealthPermission
+import androidx.health.connect.client.records.ExerciseSessionRecord
+import androidx.health.connect.client.records.HeightRecord
+import androidx.health.connect.client.records.WeightRecord
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.codecamp.fitnessapp.MainActivity
 import com.codecamp.fitnessapp.R
+import com.codecamp.fitnessapp.healthconnect.PermissionHealthConnectActivity
 import com.codecamp.fitnessapp.ui.screens.result.AltitudeResult
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.flow.MutableStateFlow
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SettingScreen(
     settingViewModel: SettingsViewModel = hiltViewModel()
 ) {
     val user = settingViewModel.user.collectAsState(initial = null)
+    val hcPermission = settingViewModel.hcPermission.collectAsState(initial = null)
     val stringSettings = stringArrayResource(R.array.settings)
     // If value is null, null.toString() returns "null" (not valid value)
     var age = MutableStateFlow(if (user.value?.age.toString() == "null") "" else user.value?.age.toString())
@@ -44,7 +58,6 @@ fun SettingScreen(
      * import androidx.compose.runtime.getValue
      * import androidx.compose.runtime.setValue
      */
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -64,7 +77,14 @@ fun SettingScreen(
         Spacer(modifier = Modifier.height(30.dp))
         Button(
             modifier = Modifier.fillMaxWidth(0.9f),
-            onClick = { /*TODO Google Health Connect*/ }
+            onClick = {
+                /*TODO Google Health Connect*/
+                //TODO: HC Permission
+                settingViewModel.updateHealthConnectUsage()
+                if (hcPermission.value?.useHealthConnect == true && hcPermission.value?.hasPermission == true) {
+                    isValidValues.value = settingViewModel.checkForHealthConnectData(age.value, height.value, weight.value)
+                }
+            }
         ) {
             Text(
                 text = stringSettings[3],

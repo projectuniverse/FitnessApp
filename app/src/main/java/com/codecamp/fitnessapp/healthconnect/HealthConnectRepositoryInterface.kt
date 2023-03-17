@@ -13,5 +13,11 @@ interface HealthConnectRepositoryInterface {
     val hikingExercises: MutableStateFlow<List<OutsideWorkout>>
     val bikingExercises: MutableStateFlow<List<OutsideWorkout>>
 
+    //User Data
+    val weight: MutableStateFlow<Int>
+    val height: MutableStateFlow<Int>
+
     suspend fun loadExercises()
+
+    suspend fun loadUserData()
 }
