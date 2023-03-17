@@ -2,9 +2,13 @@ package com.codecamp.fitnessapp.ui.screens.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.codecamp.fitnessapp.data.healthconnect.DefaultHealthConnectUsageRepository
 import com.codecamp.fitnessapp.data.user.DefaultUserRepository
+import com.codecamp.fitnessapp.healthconnect.HealthConnectRepositoryInterface
 import com.codecamp.fitnessapp.model.User
+import com.codecamp.fitnessapp.model.healthconnect.HealthConnectUsage
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -12,8 +16,14 @@ import javax.inject.Inject
 class SettingsViewModel
 @Inject constructor(
     private val userRepository: DefaultUserRepository,
+    private val hcUsageRepository: DefaultHealthConnectUsageRepository,
+    private val healthConnectRepository: HealthConnectRepositoryInterface
 ) : ViewModel() {
     val user = userRepository.user
+    val hcPermission = hcUsageRepository.hcUsages
+
+    val healthConnectWeight = healthConnectRepository.weight
+    val healthConnectHeight = healthConnectRepository.height
 
     private fun isValidNumber(case: Int, input: String): Boolean {
         val inputNumber = input.toIntOrNull()
@@ -35,6 +45,13 @@ class SettingsViewModel
         }
     }
 
+    fun updateHealthConnectUsage() {
+        viewModelScope.launch {
+            val permission = hcPermission.first().hasPermission
+            hcUsageRepository.insertHealthConnectUsage(HealthConnectUsage(0, true, permission))
+        }
+    }
+
     fun isValidUser(age: String, height: String, weight: String): Boolean {
         // Writes to database if all three entered values are correct
         if (isValidNumber(0, age)
@@ -47,5 +64,22 @@ class SettingsViewModel
             return true
         }
         return false
+    }
+
+    fun checkForHealthConnectData(age: String, height: String, weight: String): Boolean {
+        var tempHeight = height.toInt()
+        var tempWeight = weight.toInt()
+
+        viewModelScope.launch {
+            healthConnectRepository.loadUserData()
+
+            if (isValidNumber(1, healthConnectHeight.value.toString())) {
+                tempHeight = healthConnectHeight.value
+            }
+            if (isValidNumber(2, healthConnectWeight.value.toString())) {
+                tempWeight = healthConnectWeight.value
+            }
+        }
+        return isValidUser(age, tempHeight.toString(), tempWeight.toString())
     }
 }
