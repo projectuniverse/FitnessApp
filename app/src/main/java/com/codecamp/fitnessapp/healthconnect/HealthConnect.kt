@@ -1,6 +1,7 @@
 package com.codecamp.fitnessapp.healthconnect
 
 import android.app.Application
+import android.content.Context
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.records.*
 import androidx.health.connect.client.request.ReadRecordsRequest
@@ -10,26 +11,23 @@ import java.time.Instant
 import javax.inject.Inject
 
 class HealthConnect @Inject constructor(
-    private val app: Application
+    private val context: Context
 ) {
-    var healthConnectClient: HealthConnectClient? = null
+    var healthConnectClient: HealthConnectClient? = returnHealthConnectClient()
 
-    fun getHealthConnectClient() {
-        if (healthConnectClient != null) {
-            return
-        }
-
+    private fun returnHealthConnectClient(): HealthConnectClient? {
         if(!HealthConnectClient.isApiSupported()) {
-            return
+            return null
         }
 
-        if (HealthConnectClient.isProviderAvailable(app)) {
-            healthConnectClient = HealthConnectClient.getOrCreate(app)
+        if (HealthConnectClient.isProviderAvailable(context)) {
+            return HealthConnectClient.getOrCreate(context)
         }
+
+        return null
     }
 
     suspend fun getStepsRecords(startTime: Instant, endTime: Instant): ReadRecordsResponse<StepsRecord>? {
-        getHealthConnectClient()
         if (healthConnectClient == null) {
             return null
         }
@@ -63,7 +61,6 @@ class HealthConnect @Inject constructor(
          *
          *      EXERCISE_TYPE_OTHER_WORKOUT = 0
          */
-        getHealthConnectClient()
 
         if (healthConnectClient == null) {
             return null
@@ -77,26 +74,26 @@ class HealthConnect @Inject constructor(
         )
     }
 
-    suspend fun getHeightRecords(startTime: Instant, endTime: Instant): ReadRecordsResponse<HeightRecord>? {
+    suspend fun getHeightRecords(): ReadRecordsResponse<HeightRecord>? {
         if (healthConnectClient == null) {
             return null
         }
         return healthConnectClient!!.readRecords(
             ReadRecordsRequest(
                 HeightRecord::class,
-                timeRangeFilter = TimeRangeFilter.between(startTime, endTime)
+                timeRangeFilter = TimeRangeFilter.before(Instant.now())
             )
         )
     }
 
-    suspend fun getWeightRecords(startTime: Instant, endTime: Instant): ReadRecordsResponse<WeightRecord>? {
+    suspend fun getWeightRecords(): ReadRecordsResponse<WeightRecord>? {
         if (healthConnectClient == null) {
             return null
         }
         return healthConnectClient!!.readRecords(
             ReadRecordsRequest(
                 WeightRecord::class,
-                timeRangeFilter = TimeRangeFilter.between(startTime, endTime)
+                timeRangeFilter = TimeRangeFilter.before(Instant.now())
             )
         )
     }

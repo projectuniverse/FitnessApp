@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" >
+    xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.health.READ_STEPS"/>
-    <uses-permission android:name="android.permission.health.READ_ACTIVE_CALORIES_BURNED" />
-    <uses-permission android:name="androidx.health.permission.READ_WEIGHT" />
-    <uses-permission android:name="androidx.health.permission.READ_HEIGHT" />
-    <uses-permission android:name="android.permission.health.READ_DISTANCE" />
+    <uses-permission android:name="android.permission.health.READ_WEIGHT" />
+    <uses-permission android:name="android.permission.health.READ_HEIGHT" />
     <uses-permission android:name="android.permission.health.READ_EXERCISE" />
 
     <queries>
@@ -28,16 +26,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FitnessApp"
-        tools:targetApi="31" >
-        <service android:name=".foregroundservice.ForegroundLocationService" android:foregroundServiceType="location" />
+        tools:targetApi="31">
+        <activity
+            android:name=".healthconnect.PermissionHealthConnectActivity"
+            android:exported="false"
+            android:label="@string/title_activity_permission_health_connect"
+            android:theme="@style/Theme.FitnessApp" />
+
+        <service
+            android:name=".foregroundservice.ForegroundLocationService"
+            android:foregroundServiceType="location" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.FitnessApp" >
+            android:theme="@style/Theme.FitnessApp">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
@@ -46,9 +54,9 @@
                 android:value="" />
         </activity>
 
-        <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="Insert your API key"
-            />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="Insert your API key" />
     </application>
 
 </manifest>
