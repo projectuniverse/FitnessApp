@@ -1,6 +1,7 @@
 package com.codecamp.fitnessapp.di
 
 import android.app.Application
+import android.content.Context
 import androidx.room.Room
 import com.codecamp.fitnessapp.data.healthconnect.DefaultHealthConnectUsageRepository
 import com.codecamp.fitnessapp.data.healthconnect.HealthConnectUsageDatabase
@@ -152,5 +153,11 @@ object AppModule {
     @Singleton
     fun provideHCUsageRepository(db: HealthConnectUsageDatabase) : DefaultHealthConnectUsageRepository {
         return DefaultHealthConnectUsageRepository(db.healthConnectUsageDao())
+    }
+
+    @Singleton
+    @Provides
+    fun provideContext(app: Application): Context {
+        return app
     }
 }

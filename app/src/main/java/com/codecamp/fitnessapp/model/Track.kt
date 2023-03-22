@@ -37,5 +37,5 @@ data class Track(
     // Used for calculating altitude profile in combination with timestamp
     val altitude: Double,
     // UTC time
-    val timestamp: Int
+    val timestamp: Long
 )
