@@ -37,6 +37,13 @@ fun OutsideScreen(
         workoutViewModel.updateRepetitions(workoutName)
     }
 
+    val latlngList = workoutViewModel.getLatLngList()
+
+    workoutViewModel.timePassed.observe(LocalLifecycleOwner.current) {
+        time = it
+        workoutViewModel.updateTracks()
+    }
+
     Column(
         Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -55,7 +62,7 @@ fun OutsideScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Map()
+            Map(latlngList)
         }
 
         Row(

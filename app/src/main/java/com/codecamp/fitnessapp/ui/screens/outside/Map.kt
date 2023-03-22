@@ -11,13 +11,12 @@ import com.google.maps.android.compose.*
 
 @Composable
 fun Map (
-    //viewModel: MapViewModel = hiltViewModel()
+    latlngList: List<LatLng>
 ) {
     val zoom = 17f
     val start = LatLng(51.3204621,9.4886897)
 
-
-    //val trackList = viewModel.trackList.collectAsState(initial = null).value
+//    val trackList = viewModel.trackList.collectAsState(initial = null).value
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(start, zoom)
@@ -33,8 +32,8 @@ fun Map (
         cameraPositionState = cameraPositionState,
 //        locationSource = locationSource
     ) {
-//        if (trackList != null && trackList.isNotEmpty()) {
-//            Polyline(points = viewModel.getLatLngList(trackList))
-//        }
+        if (latlngList != null && latlngList.isNotEmpty()) {
+            Polyline(points = latlngList)
+        }
     }
 }

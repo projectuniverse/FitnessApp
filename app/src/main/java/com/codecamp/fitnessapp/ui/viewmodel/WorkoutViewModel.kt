@@ -1,13 +1,18 @@
 package com.codecamp.fitnessapp.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.codecamp.fitnessapp.data.track.DefaultTrackRepository
 import com.codecamp.fitnessapp.data.user.DefaultUserRepository
 import com.codecamp.fitnessapp.data.workout.DefaultWorkoutRepository
 import com.codecamp.fitnessapp.healthconnect.HealthConnectRepositoryInterface
+import com.codecamp.fitnessapp.location.LocationTrackerImplementation
+import com.codecamp.fitnessapp.location.LocationTrackerInterface
 import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.OutsideWorkout
+import com.codecamp.fitnessapp.model.Track
 import com.codecamp.fitnessapp.model.User
 import com.codecamp.fitnessapp.sensor.pushup.PushUpRepository
 import com.codecamp.fitnessapp.sensor.pushup.PushUpUtil
@@ -15,7 +20,9 @@ import com.codecamp.fitnessapp.sensor.situp.SitUpRepository
 import com.codecamp.fitnessapp.sensor.situp.SitUpUtil
 import com.codecamp.fitnessapp.sensor.squat.SquatRepository
 import com.codecamp.fitnessapp.sensor.squat.SquatUtil
+import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,7 +37,9 @@ class WorkoutViewModel
     private val sitUpRepository: SitUpRepository,
     private val pushUpRepository: PushUpRepository,
     private val userRepository: DefaultUserRepository,
-    private val healthConnectRepository: HealthConnectRepositoryInterface
+    private val healthConnectRepository: HealthConnectRepositoryInterface,
+    private val trackRepository: DefaultTrackRepository,
+    private val locationTracker: LocationTrackerInterface
 ) : ViewModel() {
     val oldInsideWorkouts = workoutRepository.insideWorkouts
     val oldOutsideWorkouts = workoutRepository.outsideWorkouts
@@ -44,6 +53,8 @@ class WorkoutViewModel
     private val squatSensorData = squatRepository.accelerometerData
     private val sitUpSensorData = sitUpRepository.gyroscopeData
     private val pushUpSensorData = pushUpRepository.proximitySensorData
+
+    private val trackList = mutableListOf<Track>()
 
     val timePassed: MutableLiveData<String> by lazy { MutableLiveData("00:00:00") }
     var workingOut = false
@@ -154,6 +165,45 @@ class WorkoutViewModel
         else { ""+elapsedHours }
 
         return "$hoursDisplay:$minutsDisplay:$secondsDisplay"
+    }
+
+    fun getLatLngList(): List<LatLng> {
+        val points = mutableListOf<LatLng>()
+        for (track in trackList) {
+            points.add(LatLng(track.lat, track.long))
+        }
+        return points
+    }
+
+    fun updateTracks() {
+        val currentTime = System.currentTimeMillis()
+        var lastTrackTime: Long = 0
+        if (trackList.isNotEmpty()) {
+            lastTrackTime = trackList.last().timestamp
+        }
+        val difference = (currentTime - lastTrackTime)
+
+        if (difference >= 10000) {
+            Log.d("asd", "ten")
+            // create new Track and add it to track list
+            viewModelScope.launch {
+                val location = locationTracker.getLocation()
+
+                if (location != null) {
+                    Log.d("asd", "got location")
+                    var newTrack = Track(
+                        workoutId = 0,
+                        lat = location.latitude,
+                        long = location.longitude,
+                        altitude = location.altitude,
+                        timestamp = currentTime
+                    )
+                    trackList.add(newTrack)
+                    Log.d("asd", newTrack.toString())
+                }
+                else { Log.d("asd", "no location") }
+            }
+        }
     }
 
     init {
