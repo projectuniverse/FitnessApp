@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.codecamp.fitnessapp.data.user.DefaultUserRepository
 import com.codecamp.fitnessapp.data.workout.DefaultWorkoutRepository
+import com.codecamp.fitnessapp.healthconnect.HealthConnectRepositoryInterface
 import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.OutsideWorkout
 import com.codecamp.fitnessapp.model.User
@@ -28,11 +29,17 @@ class WorkoutViewModel
     private val squatRepository: SquatRepository,
     private val sitUpRepository: SitUpRepository,
     private val pushUpRepository: PushUpRepository,
-    private val userRepository: DefaultUserRepository
+    private val userRepository: DefaultUserRepository,
+    private val healthConnectRepository: HealthConnectRepositoryInterface
 ) : ViewModel() {
     val oldInsideWorkouts = workoutRepository.insideWorkouts
     val oldOutsideWorkouts = workoutRepository.outsideWorkouts
     val user = userRepository.user
+
+    val healthConnectSquats = healthConnectRepository.squatExercises
+    val healthConnectRuns = healthConnectRepository.runningExercises
+    val healthConnectBiking = healthConnectRepository.bikingExercises
+    val healthConnectHikes = healthConnectRepository.hikingExercises
 
     private val squatSensorData = squatRepository.accelerometerData
     private val sitUpSensorData = sitUpRepository.gyroscopeData
@@ -150,6 +157,9 @@ class WorkoutViewModel
     }
 
     init {
+        viewModelScope.launch {
+            healthConnectRepository.loadExercises()
+        }
         viewModelScope.launch {
             Thread {
                 run {

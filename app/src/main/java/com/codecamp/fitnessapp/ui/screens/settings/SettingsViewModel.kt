@@ -67,8 +67,8 @@ class SettingsViewModel
     }
 
     fun checkForHealthConnectData(age: String, height: String, weight: String): Boolean {
-        var tempHeight = height.toInt()
-        var tempWeight = weight.toInt()
+        var tempHeight = if (height == "") 0 else height.toInt()
+        var tempWeight = if (weight == "") 0 else weight.toInt()
 
         viewModelScope.launch {
             healthConnectRepository.loadUserData()

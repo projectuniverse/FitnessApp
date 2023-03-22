@@ -31,19 +31,19 @@ class HealthConnectRepositoryImpl @Inject constructor(
         for (record in exerciseRecords.records) {
             when(record.exerciseType) {
                 ExerciseSessionRecord.EXERCISE_TYPE_SQUAT -> {
-                    val newInsideWorkout = InsideWorkout(0, "Squats", 0, 0, 0, 0)
+                    val newInsideWorkout = InsideWorkout(0, "Squats", 0, record.startTime.epochSecond.toInt(), record.endTime.epochSecond.toInt(), 0)
                     squatExercises.value += newInsideWorkout
                 }
                 ExerciseSessionRecord.EXERCISE_TYPE_BIKING -> {
-                    val newOutsideWorkout = OutsideWorkout(0, "Biking", 0.0, 0, 0.0, 0, 0, 0)
+                    val newOutsideWorkout = OutsideWorkout(0, "Biking", 0.0, 0, 0.0, record.startTime.epochSecond.toInt(), record.endTime.epochSecond.toInt(), 0)
                     bikingExercises.value += newOutsideWorkout
                 }
                 ExerciseSessionRecord.EXERCISE_TYPE_HIKING -> {
-                    val newOutsideWorkout = OutsideWorkout(0, "Hiking", 0.0, 0, 0.0, 0, 0, 0)
+                    val newOutsideWorkout = OutsideWorkout(0, "Hiking", 0.0, 0, 0.0, record.startTime.epochSecond.toInt(), record.endTime.epochSecond.toInt(), 0)
                     hikingExercises.value += newOutsideWorkout
                 }
                 ExerciseSessionRecord.EXERCISE_TYPE_RUNNING -> {
-                    val newOutsideWorkout = OutsideWorkout(0, "Running", 0.0, 0, 0.0, 0, 0, 0)
+                    val newOutsideWorkout = OutsideWorkout(0, "Running", 0.0, 0, 0.0, record.startTime.epochSecond.toInt(), record.endTime.epochSecond.toInt(), 0)
                     runningExercises.value += newOutsideWorkout
                 }
                 else -> { }
