@@ -1,6 +1,8 @@
 package com.codecamp.fitnessapp.ui
 
 import android.annotation.SuppressLint
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -9,6 +11,7 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -22,7 +25,6 @@ import com.codecamp.fitnessapp.ui.screens.TopBar
 import com.codecamp.fitnessapp.ui.screens.dashboard.DashboardScreen
 import com.codecamp.fitnessapp.ui.screens.inside.InsideScreen
 import com.codecamp.fitnessapp.ui.screens.outside.OutsideScreen
-import com.codecamp.fitnessapp.ui.screens.result.AltitudeResult
 import com.codecamp.fitnessapp.ui.screens.result.ResultScreen
 import com.codecamp.fitnessapp.ui.screens.settings.SettingScreen
 
@@ -54,6 +56,25 @@ fun FitnessApp(
     } else {
         AppScreen.Dashboard.name
     }
+
+    val onBackPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+    if (onBackPressedDispatcher != null) {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (title.contains(AppScreen.Result.name)) {
+                    navController.navigate(AppScreen.Dashboard.name)
+                } else if (title.contains(AppScreen.Dashboard.name)) {
+
+                } else {
+                    navController.popBackStack()
+                }
+            }
+        }
+        onBackPressedDispatcher.addCallback(LocalLifecycleOwner.current, callback)
+        navController.setLifecycleOwner(LocalLifecycleOwner.current)
+        navController.setOnBackPressedDispatcher(onBackPressedDispatcher)
+    }
+
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -97,13 +118,14 @@ fun FitnessApp(
         ) {
             composable(route = AppScreen.Dashboard.name) {
                 title = navController.currentDestination?.route.toString()
-
                 DashboardScreen(
                     showOldInside = { oldInside ->
                         insideWorkout = oldInside
+                        workoutName = oldInside.name
                         navController.navigate(AppScreen.Result.name)},
                     showOldOutside = { oldOutside ->
                         outsideWorkout = oldOutside
+                        workoutName = oldOutside.name
                         navController.navigate(AppScreen.Result.name)}
                 )
             }
