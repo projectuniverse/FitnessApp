@@ -2,7 +2,10 @@ package com.codecamp.fitnessapp.healthconnect
 
 import android.app.Application
 import android.content.Context
+import androidx.core.app.ActivityCompat
 import androidx.health.connect.client.HealthConnectClient
+import androidx.health.connect.client.PermissionController
+import androidx.health.connect.client.permission.HealthPermission
 import androidx.health.connect.client.records.*
 import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.response.ReadRecordsResponse
@@ -14,6 +17,25 @@ class HealthConnect @Inject constructor(
     private val context: Context
 ) {
     var healthConnectClient: HealthConnectClient? = returnHealthConnectClient()
+    private var lastRequestedInstantExercise: Instant? = null
+    private val PERMISSIONS = setOf(
+        HealthPermission.getReadPermission(StepsRecord::class),
+        HealthPermission.getReadPermission(ActiveCaloriesBurnedRecord::class),
+        HealthPermission.getReadPermission(WeightRecord::class),
+        HealthPermission.getReadPermission(HeightRecord::class)
+    )
+
+    private suspend fun hasPermissions(): Boolean{
+        if (healthConnectClient == null) {
+            return false
+        }
+
+        if (healthConnectClient!!.permissionController.getGrantedPermissions().containsAll(PERMISSIONS)) {
+            return true
+        }
+
+        return false
+    }
 
     private fun returnHealthConnectClient(): HealthConnectClient? {
         if(!HealthConnectClient.isApiSupported()) {
@@ -25,18 +47,6 @@ class HealthConnect @Inject constructor(
         }
 
         return null
-    }
-
-    suspend fun getStepsRecords(startTime: Instant, endTime: Instant): ReadRecordsResponse<StepsRecord>? {
-        if (healthConnectClient == null) {
-            return null
-        }
-        return healthConnectClient!!.readRecords(
-            ReadRecordsRequest(
-                StepsRecord::class,
-                timeRangeFilter = TimeRangeFilter.between(startTime, endTime)
-            )
-        )
     }
 
     suspend fun getActiveCaloriesBurnedRecords(startTime: Instant, endTime: Instant): ReadRecordsResponse<ActiveCaloriesBurnedRecord>? {
@@ -62,20 +72,30 @@ class HealthConnect @Inject constructor(
          *      EXERCISE_TYPE_OTHER_WORKOUT = 0
          */
 
-        if (healthConnectClient == null) {
+        if (healthConnectClient == null || !hasPermissions()) {
             return null
         }
 
-        return healthConnectClient!!.readRecords(
-            ReadRecordsRequest(
-                ExerciseSessionRecord::class,
-                timeRangeFilter = TimeRangeFilter.before(Instant.now())
+        if (lastRequestedInstantExercise == null) {
+            lastRequestedInstantExercise = Instant.now()
+            return healthConnectClient!!.readRecords(
+                ReadRecordsRequest(
+                    ExerciseSessionRecord::class,
+                    timeRangeFilter = TimeRangeFilter.before(Instant.now())
+                )
             )
-        )
+        } else {
+            return healthConnectClient!!.readRecords(
+                ReadRecordsRequest(
+                    ExerciseSessionRecord::class,
+                    timeRangeFilter = TimeRangeFilter.Companion.after(lastRequestedInstantExercise!!)
+                )
+            )
+        }
     }
 
     suspend fun getHeightRecords(): ReadRecordsResponse<HeightRecord>? {
-        if (healthConnectClient == null) {
+        if (healthConnectClient == null || !hasPermissions()) {
             return null
         }
         return healthConnectClient!!.readRecords(
@@ -87,7 +107,7 @@ class HealthConnect @Inject constructor(
     }
 
     suspend fun getWeightRecords(): ReadRecordsResponse<WeightRecord>? {
-        if (healthConnectClient == null) {
+        if (healthConnectClient == null || !hasPermissions()) {
             return null
         }
         return healthConnectClient!!.readRecords(

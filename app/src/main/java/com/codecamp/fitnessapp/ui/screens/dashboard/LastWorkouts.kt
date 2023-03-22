@@ -19,8 +19,12 @@ fun LastWorkouts(
     showOldOutside: (outsideWorkout: OutsideWorkout) -> Unit,
     workoutViewModel: WorkoutViewModel = hiltViewModel()
 ) {
-    val oldOutsides = workoutViewModel.oldOutsideWorkouts.collectAsState(initial = mutableListOf()).value
-    val oldInsides = workoutViewModel.oldInsideWorkouts.collectAsState(initial = mutableListOf()).value
+    val oldOutsides = workoutViewModel.oldOutsideWorkouts.collectAsState(initial = mutableListOf()).value +
+                        workoutViewModel.healthConnectBiking.collectAsState().value +
+                        workoutViewModel.healthConnectHikes.collectAsState().value +
+                        workoutViewModel.healthConnectRuns.collectAsState().value
+    val oldInsides = workoutViewModel.oldInsideWorkouts.collectAsState(initial = mutableListOf()).value +
+                        workoutViewModel.healthConnectSquats.collectAsState().value
 
     val indexSequence: List<Int> = workoutViewModel.getSortedSequenz(oldInsides, oldOutsides)
 
