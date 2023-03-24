@@ -8,7 +8,6 @@ import com.codecamp.fitnessapp.data.track.DefaultTrackRepository
 import com.codecamp.fitnessapp.data.user.DefaultUserRepository
 import com.codecamp.fitnessapp.data.workout.DefaultWorkoutRepository
 import com.codecamp.fitnessapp.healthconnect.HealthConnectRepositoryInterface
-import com.codecamp.fitnessapp.location.LocationTrackerImplementation
 import com.codecamp.fitnessapp.location.LocationTrackerInterface
 import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.OutsideWorkout
@@ -22,9 +21,10 @@ import com.codecamp.fitnessapp.sensor.squat.SquatRepository
 import com.codecamp.fitnessapp.sensor.squat.SquatUtil
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
+import java.lang.Math.*
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class WorkoutViewModel
@@ -60,6 +60,10 @@ class WorkoutViewModel
     var workingOut = false
     var timerRunning = true
     var startTime = 0L
+
+    val distance: MutableLiveData<String> by lazy { MutableLiveData("0.00") }
+    val pace: MutableLiveData<String> by lazy { MutableLiveData("00:00") }
+    val paceKm: MutableLiveData<String> by lazy { MutableLiveData("00:00") }
 
     val repetitions: MutableLiveData<Int> by lazy { MutableLiveData(0) }
 
@@ -176,6 +180,8 @@ class WorkoutViewModel
     }
 
     fun updateTracks() {
+        if (!workingOut) return
+
         val currentTime = System.currentTimeMillis()
         var lastTrackTime: Long = 0
         if (trackList.isNotEmpty()) {
@@ -184,25 +190,108 @@ class WorkoutViewModel
         val difference = (currentTime - lastTrackTime)
 
         if (difference >= 10000) {
-            Log.d("asd", "ten")
             // create new Track and add it to track list
             viewModelScope.launch {
-                val location = locationTracker.getLocation()
+                val debugOn = true
 
-                if (location != null) {
-                    Log.d("asd", "got location")
+                if (!debugOn) {
+                    val location = locationTracker.getLocation()
+                    if (location != null) {
+                        var newTrack = Track(
+                            workoutId = 0,
+                            lat = location.latitude,
+                            long = location.longitude,
+                            altitude = location.altitude,
+                            timestamp = currentTime
+                        )
+                        trackList.add(newTrack)
+                        Log.d("trackgen", newTrack.toString())
+                    }
+                }
+                else {
+                    var lat = 51.3204621
+                    var long = 9.4886897
+                    var alt = 0.0
+
+                    if (trackList.isNotEmpty() && trackList.last() != null) {
+                        lat = trackList.last().lat + 0.0005 * (3 * Random.nextDouble() + 0.1)
+                        long = trackList.last().long + 0.0005 * (3 * Random.nextDouble() + 0.1)
+                    }
+
                     var newTrack = Track(
                         workoutId = 0,
-                        lat = location.latitude,
-                        long = location.longitude,
-                        altitude = location.altitude,
+                        lat = lat,
+                        long = long,
+                        altitude = alt,
                         timestamp = currentTime
                     )
                     trackList.add(newTrack)
-                    Log.d("asd", newTrack.toString())
+                    Log.d("trackgen", newTrack.toString())
                 }
-                else { Log.d("asd", "no location") }
+
+                updateRunningData()
             }
+        }
+    }
+
+    private fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
+        val r = 6371 // radius of Earth in kilometers
+        val latDistance = Math.toRadians(lat2 - lat1)
+        val lonDistance = Math.toRadians(lon2 - lon1)
+        val a = kotlin.math.sin(latDistance / 2) * kotlin.math.sin(latDistance / 2) +
+                kotlin.math.cos(toRadians(lat1)) * kotlin.math.cos(toRadians(lat2)) *
+                kotlin.math.sin(lonDistance / 2) * kotlin.math.sin(lonDistance / 2)
+        val c = 2 * kotlin.math.atan2(kotlin.math.sqrt(a), kotlin.math.sqrt(1 - a))
+        return r * c
+    }
+
+    private fun formatTime(doubleMinutes: Double): String {
+        val minutes = doubleMinutes.toInt()
+        val seconds = ((doubleMinutes - minutes) * 60).toInt()
+        return String.format("%02d:%02d", minutes, seconds)
+    }
+
+    private fun updateRunningData() {
+        if (trackList.isEmpty()) return
+
+        var dis = 0.0
+        var _paceKm = 0.0
+        var lastTrack: Track? = null
+        var elapsedTime = 0.0
+
+        for (track in trackList) {
+            if (lastTrack != null) {
+                dis += calculateDistance(lastTrack.lat, lastTrack.long, track.lat, track.long)
+            }
+            lastTrack = track
+        }
+
+        if (trackList.size > 1) {
+            elapsedTime = (trackList.last().timestamp.toDouble() - startTime) / (1000 * 60)
+        }
+
+        distance.postValue(String.format("%.2f", dis))
+        pace.postValue(formatTime(elapsedTime / dis))
+
+        if (dis > 1) {
+            lastTrack = null
+            var km = 0.0
+            for (i in trackList.size - 1 downTo 0) {
+                if (lastTrack != null) {
+                    km += calculateDistance(lastTrack.lat, lastTrack.long, trackList[i].lat, trackList[i].long)
+
+                    if (km > 1) {
+                        var t = (trackList.last().timestamp.toDouble() - trackList[i].timestamp) / (1000 * 60)
+                        _paceKm = t / km
+                        break
+                    }
+                }
+                lastTrack = trackList[i]
+            }
+            paceKm.postValue(formatTime(_paceKm))
+        }
+        else {
+            paceKm.postValue(formatTime(elapsedTime / dis))
         }
     }
 
