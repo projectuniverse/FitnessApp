@@ -27,15 +27,16 @@ fun OutsideScreen(
 ) {
     val workoutStats = stringArrayResource(R.array.WorkoutStats)
     val timerDefaultText = stringResource(R.string.timer)
+    val distanceDefaultText = stringResource(R.string.distance)
+    val paceDefaultText = stringResource(R.string.pace)
+    val paceKmDefaultText = stringResource(R.string.paceKm)
 
     var workoutActive by remember { mutableStateOf(false) }
     var buttontext by remember { mutableStateOf(workoutStats[7]) }
     var time by remember { mutableStateOf(timerDefaultText) }
-
-    workoutViewModel.timePassed.observe(LocalLifecycleOwner.current) {
-        time = it
-        workoutViewModel.updateRepetitions(workoutName)
-    }
+    var distance by remember { mutableStateOf(distanceDefaultText) }
+    var pace by remember { mutableStateOf(paceDefaultText) }
+    var paceKm by remember { mutableStateOf(paceKmDefaultText) }
 
     val latlngList = workoutViewModel.getLatLngList()
 
@@ -44,6 +45,10 @@ fun OutsideScreen(
         workoutViewModel.updateTracks()
     }
 
+    workoutViewModel.distance.observe(LocalLifecycleOwner.current) { distance = it }
+    workoutViewModel.pace.observe(LocalLifecycleOwner.current) { pace = it }
+    workoutViewModel.paceKm.observe(LocalLifecycleOwner.current) { paceKm = it }
+
     Column(
         Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -51,7 +56,7 @@ fun OutsideScreen(
 
         Text(text = workoutName, fontSize = 40.sp)
 
-        WorkoutStats(time = time, distance = "0.00", paceKm = "00:00", pace = "00:00")
+        WorkoutStats(time = time, distance = distance, paceKm = paceKm, pace = pace)
 
         Spacer(modifier = Modifier.height(10.dp))
 
