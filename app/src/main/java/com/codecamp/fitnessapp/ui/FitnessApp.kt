@@ -121,10 +121,12 @@ fun FitnessApp(
                 DashboardScreen(
                     showOldInside = { oldInside ->
                         insideWorkout = oldInside
+                        outsideWorkout = null
                         workoutName = oldInside.name
                         navController.navigate(AppScreen.Result.name)},
                     showOldOutside = { oldOutside ->
                         outsideWorkout = oldOutside
+                        insideWorkout = null
                         workoutName = oldOutside.name
                         navController.navigate(AppScreen.Result.name)}
                 )

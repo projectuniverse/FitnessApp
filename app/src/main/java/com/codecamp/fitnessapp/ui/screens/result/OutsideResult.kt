@@ -3,18 +3,28 @@ package com.codecamp.fitnessapp.ui.screens.result
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.OutsideWorkout
 
 @Composable
-fun OutsideResult(outsideWorkout: OutsideWorkout) {
+fun OutsideResult(
+    outsideWorkout: OutsideWorkout,
+    resultViewModel: ResultViewModel = hiltViewModel()
+) {
     val workoutStats = stringArrayResource(R.array.WorkoutStats)
-    val time = stringResource(R.string.timer) //unitConverter.millisecondsToTimer((insideWorkout.endTime-insideWorkout.startTime).toLong())
+    val time = stringResource(R.string.timer)
+
+    val tracklist = resultViewModel.tracklist.collectAsState(initial = mutableListOf()).value
+    val usedTracks = resultViewModel.getUsedTracks(tracklist, outsideWorkout.id)
+    val latlngList = resultViewModel.getLatlngList(usedTracks)
+    val altitudeList = resultViewModel.getAltitudeList(usedTracks)
 
     Column(
         modifier = Modifier
@@ -37,10 +47,6 @@ fun OutsideResult(outsideWorkout: OutsideWorkout) {
 
                 ResultCard(name = workoutStats[3], value = outsideWorkout.pace.toString())
 
-                Spacer(modifier = Modifier.height(10.dp))
-
-                AltitudeResult()
-
                 if(outsideWorkout.name != stringArrayResource(R.array.outsideActivities)[2]) {
                     Spacer(modifier = Modifier.height(10.dp))
 
@@ -53,7 +59,11 @@ fun OutsideResult(outsideWorkout: OutsideWorkout) {
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                //TODO KARTE
+                AltitudeResult(altitudeList)
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                MapResult(latlngList)
 
             }
         }
