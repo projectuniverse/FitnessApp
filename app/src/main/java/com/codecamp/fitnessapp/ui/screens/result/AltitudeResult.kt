@@ -39,26 +39,25 @@ import kotlin.math.ceil
  */
 @Composable
 fun AltitudeResult(
-    //values: List<Pair<Int, Float>>
+    values: List<Pair<Int, Float>>
 ) {
     Card(
-        // TODO might need to adjust the fraction
-        modifier = Modifier.fillMaxWidth(1f),
+        modifier = Modifier.fillMaxWidth(0.9f),
         shape = MaterialTheme.shapes.medium,
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White,
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
             contentColor = MaterialTheme.colorScheme.onSurface,
         )
     ) {
-        /*
-         * TODO: Sample data set. Replace with the data set given in constructor.
-         */
-        val values: MutableList<Pair<Int, Float>> = mutableListOf()
-        val start = 1677633370
-        for (i in 0 until 180) {
-            values.add(start + i*10 to (167..300).random().toFloat())
-        }
+//        /*
+//         * TODO: Sample data set. Replace with the data set given in constructor.
+//         */
+//        val values: MutableList<Pair<Int, Float>> = mutableListOf()
+//        val start = 1677633370
+//        for (i in 0 until 180) {
+//            values.add(start + i*10 to (167..300).random().toFloat())
+//        }
 
         class Entry(
             val time: Int,
