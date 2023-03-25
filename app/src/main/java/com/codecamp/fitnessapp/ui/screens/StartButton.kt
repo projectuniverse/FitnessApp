@@ -13,6 +13,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.codecamp.fitnessapp.R
 
+/*
+* The floatingActionButton that starts the workout chosen in the the dropdown menu
+* */
 @Composable
 fun StartButton(
     title: String,

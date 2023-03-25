@@ -57,6 +57,9 @@ fun FitnessApp(
         AppScreen.Dashboard.name
     }
 
+    /*
+    * Costum onBackPressed function, that overrides the standard onBackPressed
+    * */
     val onBackPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     if (onBackPressedDispatcher != null) {
         val callback = object : OnBackPressedCallback(true) {
@@ -75,7 +78,12 @@ fun FitnessApp(
         navController.setOnBackPressedDispatcher(onBackPressedDispatcher)
     }
 
-
+    /*
+    * In this Scaffold sits the whole UI of the App
+    * In every screen is a topbar and only in the dashboard a floatingActionButton
+    * The navigation is implemented with a NavHost and NavController
+    * The title of the topbar switches when entering a screen
+    * */
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {

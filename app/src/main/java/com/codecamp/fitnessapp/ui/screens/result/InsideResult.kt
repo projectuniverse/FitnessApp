@@ -19,6 +19,10 @@ fun InsideResult(
     val workoutStats = stringArrayResource(R.array.WorkoutStats)
     val time = workoutViewModel.getElapsedTime(insideWorkout.endTime, insideWorkout.startTime)
 
+    /*
+    * All information from the workout is displayed.
+    * For every trivial information a custom result card is used.
+    * */
     Column(
         modifier = Modifier
             .fillMaxWidth(0.95f)

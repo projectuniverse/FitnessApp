@@ -13,6 +13,10 @@ import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.OutsideWorkout
 import com.codecamp.fitnessapp.ui.viewmodel.WorkoutViewModel
 
+/*
+* The last workouts are diplayed in order when they were done,
+* if no workouts are done, a warning is shown instead
+* */
 @Composable
 fun LastWorkouts(
     showOldInside: (insideWorkout: InsideWorkout) -> Unit,

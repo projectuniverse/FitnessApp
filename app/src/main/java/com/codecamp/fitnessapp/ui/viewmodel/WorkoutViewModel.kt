@@ -108,6 +108,9 @@ class WorkoutViewModel
             }
     }
 
+    /*
+    * returns the sorted sequence in which order the old Workouts need to be displayed
+    * */
     fun getSortedSequenz(oldInsides: List<InsideWorkout>, oldOutsides: List<OutsideWorkout>): List<Int> {
         val sequence = mutableListOf<Int>()
 
@@ -123,6 +126,9 @@ class WorkoutViewModel
         return sequence
     }
 
+    /*
+    * starts and stops the timer
+    * */
     fun switchWorkingOut() {
         workingOut = !workingOut
         if(workingOut) {
@@ -132,6 +138,9 @@ class WorkoutViewModel
         }
     }
 
+    /*
+    * calculates the burned calories of the inside workouts
+    * */
     fun calculateKCalInside(workoutName: String, repetitions: Int, user: User): Int {
         val kCal:Double = when (workoutName) {
             "Squats" -> {repetitions/25.0 * user.weight * 0.0175 * 5.5} // oder 6 * user.weight * timeInHours
@@ -141,6 +150,9 @@ class WorkoutViewModel
         return kCal.toInt()
     }
 
+    /*
+    * calculates the burned calories of the outside workouts
+    * */
     fun calculateKCalOutside(workoutName: String, distance: Double, timeInHours: Int, user: User): Int {
         val kCal:Double = when (workoutName) {
             "Running" -> {6.5 * user.weight * timeInHours}
@@ -150,12 +162,18 @@ class WorkoutViewModel
         return kCal.toInt()
     }
 
+    /*
+    * saves an inside workout in the repository
+    * */
     fun saveWorkout(result: InsideWorkout) {
         viewModelScope.launch {
             workoutRepository.insertInsideWorkout(result)
         }
     }
 
+    /*
+    * calculates from a given start and end time the format: hh:mm:ss
+    * */
     fun getElapsedTime(endTime: Int, startTime: Int): String {
         val elapsedSeconds = endTime - startTime
         val elapsedMinutes = elapsedSeconds / 60
@@ -295,11 +313,15 @@ class WorkoutViewModel
         }
     }
 
+
     init {
         viewModelScope.launch {
             healthConnectRepository.loadExercises()
         }
         viewModelScope.launch {
+            /*
+            * starts the timer thread
+            * */
             Thread {
                 run {
                     while (timerRunning) {

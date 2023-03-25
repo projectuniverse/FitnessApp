@@ -16,6 +16,10 @@ import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.ui.viewmodel.WorkoutViewModel
 
+
+/*
+* By clicking on a card you get to the resultscreen of the chosen workout
+* */
 @Composable
 fun OldInsideWorkout(
     insideWorkout: InsideWorkout,

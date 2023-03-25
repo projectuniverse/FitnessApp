@@ -26,6 +26,10 @@ fun OutsideResult(
     val latlngList = resultViewModel.getLatlngList(usedTracks)
     val altitudeList = resultViewModel.getAltitudeList(usedTracks)
 
+    /*
+    * All information from the workout is displayed.
+    * For every trivial information a custom result card is used.
+    * */
     Column(
         modifier = Modifier
             .fillMaxWidth(0.95f)
@@ -59,10 +63,16 @@ fun OutsideResult(
 
                 Spacer(modifier = Modifier.height(10.dp))
 
+                /*
+                * A graph that shows the altitude changes
+                * */
                 AltitudeResult(altitudeList)
 
                 Spacer(modifier = Modifier.height(10.dp))
 
+                /*
+                * A map that shows the route the user travelled
+                * */
                 MapResult(latlngList)
 
             }

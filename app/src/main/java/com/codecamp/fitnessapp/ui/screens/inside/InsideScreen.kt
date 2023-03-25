@@ -35,6 +35,11 @@ fun InsideScreen(
     var repetitions by remember { mutableStateOf(0) }
     var startTime by remember { mutableStateOf(0) }
 
+
+    /*
+    * If the timer or the number repetition changes the timer, repetitions and burned calories are
+    * calculated and updated
+    * */
     workoutViewModel.timePassed.observe(LocalLifecycleOwner.current) {
         time = it
         workoutViewModel.updateRepetitions(workoutName)
@@ -45,6 +50,9 @@ fun InsideScreen(
         kCal = workoutViewModel.calculateKCalInside(workoutName, repetitions, currentUser.value)
     }
 
+    /*
+    * The current workout stats are displayed
+    * */
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -61,6 +69,9 @@ fun InsideScreen(
                 .fillMaxWidth()
                 .weight(1f, false)
         ) {
+            /*
+            * This button allows the user to start, stop and save the completed Workout
+            * */
             Button(
                 onClick = {
                     if(workoutActive) {
