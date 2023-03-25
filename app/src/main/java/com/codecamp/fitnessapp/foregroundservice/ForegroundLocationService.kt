@@ -1,14 +1,19 @@
 package com.codecamp.fitnessapp.foregroundservice
 
+import android.annotation.SuppressLint
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.location.LocationTrackerImplementation
 import com.codecamp.fitnessapp.location.LocationTrackerInterface
+import com.google.android.gms.location.ActivityRecognition
+import com.google.android.gms.location.ActivityRecognitionClient
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,11 +22,13 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import javax.inject.Inject
 
 class ForegroundLocationService: Service() {
 
     private lateinit var locationTracker: LocationTrackerInterface
+    private lateinit var client: ActivityRecognitionClient
+    private lateinit var receiver: ActivityTransitionReceiver
+
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     override fun onCreate() {
@@ -30,10 +37,36 @@ class ForegroundLocationService: Service() {
             applicationContext,
             LocationServices.getFusedLocationProviderClient(applicationContext)
         )
+        client = ActivityRecognition.getClient(applicationContext)
+        receiver = ActivityTransitionReceiver()
+/*        LocalBroadcastManager.getInstance(applicationContext).registerReceiver(
+            receiver, IntentFilter(ActivityTransitionUtil.RECEIVER_ACTION)
+        )*/
     }
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun requestUpdates() {
+        if (ActivityTransitionUtil.hasPermission(applicationContext)) {
+            client.requestActivityTransitionUpdates(ActivityTransitionUtil.request, getPendingIntent()).addOnSuccessListener {
+                Log.d("ACTIVITY_TRANSITION", "REQUEST SUCCESSFUL")
+            }.addOnFailureListener {
+                Log.d("ACTIVITY_TRANSITION", "REQUEST FAILURE")
+            }
+        }
+    }
+
+    private fun getPendingIntent(): PendingIntent {
+        val newIntent = Intent(applicationContext, ActivityTransitionReceiver::class.java)
+        return PendingIntent.getBroadcast(
+            applicationContext,
+            0,
+            newIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -49,11 +82,12 @@ class ForegroundLocationService: Service() {
         val notification = NotificationCompat.Builder(this, "location")
             .setContentTitle("Tracking location...")
             .setContentText("Location: null")
-            .setSmallIcon(R.drawable.ic_launcher_background)
+            .setSmallIcon(R.drawable.fitnessappicon)
             .setOngoing(true)
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
+        //requestUpdates()
         locationTracker
             .getLocationFlow(10000L)
             .catch { e ->
@@ -62,7 +96,7 @@ class ForegroundLocationService: Service() {
             .onEach { location ->
                 val lat = location.latitude
                 val lon = location.longitude
-                val updatedNotification = notification.setContentText("Location: $lat, $lon")
+                val updatedNotification = notification.setContentText("Location: $lat, $lon || ${ActivityTransitionUtil.activityNotificationText.value}")
                 notificationManager.notify(1, updatedNotification.build())
             }
             .launchIn(serviceScope)
