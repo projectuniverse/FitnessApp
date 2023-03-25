@@ -19,6 +19,10 @@ import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.OutsideWorkout
 import com.codecamp.fitnessapp.ui.viewmodel.WorkoutViewModel
 
+
+/*
+* By clicking on a card you get to the resultscreen of the chosen workout
+* */
 @Composable
 fun OldOutsideWorkout(
     outsideWorkout: OutsideWorkout,

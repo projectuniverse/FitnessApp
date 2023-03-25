@@ -10,6 +10,9 @@ import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.OutsideWorkout
 import com.codecamp.fitnessapp.ui.screens.dashboard.weather.WeatherLabel
 
+/*
+* In the Dashboardscreen the weather and last workouts are displayed
+* */
 @Composable
 fun DashboardScreen(
     showOldInside: (insideWorkout: InsideWorkout) -> Unit,

@@ -19,6 +19,9 @@ fun ResultScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        /*
+        * In dependence of which workout is done, the outside or inside workout are displayed
+        * */
         if (outsideWorkout != null) {
             OutsideResult(outsideWorkout)
         } else if (insideWorkout != null) {

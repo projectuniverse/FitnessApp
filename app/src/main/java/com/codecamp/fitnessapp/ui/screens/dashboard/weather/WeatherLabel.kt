@@ -17,6 +17,12 @@ import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 
+/*
+* The current weather and a forecast is displayed. If no location permissions are granted,
+* a button is shown to give the needed permissions.
+* If no weather is able to retrieve from the API
+* or loaded from the repository, a warning is shown instead.
+* */
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun WeatherLabel(
