@@ -1,5 +1,6 @@
 package com.codecamp.fitnessapp
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,6 +11,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.PermissionController
 import androidx.health.connect.client.permission.HealthPermission
@@ -25,17 +29,22 @@ import com.codecamp.fitnessapp.ui.theme.FitnessAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val healthConnectViewModel: HealthConnectViewModel by viewModels()
+    private val Context.dataStore by preferencesDataStore("FitnessSettings")
     //private val hcUsage = healthConnectViewModel.hcUsage
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        var firstInit: Boolean? = null
 
         // start Location tracking
         Intent(applicationContext, ForegroundLocationService::class.java).apply {
@@ -44,16 +53,20 @@ class MainActivity : ComponentActivity() {
         }
 
         GlobalScope.launch {
+            firstInit = getFirstInit()
             if (healthConnectViewModel.healthConnect.healthConnectClient != null) {
                 checkPermissionsAndRun(healthConnectViewModel.healthConnect.healthConnectClient!!)
             }
         }
 
+        // Show Logo until data has arrived
+        while (firstInit == null) {}
+
         setContent {
             FitnessAppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colorScheme.surface) {
-                    FitnessApp()
+                    FitnessApp(firstInit = firstInit!!)
 
                     /*Button(onClick = {
                         Intent(applicationContext, ForegroundLocationService::class.java).apply {
@@ -73,6 +86,20 @@ class MainActivity : ComponentActivity() {
         }
 
          */
+    }
+
+    private suspend fun getFirstInit(): Boolean {
+        val isFirstTimeLaunchKey = booleanPreferencesKey("is_first_time_launch4")
+        val isFirstTimeLaunchFlow: Flow<Boolean> = dataStore.data
+            .map { preferences -> preferences[isFirstTimeLaunchKey] ?: true }
+            .distinctUntilChanged()
+
+        return if (isFirstTimeLaunchFlow.first()) {
+            dataStore.edit { preferences ->
+                preferences[isFirstTimeLaunchKey] = false
+            }
+            true
+        } else false
     }
 
     private val PERMISSIONS = setOf(

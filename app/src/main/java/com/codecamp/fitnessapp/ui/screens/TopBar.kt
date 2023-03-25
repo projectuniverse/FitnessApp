@@ -18,7 +18,8 @@ import com.codecamp.fitnessapp.R
 fun TopBar(
     title: String,
     showSettings: () -> Unit,
-    navigateBack: () -> Unit
+    navigateBack: () -> Unit,
+    firstInit: Boolean
 ) {
     val dashboard = stringResource(R.string.Dashboard)
     CenterAlignedTopAppBar(
@@ -30,7 +31,7 @@ fun TopBar(
             )
         },
         navigationIcon = {
-            if (title != dashboard) {
+            if (title != dashboard && !firstInit) {
                 IconButton(
                     modifier = Modifier.width(75.dp),
                     onClick = { navigateBack() }
