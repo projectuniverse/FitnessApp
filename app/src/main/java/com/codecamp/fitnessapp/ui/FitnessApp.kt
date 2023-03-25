@@ -13,13 +13,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.codecamp.fitnessapp.FitnessAppViewModel
 import com.codecamp.fitnessapp.R
+import com.codecamp.fitnessapp.data.user.DefaultUserRepository
 import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.OutsideWorkout
+import com.codecamp.fitnessapp.model.User
 import com.codecamp.fitnessapp.ui.screens.StartButton
 import com.codecamp.fitnessapp.ui.screens.TopBar
 import com.codecamp.fitnessapp.ui.screens.dashboard.DashboardScreen
@@ -27,6 +31,8 @@ import com.codecamp.fitnessapp.ui.screens.inside.InsideScreen
 import com.codecamp.fitnessapp.ui.screens.outside.OutsideScreen
 import com.codecamp.fitnessapp.ui.screens.result.ResultScreen
 import com.codecamp.fitnessapp.ui.screens.settings.SettingScreen
+import com.codecamp.fitnessapp.ui.screens.settings.SettingsViewModel
+import javax.inject.Inject
 
 enum class AppScreen(@StringRes val title: Int) {
     Dashboard(title = R.string.Dashboard),
@@ -41,21 +47,24 @@ enum class AppScreen(@StringRes val title: Int) {
 @Composable
 fun FitnessApp(
     navController: NavHostController = rememberNavController(),
+    fitnessAppViewModel: FitnessAppViewModel = hiltViewModel(),
+    firstInit: Boolean
 ) {
-    val appName = stringResource(R.string.Dashboard)
-    var title by remember { mutableStateOf(appName) }
-    var workoutName = ""
-    val firstInit = false
-    var insideWorkout: InsideWorkout? = null
-    var outsideWorkout: OutsideWorkout? = null
-
-    // TODO Needs to be updated/changed.
-    // TODO Use: https://developer.android.com/topic/libraries/architecture/datastore
-    val firstscreen = if(firstInit) {
+    val user = fitnessAppViewModel.user.collectAsState(initial = null)
+    val _firstInit = if (user.value != null) {
+        false
+    } else {
+        firstInit
+    }
+    val firstScreen = if(_firstInit) {
         AppScreen.Settings.name
     } else {
         AppScreen.Dashboard.name
     }
+    var title by remember { mutableStateOf(firstScreen) }
+    var workoutName = ""
+    var insideWorkout: InsideWorkout? = null
+    var outsideWorkout: OutsideWorkout? = null
 
     /*
     * Costum onBackPressed function, that overrides the standard onBackPressed
@@ -66,9 +75,7 @@ fun FitnessApp(
             override fun handleOnBackPressed() {
                 if (title.contains(AppScreen.Result.name)) {
                     navController.navigate(AppScreen.Dashboard.name)
-                } else if (title.contains(AppScreen.Dashboard.name)) {
-
-                } else {
+                } else if (title != AppScreen.Dashboard.name) {
                     navController.popBackStack()
                 }
             }
@@ -89,17 +96,18 @@ fun FitnessApp(
         topBar = {
             TopBar(
                 title,
-            showSettings = {
-                navController.navigate(AppScreen.Settings.name)
-                title = AppScreen.Settings.name
-            },
+                showSettings = {
+                    navController.navigate(AppScreen.Settings.name)
+                    title = AppScreen.Settings.name
+                               },
                 navigateBack = {
                     if (title.contains(AppScreen.Result.name)) {
                         navController.navigate(AppScreen.Dashboard.name)
                     } else {
                         navController.popBackStack()
                     }
-                }
+                },
+                _firstInit
             )
         },
         floatingActionButton = {
@@ -122,7 +130,7 @@ fun FitnessApp(
             // See: https://www.youtube.com/watch?v=hQJpd78RUVg
             modifier = Modifier.padding(top = innerPadding.calculateTopPadding()),
             navController = navController,
-            startDestination = firstscreen
+            startDestination = firstScreen
         ) {
             composable(route = AppScreen.Dashboard.name) {
                 title = navController.currentDestination?.route.toString()

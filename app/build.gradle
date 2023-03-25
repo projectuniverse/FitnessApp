@@ -5,7 +5,6 @@ plugins {
     id 'com.google.devtools.ksp' version "1.8.10-1.0.9"
     id 'dagger.hilt.android.plugin'
     id 'kotlin-kapt'
-    //id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -52,6 +51,8 @@ android {
 }
 
 dependencies {
+    // Viewmodel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
     // Retrofit with Kotlin serialization Converter
@@ -60,8 +61,6 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0"
     // For icons
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
-    // Viewmodel
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
     // Room
     implementation "androidx.room:room-runtime:$room_version"
     ksp "androidx.room:room-compiler:$room_version"
@@ -89,6 +88,8 @@ dependencies {
     implementation "com.patrykandpatrick.vico:core:1.6.4"
     implementation "com.patrykandpatrick.vico:compose:1.6.4"
     implementation "com.patrykandpatrick.vico:compose-m3:1.6.4"
+    // Data Store
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
 
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
     implementation 'androidx.activity:activity-compose:1.6.1'
