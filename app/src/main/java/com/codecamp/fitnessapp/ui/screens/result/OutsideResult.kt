@@ -40,15 +40,15 @@ fun OutsideResult(
             items(count = 1) {
                 Spacer(modifier = Modifier.height(20.dp))
 
-                ResultCard(name = workoutStats[1], value = outsideWorkout.distance)
+                ResultCard(name = workoutStats[1], value = outsideWorkout.distance.toString() + "km")
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                ResultCard(name = workoutStats[0], value = outsideWorkout.time)
+                ResultCard(name = workoutStats[0], value = resultViewModel.getElapsedTime(outsideWorkout.endTime, outsideWorkout.startTime))
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                ResultCard(name = workoutStats[3], value = outsideWorkout.pace)
+                ResultCard(name = workoutStats[3], value = resultViewModel.formatTime(outsideWorkout.pace) + "min/km")
 
                 if(outsideWorkout.name != stringArrayResource(R.array.outsideActivities)[2]) {
                     Spacer(modifier = Modifier.height(10.dp))

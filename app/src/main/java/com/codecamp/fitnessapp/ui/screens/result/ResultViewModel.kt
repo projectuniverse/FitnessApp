@@ -40,4 +40,25 @@ class ResultViewModel
         }
         return usedTracks
     }
+
+    fun formatTime(doubleMinutes: Double): String {
+        val minutes = doubleMinutes.toInt()
+        val seconds = ((doubleMinutes - minutes) * 60).toInt()
+        return String.format("%02d:%02d", minutes, seconds)
+    }
+
+    fun getElapsedTime(endTime: Int, startTime: Int): String {
+        val elapsedSeconds = endTime - startTime
+        val elapsedMinutes = elapsedSeconds / 60
+        val elapsedHours = elapsedMinutes / 60
+
+        val secondsDisplay = if(elapsedSeconds % 60 < 10) { "0" + elapsedSeconds % 60 }
+        else { elapsedSeconds % 60 }
+        val minutsDisplay = if(elapsedMinutes % 60 < 10) { "0" + elapsedMinutes % 60 }
+        else { elapsedMinutes % 60 }
+        val hoursDisplay = if(elapsedHours < 10) { "0" + elapsedHours % 60 }
+        else { ""+elapsedHours }
+
+        return "$hoursDisplay:$minutsDisplay:$secondsDisplay"
+    }
 }

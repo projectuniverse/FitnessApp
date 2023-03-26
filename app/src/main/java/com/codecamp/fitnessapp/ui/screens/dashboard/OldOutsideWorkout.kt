@@ -67,7 +67,7 @@ fun OldOutsideWorkout(
             }
 
             val workoutDetails = workoutInfos[0] + " " + outsideWorkout.distance + workoutInfos[3] + "\n" +
-                    workoutInfos[2] + " " + outsideWorkout.time
+                    workoutInfos[2] + " " + workoutViewModel.getElapsedTime(outsideWorkout.endTime, outsideWorkout.startTime)
 
             Column(
                 modifier = Modifier.fillMaxWidth(),
