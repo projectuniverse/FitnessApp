@@ -39,9 +39,6 @@ class ForegroundLocationService: Service() {
         )
         client = ActivityRecognition.getClient(applicationContext)
         receiver = ActivityTransitionReceiver()
-/*        LocalBroadcastManager.getInstance(applicationContext).registerReceiver(
-            receiver, IntentFilter(ActivityTransitionUtil.RECEIVER_ACTION)
-        )*/
     }
 
     override fun onBind(intent: Intent?): IBinder? {

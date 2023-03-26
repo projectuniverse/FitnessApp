@@ -14,12 +14,14 @@ import com.google.android.gms.location.ActivityRecognition
 import com.google.android.gms.location.ActivityTransition
 import com.google.android.gms.location.ActivityTransitionRequest
 import com.google.android.gms.location.DetectedActivity
+import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 object ActivityTransitionUtil {
 
     var activityNotificationText = mutableStateOf("Null - Null")
-    val RECEIVER_ACTION = BuildConfig.APPLICATION_ID + ".ActivityTransitionReceiver"
+
+    var currentUserActivity = MutableStateFlow(DetectedActivity.STILL)
 
     private val transitions = listOf(
         ActivityTransition.Builder()
