@@ -50,6 +50,7 @@
         <item>Steps</item>
         <item>Start Workout</item>
         <item>Stop Workout</item>
+        <item>Result Screen</item>
     </string-array>
 
     <string name="timer">"00:00:00"</string>

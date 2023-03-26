@@ -87,7 +87,7 @@ fun InsideScreen(
 
                         workoutViewModel.switchWorkingOut()
                         workoutViewModel.stopListening()
-                        workoutViewModel.saveWorkout(result)
+                        workoutViewModel.saveInsideWorkout(result)
                         stopWorkout(result)
                     } else {
                         buttontext = workoutStats[8]
