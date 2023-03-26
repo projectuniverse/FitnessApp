@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
  */
 interface WorkoutRepository {
     suspend fun insertInsideWorkout(insideWorkout: InsideWorkout)
-    suspend fun insertOutsideWorkout(outsideWorkout: OutsideWorkout)
+    suspend fun insertOutsideWorkout(outsideWorkout: OutsideWorkout) : Int
 }
 
 @kotlinx.serialization.ExperimentalSerializationApi
@@ -32,5 +32,7 @@ class DefaultWorkoutRepository(
     val outsideWorkouts = outsideWorkoutDao.getAllOutsideWorkouts()
 
     override suspend fun insertInsideWorkout(insideWorkout: InsideWorkout) = insideWorkoutDao.insert(insideWorkout)
-    override suspend fun insertOutsideWorkout(outsideWorkout: OutsideWorkout) = outsideWorkoutDao.insert(outsideWorkout)
+    override suspend fun insertOutsideWorkout(outsideWorkout: OutsideWorkout) : Int {
+        return outsideWorkoutDao.insert(outsideWorkout).toInt()
+    }
 }
