@@ -1,8 +1,10 @@
 package com.codecamp.fitnessapp.ui.screens.dashboard
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.codecamp.fitnessapp.data.weather.DefaultWeatherRepository
+import com.codecamp.fitnessapp.location.LocationTrackerInterface
 import com.codecamp.fitnessapp.model.Weather
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -12,11 +14,20 @@ import javax.inject.Inject
 class WeatherViewModel
 @Inject constructor(
     private val weatherRepository: DefaultWeatherRepository,
+    private val locationTracker: LocationTrackerInterface
 ) : ViewModel() {
     val weather = weatherRepository.weather
     init {
+        fetchWeather()
+    }
+
+    fun fetchWeather() {
         viewModelScope.launch {
-            weatherRepository.fetchWeather(51.31,9.48)
+            val location = locationTracker.getLocation()
+            location?.let {
+                weatherRepository.fetchWeather(location.latitude,location.longitude)
+                Log.d("WEATHER_DATA", location.latitude.toString() + " ** " + location.longitude.toString())
+            }
         }
     }
 

@@ -12,10 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.codecamp.fitnessapp.ui.screens.dashboard.WeatherInfos
 import com.codecamp.fitnessapp.ui.screens.dashboard.WeatherViewModel
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionState
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.*
 
 /*
 * The current weather and a forecast is displayed. If no location permissions are granted,
@@ -30,11 +27,15 @@ fun WeatherLabel(
 ) {
     val weather = viewModel.weather.collectAsState(initial = null).value
 
-    val locationPermission = rememberPermissionState(
-        permission = Manifest.permission.ACCESS_COARSE_LOCATION
+    val locationPermission = rememberMultiplePermissionsState(
+        permissions = listOf(Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION),
+        onPermissionsResult = {
+            viewModel.fetchWeather()
+        }
     )
 
-    if (locationPermission.status.isGranted) {
+    if (locationPermission.allPermissionsGranted) {
         Column(
             modifier = Modifier.fillMaxWidth(0.7f),
             verticalArrangement = Arrangement.Center,
@@ -55,7 +56,7 @@ fun WeatherLabel(
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun LocationPermission(permissionState: PermissionState) {
+fun LocationPermission(permissionState: MultiplePermissionsState) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -71,7 +72,7 @@ fun LocationPermission(permissionState: PermissionState) {
         }
         Spacer(modifier = Modifier.padding(20.dp))
         Button(onClick = {
-            permissionState.launchPermissionRequest()
+            permissionState.launchMultiplePermissionRequest()
         }) {
             Text(text = "Yes")
         }
