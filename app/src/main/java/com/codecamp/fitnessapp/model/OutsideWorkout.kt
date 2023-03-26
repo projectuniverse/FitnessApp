@@ -16,6 +16,7 @@ data class OutsideWorkout(
     val steps: Int,
     val distance: Double,
     val kcal: Int,
+    // UTC time
     val startTime: Int,
     val endTime: Int
 )
