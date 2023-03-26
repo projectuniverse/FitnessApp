@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface OutsideWorkoutDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(outsideWorkout: OutsideWorkout)
+    suspend fun insert(outsideWorkout: OutsideWorkout): Long
 
     @Query("SELECT * FROM outsideWorkout WHERE id = :id")
     fun getOutsideWorkout(id: Int): Flow<OutsideWorkout>
