@@ -35,15 +35,15 @@ class HealthConnectRepositoryImpl @Inject constructor(
                     squatExercises.value += newInsideWorkout
                 }
                 ExerciseSessionRecord.EXERCISE_TYPE_BIKING -> {
-                    val newOutsideWorkout = OutsideWorkout(0, "Biking", 0.0, 0, 0.0, record.startTime.epochSecond.toInt(), record.endTime.epochSecond.toInt(), 0)
+                    val newOutsideWorkout = OutsideWorkout(0, "Biking", "00:00", 0, "0.00", "00:00:00", 0, record.endTime.epochSecond.toInt(), 0)
                     bikingExercises.value += newOutsideWorkout
                 }
                 ExerciseSessionRecord.EXERCISE_TYPE_HIKING -> {
-                    val newOutsideWorkout = OutsideWorkout(0, "Hiking", 0.0, 0, 0.0, record.startTime.epochSecond.toInt(), record.endTime.epochSecond.toInt(), 0)
+                    val newOutsideWorkout = OutsideWorkout(0, "Hiking", "00:00", 0, "0.00", "00:00:00", 0, record.endTime.epochSecond.toInt(), 0)
                     hikingExercises.value += newOutsideWorkout
                 }
                 ExerciseSessionRecord.EXERCISE_TYPE_RUNNING -> {
-                    val newOutsideWorkout = OutsideWorkout(0, "Running", 0.0, 0, 0.0, record.startTime.epochSecond.toInt(), record.endTime.epochSecond.toInt(), 0)
+                    val newOutsideWorkout = OutsideWorkout(0, "Running", "00:00", 0, "0.00", "00:00:00", 0, record.endTime.epochSecond.toInt(), 0)
                     runningExercises.value += newOutsideWorkout
                 }
                 else -> { }

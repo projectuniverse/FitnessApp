@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.OutsideWorkout
+import com.codecamp.fitnessapp.model.User
 import com.codecamp.fitnessapp.ui.viewmodel.WorkoutViewModel
 
 
@@ -30,8 +31,9 @@ fun OutsideScreen(
     val distanceDefaultText = stringResource(R.string.distance)
     val paceDefaultText = stringResource(R.string.pace)
     val paceKmDefaultText = stringResource(R.string.paceKm)
+    val currentUser = workoutViewModel.user.collectAsState(initial = User(0, 0, 0, 0))
 
-    var workoutActive by remember { mutableStateOf(false) }
+    var workoutState by remember { mutableStateOf("ready") }
     var buttontext by remember { mutableStateOf(workoutStats[7]) }
     var time by remember { mutableStateOf(timerDefaultText) }
     var distance by remember { mutableStateOf(distanceDefaultText) }
@@ -76,14 +78,20 @@ fun OutsideScreen(
         ) {
             Button(
                 onClick = {
-                    if(workoutActive) {
-                        val result = OutsideWorkout(0, workoutName, 0.0, 0, 0.0, 0, 0, 0)
-                        stopWorkout(result)
+                    if (workoutState == "ready") {
                         workoutViewModel.switchWorkingOut()
-                    } else {
                         buttontext = workoutStats[8]
+                        workoutState = "active"
+                    }
+                    else if(workoutState == "active") {
                         workoutViewModel.switchWorkingOut()
-                        workoutActive = true
+                        workoutState = "stopped"
+                        buttontext = workoutStats[9]
+                    }
+                    else if (workoutState == "stopped") {
+                        val result = workoutViewModel.createOutsideWorkout(workoutName, currentUser.value)
+                        workoutViewModel.saveOutsideWorkout(result)
+                        stopWorkout(result)
                     }
 
                 },

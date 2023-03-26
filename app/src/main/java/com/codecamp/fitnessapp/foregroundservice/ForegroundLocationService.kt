@@ -79,7 +79,7 @@ class ForegroundLocationService: Service() {
         val notification = NotificationCompat.Builder(this, "location")
             .setContentTitle("Tracking location...")
             .setContentText("Location: null")
-            .setSmallIcon(R.drawable.fitnessappicon)
+            .setSmallIcon(R.drawable.ic_launcher_background)
             .setOngoing(true)
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

@@ -12,12 +12,11 @@ data class OutsideWorkout(
     val id: Int = 0,
     val name: String,
     // Average pace
-    val pace: Double,
+    val pace: String,
     val steps: Int,
-    val distance: Double,
-    //Time in unix, UTC
+    val distance: String,
+    val time: String,
+    val kcal: Int,
     val startTime: Int,
-    //Time in unix, UTC
-    val endTime: Int,
-    val kcal: Int
+    val endTime: Int
 )

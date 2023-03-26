@@ -21,6 +21,7 @@ import com.codecamp.fitnessapp.sensor.squat.SquatRepository
 import com.codecamp.fitnessapp.sensor.squat.SquatUtil
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 import java.lang.Math.*
 import javax.inject.Inject
@@ -153,19 +154,16 @@ class WorkoutViewModel
     /*
     * calculates the burned calories of the outside workouts
     * */
-    fun calculateKCalOutside(workoutName: String, distance: Double, timeInHours: Int, user: User): Int {
+    private fun calculateKCalOutside(workoutName: String, distance: Double, timeInHours: Double, user: User): Int {
         val kCal:Double = when (workoutName) {
-            "Running" -> {6.5 * user.weight * timeInHours}
-            "Biking" -> {7.0 * user.weight * timeInHours}
-            else -> {3.6 * user.weight * timeInHours}
+            "Running" -> { (0.75 * distance * user.weight) + (timeInHours * 60 * 8 * user.weight)}
+            "Biking" -> { (timeInHours * (distance / timeInHours) * 3.5 * user.weight) / 200 }
+            else -> { (0.5 * distance * user.weight) }
         }
         return kCal.toInt()
     }
 
-    /*
-    * saves an inside workout in the repository
-    * */
-    fun saveWorkout(result: InsideWorkout) {
+    fun saveInsideWorkout(result: InsideWorkout) {
         viewModelScope.launch {
             workoutRepository.insertInsideWorkout(result)
         }
@@ -223,7 +221,6 @@ class WorkoutViewModel
                             timestamp = currentTime
                         )
                         trackList.add(newTrack)
-                        Log.d("trackgen", newTrack.toString())
                     }
                 }
                 else {
@@ -244,7 +241,6 @@ class WorkoutViewModel
                         timestamp = currentTime
                     )
                     trackList.add(newTrack)
-                    Log.d("trackgen", newTrack.toString())
                 }
 
                 updateRunningData()
@@ -252,7 +248,7 @@ class WorkoutViewModel
         }
     }
 
-    private fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
+    private fun calculateTrackDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
         val r = 6371 // radius of Earth in kilometers
         val latDistance = Math.toRadians(lat2 - lat1)
         val lonDistance = Math.toRadians(lon2 - lon1)
@@ -269,50 +265,100 @@ class WorkoutViewModel
         return String.format("%02d:%02d", minutes, seconds)
     }
 
-    private fun updateRunningData() {
-        if (trackList.isEmpty()) return
-
+    private fun calculateDistance(): Double {
         var dis = 0.0
-        var _paceKm = 0.0
         var lastTrack: Track? = null
-        var elapsedTime = 0.0
-
         for (track in trackList) {
             if (lastTrack != null) {
-                dis += calculateDistance(lastTrack.lat, lastTrack.long, track.lat, track.long)
+                dis += calculateTrackDistance(lastTrack.lat, lastTrack.long, track.lat, track.long)
             }
             lastTrack = track
         }
+        return dis
+    }
 
-        if (trackList.size > 1) {
-            elapsedTime = (trackList.last().timestamp.toDouble() - startTime) / (1000 * 60)
-        }
+    private fun calculateTimeForLastKm(): Double {
+        var lastTrack: Track? = null
+        var km = 0.0
+        var t = (trackList.last().timestamp.toDouble() - startTime) / (1000 * 60)
+        for (i in trackList.size - 1 downTo 0) {
+            if (lastTrack != null) {
+                km += calculateTrackDistance(lastTrack.lat, lastTrack.long, trackList[i].lat, trackList[i].long)
 
-        distance.postValue(String.format("%.2f", dis))
-        pace.postValue(formatTime(elapsedTime / dis))
-
-        if (dis > 1) {
-            lastTrack = null
-            var km = 0.0
-            for (i in trackList.size - 1 downTo 0) {
-                if (lastTrack != null) {
-                    km += calculateDistance(lastTrack.lat, lastTrack.long, trackList[i].lat, trackList[i].long)
-
-                    if (km > 1) {
-                        var t = (trackList.last().timestamp.toDouble() - trackList[i].timestamp) / (1000 * 60)
-                        _paceKm = t / km
-                        break
-                    }
+                if (km > 1) {
+                    val t = (trackList.last().timestamp.toDouble() - trackList[i].timestamp) / (1000 * 60)
+                    break
                 }
-                lastTrack = trackList[i]
             }
-            paceKm.postValue(formatTime(_paceKm))
+            lastTrack = trackList[i]
         }
-        else {
-            paceKm.postValue(formatTime(elapsedTime / dis))
+
+        return t / km
+    }
+
+    private fun updateRunningData() {
+        if (trackList.size > 1) {
+            val dis = calculateDistance() // distance in km
+            distance.postValue(String.format("%.2f", dis))
+
+            val elapsedTime = (trackList.last().timestamp.toDouble() - startTime) / (1000 * 60)
+            pace.postValue(formatTime(elapsedTime / dis))
+
+            val _paceKm = calculateTimeForLastKm()
+            paceKm.postValue(formatTime(_paceKm))
         }
     }
 
+    fun saveOutsideWorkout(result: OutsideWorkout) {
+        viewModelScope.launch {
+            workoutRepository.insertOutsideWorkout(result)
+
+//            for (track in trackList) {
+//                track.workoutId = result.id
+//                trackRepository.insertTrack(track)
+//            }
+        }
+    }
+
+    private fun kmToSteps(km: Double, workoutName: String): Int {
+        val steps: Double = when (workoutName) {
+            "Running" -> { km * 1315 }
+            "Hiking" -> { km * 1750 }
+            else -> { 0.0 }
+        }
+        return steps.toInt()
+    }
+
+    fun createOutsideWorkout(workoutName: String, user: User): OutsideWorkout {
+
+
+        val endTime = trackList.last().timestamp
+        val startTime = trackList.first().timestamp
+        val elapsedTime = (endTime - startTime).toDouble() / (1000 * 60)
+
+        var dis = calculateDistance()
+        var steps = kmToSteps(dis, workoutName)
+
+
+        val kcal = calculateKCalOutside(workoutName, dis, (elapsedTime / 60), user)
+
+        val pace = elapsedTime / dis
+
+
+        var time = timePassed.value
+        if (time == null) time = "00:00:00"
+
+        return OutsideWorkout(
+            name = workoutName,
+            pace = formatTime(pace),
+            steps = steps,
+            distance = String.format("%.2f", dis),
+            time = time,
+            kcal = kcal,
+            endTime = (trackList.last().timestamp / 1000).toInt(),
+            startTime = (trackList.first().timestamp / 1000).toInt()
+        )
+    }
 
     init {
         viewModelScope.launch {

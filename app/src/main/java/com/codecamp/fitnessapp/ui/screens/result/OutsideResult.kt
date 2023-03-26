@@ -19,7 +19,6 @@ fun OutsideResult(
     resultViewModel: ResultViewModel = hiltViewModel()
 ) {
     val workoutStats = stringArrayResource(R.array.WorkoutStats)
-    val time = stringResource(R.string.timer)
 
     val tracklist = resultViewModel.tracklist.collectAsState(initial = mutableListOf()).value
     val usedTracks = resultViewModel.getUsedTracks(tracklist, outsideWorkout.id)
@@ -41,15 +40,15 @@ fun OutsideResult(
             items(count = 1) {
                 Spacer(modifier = Modifier.height(20.dp))
 
-                ResultCard(name = workoutStats[1], value = outsideWorkout.distance.toString())
+                ResultCard(name = workoutStats[1], value = outsideWorkout.distance)
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                ResultCard(name = workoutStats[0], value = time)
+                ResultCard(name = workoutStats[0], value = outsideWorkout.time)
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                ResultCard(name = workoutStats[3], value = outsideWorkout.pace.toString())
+                ResultCard(name = workoutStats[3], value = outsideWorkout.pace)
 
                 if(outsideWorkout.name != stringArrayResource(R.array.outsideActivities)[2]) {
                     Spacer(modifier = Modifier.height(10.dp))
