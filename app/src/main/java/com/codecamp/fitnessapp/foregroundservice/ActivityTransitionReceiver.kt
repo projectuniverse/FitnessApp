@@ -5,18 +5,15 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.codecamp.fitnessapp.BuildConfig
-import com.codecamp.fitnessapp.foregroundservice.ActivityTransitionUtil.RECEIVER_ACTION
+import com.google.android.gms.location.ActivityTransition
 import com.google.android.gms.location.ActivityTransitionResult
+import com.google.android.gms.location.DetectedActivity
 
 class ActivityTransitionReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
 
         Log.d("ACTIVITY_TRANSITION", "ON_RECEIVE")
-/*        if (RECEIVER_ACTION == intent.action) {
-            Log.d("ACTIVITY_TRANSITION", "Received an unsupported action")
-            return
-        }*/
 
         if (ActivityTransitionResult.hasResult(intent)) {
             val result = ActivityTransitionResult.extractResult(intent)
@@ -27,6 +24,22 @@ class ActivityTransitionReceiver : BroadcastReceiver() {
 
                 Log.d("ACTIVITY_TRANSITION", info)
                 ActivityTransitionUtil.updateNotificationText(info)
+                if (event.transitionType == ActivityTransition.ACTIVITY_TRANSITION_EXIT && event.activityType != DetectedActivity.STILL) {
+                    //TODO: workout vom typ activity type beenden
+                }
+                if (event.transitionType == ActivityTransition.ACTIVITY_TRANSITION_ENTER) {
+                    when(event.activityType) {
+                        DetectedActivity.WALKING -> {
+                            //TODO: starte hiking workout //
+                         }
+                        DetectedActivity.RUNNING -> {
+                            //TODO: starte running workout //
+                        }
+                        DetectedActivity.ON_BICYCLE -> {
+                            //TODO: starte biking workout //
+                        }
+                    }
+                }
             }
         }
     }
