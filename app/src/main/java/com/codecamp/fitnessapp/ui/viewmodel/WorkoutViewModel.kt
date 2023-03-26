@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 import java.lang.Math.*
 import javax.inject.Inject
+import kotlin.math.roundToInt
 import kotlin.random.Random
 
 @HiltViewModel
@@ -312,7 +313,6 @@ class WorkoutViewModel
     fun saveOutsideWorkout(result: OutsideWorkout) {
         viewModelScope.launch {
             workoutRepository.insertOutsideWorkout(result)
-
 //            for (track in trackList) {
 //                track.workoutId = result.id
 //                trackRepository.insertTrack(track)
@@ -330,8 +330,6 @@ class WorkoutViewModel
     }
 
     fun createOutsideWorkout(workoutName: String, user: User): OutsideWorkout {
-
-
         val endTime = trackList.last().timestamp
         val startTime = trackList.first().timestamp
         val elapsedTime = (endTime - startTime).toDouble() / (1000 * 60)
@@ -344,16 +342,11 @@ class WorkoutViewModel
 
         val pace = elapsedTime / dis
 
-
-        var time = timePassed.value
-        if (time == null) time = "00:00:00"
-
         return OutsideWorkout(
             name = workoutName,
-            pace = formatTime(pace),
+            pace = pace,
             steps = steps,
-            distance = String.format("%.2f", dis),
-            time = time,
+            distance = (dis * 100).roundToInt().toDouble() / 100,
             kcal = kcal,
             endTime = (trackList.last().timestamp / 1000).toInt(),
             startTime = (trackList.first().timestamp / 1000).toInt()
