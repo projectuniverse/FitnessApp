@@ -17,4 +17,7 @@ interface OutsideWorkoutDao {
 
     @Query("SELECT * FROM outsideWorkout")
     fun getAllOutsideWorkouts(): Flow<List<OutsideWorkout>>
+
+    @Query("DELETE FROM outsideWorkout")
+    fun deleteOutsideWorkouts()
 }

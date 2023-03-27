@@ -17,4 +17,7 @@ interface InsideWorkoutDao {
 
     @Query("SELECT * FROM insideWorkout")
     fun getAllInsideWorkouts(): Flow<List<InsideWorkout>>
+
+    @Query("DELETE FROM insideWorkout")
+    fun deleteInsideWorkouts()
 }
