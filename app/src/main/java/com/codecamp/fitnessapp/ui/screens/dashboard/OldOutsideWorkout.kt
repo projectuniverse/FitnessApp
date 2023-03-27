@@ -66,7 +66,7 @@ fun OldOutsideWorkout(
                 Icon(icon, contentDescription = "", modifier = Modifier.size(64.dp))
             }
 
-            val workoutDetails = workoutInfos[0] + " " + outsideWorkout.distance + workoutInfos[3] + "\n" +
+            val workoutDetails = workoutInfos[0] + " " + outsideWorkout.distance + " " + workoutInfos[3] + "\n" +
                     workoutInfos[2] + " " + workoutViewModel.getElapsedTime(outsideWorkout.endTime, outsideWorkout.startTime)
 
             Column(

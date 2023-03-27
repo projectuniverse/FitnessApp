@@ -29,7 +29,7 @@ data class Track(
      * If outsideWorkout is deleted, all Tracks with this workoutId automatically
      * get deleted.
      */
-    val workoutId: Int,
+    var workoutId: Int,
     // lat and long must later manually be converted to LatLng for using google maps
     // Also used for calculating pace per km in combination with timestamp
     val lat: Double,
