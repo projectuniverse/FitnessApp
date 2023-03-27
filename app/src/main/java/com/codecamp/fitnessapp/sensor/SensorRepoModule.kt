@@ -1,5 +1,7 @@
 package com.codecamp.fitnessapp.sensor
 
+import com.codecamp.fitnessapp.sensor.finall.GyroscopeRepository
+import com.codecamp.fitnessapp.sensor.finall.GyroscopeRepositoryImpl
 import com.codecamp.fitnessapp.sensor.pushup.PushUpRepositoryImpl
 import com.codecamp.fitnessapp.sensor.pushup.PushUpRepository
 import com.codecamp.fitnessapp.sensor.situp.SitUpRepository
@@ -28,4 +30,8 @@ abstract class SensorRepoModule {
     @Binds
     @Singleton
     abstract fun bindSitUpRepo(sitUpRepositoryImpl: SitUpRepositoryImpl): SitUpRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindGyroscopeRepo(gyroscopeRepositoryImpl: GyroscopeRepositoryImpl): GyroscopeRepository
 }

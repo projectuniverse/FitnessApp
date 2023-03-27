@@ -22,9 +22,9 @@ class SitUpUtil {
         var rotY = sensorValues[1]
         var rotZ = sensorValues[2]
 
-/*        if (abs(rotY) < 1f) {
+        if (abs(rotY) < 1f) {
             rotY = 0f
-        }*/
+        }
 
         counter += rotY
 

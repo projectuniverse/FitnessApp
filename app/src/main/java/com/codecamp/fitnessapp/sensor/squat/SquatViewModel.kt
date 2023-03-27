@@ -12,9 +12,9 @@ class SquatViewModel @Inject constructor(
     val accelerometerData = squatRepository.accelerometerData
     //val gyroscopeData = squatRepository.gyroscopeData
 
-    fun updateRepetitions(): Int {
+    /*fun updateRepetitions(): Int {
         return squatUtil.checkSquat(accelerometerData.value)
-    }
+    }*/
 
     fun startListening() {
         squatRepository.startListening()

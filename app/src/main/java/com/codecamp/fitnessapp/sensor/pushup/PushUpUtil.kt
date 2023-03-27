@@ -2,38 +2,54 @@ package com.codecamp.fitnessapp.sensor.pushup
 
 import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlin.math.abs
 
 
-enum class PushupState {
+enum class PushUpState {
     START,
-    DOWN
+    DOWN,
+    PAUSE,
+    UP
 }
 class PushUpUtil {
-    var state = mutableStateOf(PushupState.START)
+    var state = mutableStateOf(PushUpState.START)
     val repetitions = MutableStateFlow(0)
-    private val threshold = 1.0f
-    //var x = MutableStateFlow(0.0f)
 
-    fun checkPushUp(sensorValue: Float): Int {
-        //repetitions.value++
-        when(state.value) {
-            PushupState.START -> {
-                //check if sensor data falls under threshold
-                // yes -> change state to DOWN
-                if (sensorValue < threshold) {
-                    state.value = PushupState.DOWN
+    fun checkPushUp(sensorValues: List<Float>): Int {
+        var  rotX = sensorValues[0]
+        //var rotY = sensorValues[1]
+        //var rotZ = sensorValues[2]
+
+        if (abs(rotX) < 0.5f) {
+            rotX = 0f
+        }
+
+        //Log.d("SENSOSR_DATA_X", rotX.toString() + "||State: " + state.value.name)
+
+        when(state.value)  {
+            PushUpState.START -> {
+                if (rotX > 0) {
+                    state.value = PushUpState.DOWN
                 }
             }
-            PushupState.DOWN -> {
-                //check if sensor data falls above threshold
-                // yes -> change state to START
-                //        increase repetitions
-                if (sensorValue >= threshold) {
-                    state.value = PushupState.START
+            PushUpState.DOWN -> {
+                if (rotX == 0f) {
+                    state.value = PushUpState.PAUSE
+                }
+            }
+            PushUpState.PAUSE -> {
+                if (rotX < 0f) {
+                    state.value = PushUpState.UP
+                }
+            }
+            PushUpState.UP -> {
+                if (rotX == 0f) {
+                    state.value = PushUpState.START
                     repetitions.value++
                 }
             }
         }
+
         return repetitions.value
     }
 }

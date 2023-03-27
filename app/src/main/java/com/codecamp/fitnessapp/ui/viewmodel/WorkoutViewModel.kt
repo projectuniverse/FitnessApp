@@ -13,6 +13,7 @@ import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.OutsideWorkout
 import com.codecamp.fitnessapp.model.Track
 import com.codecamp.fitnessapp.model.User
+import com.codecamp.fitnessapp.sensor.finall.GyroscopeRepository
 import com.codecamp.fitnessapp.sensor.pushup.PushUpRepository
 import com.codecamp.fitnessapp.sensor.pushup.PushUpUtil
 import com.codecamp.fitnessapp.sensor.situp.SitUpRepository
@@ -21,6 +22,7 @@ import com.codecamp.fitnessapp.sensor.squat.SquatRepository
 import com.codecamp.fitnessapp.sensor.squat.SquatUtil
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 import java.lang.Math.*
@@ -39,6 +41,7 @@ class WorkoutViewModel
     private val sitUpRepository: SitUpRepository,
     private val pushUpRepository: PushUpRepository,
     private val userRepository: DefaultUserRepository,
+    private val gyroscopeRepository: GyroscopeRepository,
     private val healthConnectRepository: HealthConnectRepositoryInterface,
     private val trackRepository: DefaultTrackRepository,
     private val locationTracker: LocationTrackerInterface
@@ -56,6 +59,8 @@ class WorkoutViewModel
     private val sitUpSensorData = sitUpRepository.gyroscopeData
     private val pushUpSensorData = pushUpRepository.proximitySensorData
 
+    private val gyroscopeData = gyroscopeRepository.gyroscropeData
+
     private val trackList = mutableListOf<Track>()
 
     val timePassed: MutableLiveData<String> by lazy { MutableLiveData("00:00:00") }
@@ -70,10 +75,16 @@ class WorkoutViewModel
     val repetitions: MutableLiveData<Int> by lazy { MutableLiveData(0) }
 
     fun startListening(workoutType: String) {
-        when (workoutType) {
+        viewModelScope.launch {
+            delay(3000L)
+        }
+
+        gyroscopeRepository.startListening()
+
+/*        when (workoutType) {
             "Pushups" -> {
-                pushUpRepository.startListening()
-                sitUpRepository.stopListening()
+                sitUpRepository.startListening()
+                //sitUpRepository.stopListening()
                 squatRepository.stopListening()
             }
             "Situps" -> {
@@ -82,30 +93,34 @@ class WorkoutViewModel
                 squatRepository.stopListening()
             }
             else -> {
-                squatRepository.startListening()
-                sitUpRepository.stopListening()
+                //squatRepository.startListening()
+                //sitUpRepository.stopListening()
+                sitUpRepository.startListening()
                 pushUpRepository.stopListening()
             }
-        }
+        }*/
     }
 
     fun stopListening() {
-        pushUpRepository.stopListening()
+/*        pushUpRepository.stopListening()
         sitUpRepository.stopListening()
-        squatRepository.stopListening()
+        squatRepository.stopListening()*/
+        gyroscopeRepository.stopListening()
     }
 
     fun updateRepetitions(workoutType: String) {
         repetitions.value =
             when (workoutType) {
                 "Pushups" -> {
-                    pushUpUtil.checkPushUp(pushUpSensorData.value)
+                    //pushUpUtil.checkPushUp(pushUpSensorData.value)
+                    pushUpUtil.checkPushUp(gyroscopeData.value)
                 }
                 "Situps" -> {
-                    sitUpUtil.checkRepetition(sitUpSensorData.value)
+                    sitUpUtil.checkRepetition(gyroscopeData.value)
                 }
                 else -> {
-                    squatUtil.checkSquat(squatSensorData.value)
+                    //squatUtil.checkSquat(squatSensorData.value)
+                    squatUtil.checkRepetition(gyroscopeData.value)
                 }
             }
     }
@@ -351,6 +366,12 @@ class WorkoutViewModel
             endTime = (trackList.last().timestamp / 1000).toInt(),
             startTime = (trackList.first().timestamp / 1000).toInt()
         )
+    }
+
+    fun resetRepetitions() {
+        pushUpUtil.repetitions.value = 0
+        sitUpUtil.repetitions.value = 0
+        squatUtil.repetitions.value = 0
     }
 
     init {
