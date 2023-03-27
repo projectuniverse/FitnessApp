@@ -1,10 +1,7 @@
 package com.codecamp.fitnessapp.healthconnect
 
-import android.app.Application
 import android.content.Context
-import androidx.core.app.ActivityCompat
 import androidx.health.connect.client.HealthConnectClient
-import androidx.health.connect.client.PermissionController
 import androidx.health.connect.client.permission.HealthPermission
 import androidx.health.connect.client.records.*
 import androidx.health.connect.client.request.ReadRecordsRequest
@@ -16,7 +13,7 @@ import javax.inject.Inject
 class HealthConnect @Inject constructor(
     private val context: Context
 ) {
-    var healthConnectClient: HealthConnectClient? = null
+    private var healthConnectClient: HealthConnectClient? = null
     private var lastRequestedInstantExercise: Instant? = null
     private val PERMISSIONS = setOf(
         HealthPermission.getReadPermission(ExerciseSessionRecord::class),
@@ -36,7 +33,7 @@ class HealthConnect @Inject constructor(
         return false
     }
 
-    fun assignHealthConnectClient() {
+    private fun assignHealthConnectClient() {
         if(!HealthConnectClient.isApiSupported()) {
             return
         }

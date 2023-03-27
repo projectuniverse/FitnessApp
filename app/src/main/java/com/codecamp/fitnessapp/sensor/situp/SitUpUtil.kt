@@ -12,21 +12,15 @@ enum class SitUpState {
 }
 
 class SitUpUtil {
-    val state = mutableStateOf(SitUpState.START)
+    private val state = mutableStateOf(SitUpState.START)
     var repetitions = MutableStateFlow(0)
-    var counter = 0f
-    val threshold = 15
 
     fun checkRepetition(sensorValues: List<Float>): Int {
-        var  rotX = sensorValues[0]
         var rotY = sensorValues[1]
-        var rotZ = sensorValues[2]
 
         if (abs(rotY) < 1f) {
             rotY = 0f
         }
-
-        counter += rotY
 
         when(state.value)  {
             SitUpState.START -> {

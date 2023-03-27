@@ -6,12 +6,9 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.collectAsState
+import androidx.core.app.ActivityCompat
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
@@ -20,7 +17,6 @@ import androidx.health.connect.client.PermissionController
 import androidx.health.connect.client.permission.HealthPermission
 import androidx.health.connect.client.records.*
 import com.codecamp.fitnessapp.foregroundservice.ForegroundLocationService
-import com.codecamp.fitnessapp.sensor.TestScreen
 import com.codecamp.fitnessapp.ui.FitnessApp
 import com.codecamp.fitnessapp.ui.theme.FitnessAppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,10 +47,14 @@ class MainActivity : ComponentActivity() {
             firstInit = getFirstInit()
             if (HealthConnectClient.isApiSupported() && HealthConnectClient.isProviderAvailable(applicationContext)) {
                 val client = HealthConnectClient.getOrCreate(applicationContext)
-                Log.d("HEALTH_CONNECT", "Client not null")
                 checkPermissionsAndRun(client)
             }
         }
+
+        ActivityCompat.requestPermissions(this,
+            arrayOf(HealthPermission.getReadPermission(HeightRecord::class)),
+            0
+        )
 
         // Show Logo until data has arrived
         while (firstInit == null) {}
@@ -64,25 +64,9 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colorScheme.surface) {
                     FitnessApp(firstInit = firstInit!!)
-
-                    /*Button(onClick = {
-                        Intent(applicationContext, ForegroundLocationService::class.java).apply {
-                            action = ForegroundLocationService.ACTION_STOP
-                            startService(this)
-                        }
-                    }) {
-                        Text(text = "Stop Background Location Tracking")
-                    }*/
                 }
             }
         }
-        /*
-                outsideScreen(outsideWorkoutType = "Walk")
-                //WeatherCard(healthConnectViewModel)
-            }
-        }
-
-         */
     }
 
     private suspend fun getFirstInit(): Boolean {
@@ -119,8 +103,6 @@ class MainActivity : ComponentActivity() {
 
     suspend fun checkPermissionsAndRun(healthConnectClient: HealthConnectClient) {
         val granted = healthConnectClient.permissionController.getGrantedPermissions()
-        Log.d("HEALTH_CONNECT", granted.toString())
-        Log.d("HEALTH_CONNECT", PERMISSIONS.toString())
         if (granted.containsAll(PERMISSIONS)) {
             // already has permission form previous launch
             Log.d("HEALTH_CONNECT", "has permissions")

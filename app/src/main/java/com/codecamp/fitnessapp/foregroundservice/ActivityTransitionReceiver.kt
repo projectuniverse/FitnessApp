@@ -12,9 +12,6 @@ import com.google.android.gms.location.DetectedActivity
 class ActivityTransitionReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-
-        Log.d("ACTIVITY_TRANSITION", "ON_RECEIVE")
-
         if (ActivityTransitionResult.hasResult(intent)) {
             val result = ActivityTransitionResult.extractResult(intent)
             for (event in result!!.transitionEvents) {

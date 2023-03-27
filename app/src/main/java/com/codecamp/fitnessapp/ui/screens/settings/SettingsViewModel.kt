@@ -5,9 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.codecamp.fitnessapp.data.user.DefaultUserRepository
 import com.codecamp.fitnessapp.healthconnect.HealthConnectRepositoryInterface
 import com.codecamp.fitnessapp.model.User
-import com.codecamp.fitnessapp.model.healthconnect.HealthConnectUsage
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,8 +17,8 @@ class SettingsViewModel
 ) : ViewModel() {
     val user = userRepository.user
 
-    val healthConnectWeight = healthConnectRepository.weight
-    val healthConnectHeight = healthConnectRepository.height
+    private val healthConnectWeight = healthConnectRepository.weight
+    private val healthConnectHeight = healthConnectRepository.height
 
     private fun isValidNumber(case: Int, input: String): Boolean {
         val inputNumber = input.toIntOrNull()

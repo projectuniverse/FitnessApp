@@ -1,6 +1,5 @@
 package com.codecamp.fitnessapp.ui.screens.inside
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
@@ -18,7 +17,6 @@ import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.User
 import com.codecamp.fitnessapp.ui.viewmodel.WorkoutViewModel
-import kotlinx.coroutines.delay
 
 @Composable
 fun InsideScreen(

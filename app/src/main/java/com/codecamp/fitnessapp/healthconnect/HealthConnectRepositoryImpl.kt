@@ -56,10 +56,14 @@ class HealthConnectRepositoryImpl @Inject constructor(
         val heightRecords = healthConnect.getHeightRecords()
 
         if (weightRecords != null) {
-            weight.value = weightRecords.records.last().weight.inKilograms.toInt()
+            if (weightRecords.records.isNotEmpty()) {
+                weight.value = weightRecords.records.last().weight.inKilograms.toInt()
+            }
         }
         if (heightRecords != null) {
-            height.value = heightRecords.records.last().height.inMeters.toInt() * 100
+            if (heightRecords.records.isNotEmpty()) {
+                height.value = heightRecords.records.last().height.inMeters.toInt() * 100
+            }
         }
     }
 }

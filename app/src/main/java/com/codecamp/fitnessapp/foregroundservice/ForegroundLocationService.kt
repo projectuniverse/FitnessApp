@@ -56,6 +56,13 @@ class ForegroundLocationService: Service() {
         }
     }
 
+    @SuppressLint("MissingPermission")
+    fun removeUpdates() {
+        if (ActivityTransitionUtil.hasPermission(applicationContext)) {
+            client.removeActivityTransitionUpdates(getPendingIntent())
+        }
+    }
+
     private fun getPendingIntent(): PendingIntent {
         val newIntent = Intent(applicationContext, ActivityTransitionReceiver::class.java)
         return PendingIntent.getBroadcast(
@@ -84,7 +91,7 @@ class ForegroundLocationService: Service() {
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        //requestUpdates()
+        requestUpdates()
         locationTracker
             .getLocationFlow(10000L)
             .catch { e ->

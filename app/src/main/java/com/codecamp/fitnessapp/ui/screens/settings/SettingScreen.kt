@@ -13,11 +13,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.codecamp.fitnessapp.R
-import com.codecamp.fitnessapp.model.healthconnect.HealthConnectUsage
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.flow.MutableStateFlow
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SettingScreen(
     settingViewModel: SettingsViewModel = hiltViewModel()
