@@ -52,7 +52,7 @@ fun FitnessApp(
 
     if (firstInit.value != null) {
         val _firstInit = if (user.value != null) {
-            fitnessAppViewModel.updateFirstInit()
+            fitnessAppViewModel.setFirstInit(false)
             false
         } else {
             firstInit.value!!
@@ -153,7 +153,7 @@ fun FitnessApp(
                 }
 
                 composable(route = AppScreen.Settings.name) {
-                    SettingScreen()
+                    SettingScreen(_firstInit)
                 }
 
                 composable(route = AppScreen.Inside.name) {
