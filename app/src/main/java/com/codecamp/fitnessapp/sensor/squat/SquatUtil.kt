@@ -1,6 +1,7 @@
 package com.codecamp.fitnessapp.sensor.squat
 
 import androidx.compose.runtime.mutableStateOf
+import com.codecamp.fitnessapp.sensor.situp.SitUpState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlin.math.abs
 
@@ -17,7 +18,7 @@ class SquatUtil {
     private val threshold = 10
     var counter = 0f
 
-    fun checkSquat(sensorValues: List<Float>): Int {
+    /*fun checkSquat(sensorValues: List<Float>): Int {
         val x = sensorValues[0]
         var y = sensorValues[1]
         val z = sensorValues[2]
@@ -26,9 +27,9 @@ class SquatUtil {
             y = 0f
         }
 
-        /*if ((state.value == SquatState.DOWN || state.value == SquatState.UP) && y > 0.3f) {
+        if ((state.value == SquatState.DOWN || state.value == SquatState.UP) && y > 0.3f) {
             counter += y
-        }*/
+        }
 
         when(state.value) {
             SquatState.START -> {
@@ -59,6 +60,44 @@ class SquatUtil {
                     state.value = SquatState.START
                     repetitions.value++
                     counter = 0f
+                }
+            }
+        }
+
+        return repetitions.value
+    }*/
+
+    fun checkRepetition(sensorValues: List<Float>): Int {
+        var  rotX = sensorValues[0]
+        var rotY = sensorValues[1]
+        var rotZ = sensorValues[2]
+
+        if (abs(rotX) < 0.5f) {
+            rotX = 0f
+        }
+
+        //counter += rotY
+
+        when(state.value)  {
+            SquatState.START -> {
+                if (rotX < 0) {
+                    state.value = SquatState.DOWN
+                }
+            }
+            SquatState.DOWN -> {
+                if (rotX == 0f) {
+                    state.value = SquatState.PAUSE
+                }
+            }
+            SquatState.PAUSE -> {
+                if (rotX > 0f) {
+                    state.value = SquatState.UP
+                }
+            }
+            SquatState.UP -> {
+                if (rotX == 0f) {
+                    state.value = SquatState.START
+                    repetitions.value++
                 }
             }
         }

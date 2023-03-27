@@ -1,6 +1,7 @@
 package com.codecamp.fitnessapp.sensor
 
 import android.app.Application
+import com.codecamp.fitnessapp.sensor.finall.GyroscopeRepositoryImpl
 import com.codecamp.fitnessapp.sensor.pushup.PushUpRepositoryImpl
 import com.codecamp.fitnessapp.sensor.pushup.PushUpUtil
 import com.codecamp.fitnessapp.sensor.situp.SitUpUtil
@@ -63,5 +64,11 @@ object SensorModule {
     @Singleton
     fun provideSitUpUtil(): SitUpUtil {
         return SitUpUtil()
+    }
+
+    @Provides
+    @Singleton
+    fun provideGyroscopeRepoImpl(gyroscope: Gyroscope): GyroscopeRepositoryImpl {
+        return GyroscopeRepositoryImpl(gyroscope)
     }
 }
