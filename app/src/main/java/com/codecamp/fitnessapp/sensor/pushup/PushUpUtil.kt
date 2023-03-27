@@ -12,19 +12,15 @@ enum class PushUpState {
     UP
 }
 class PushUpUtil {
-    var state = mutableStateOf(PushUpState.START)
+    private val state = mutableStateOf(PushUpState.START)
     val repetitions = MutableStateFlow(0)
 
     fun checkPushUp(sensorValues: List<Float>): Int {
         var  rotX = sensorValues[0]
-        //var rotY = sensorValues[1]
-        //var rotZ = sensorValues[2]
 
         if (abs(rotX) < 0.5f) {
             rotX = 0f
         }
-
-        //Log.d("SENSOSR_DATA_X", rotX.toString() + "||State: " + state.value.name)
 
         when(state.value)  {
             PushUpState.START -> {

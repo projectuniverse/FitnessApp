@@ -14,17 +14,12 @@ import com.codecamp.fitnessapp.model.OutsideWorkout
 import com.codecamp.fitnessapp.model.Track
 import com.codecamp.fitnessapp.model.User
 import com.codecamp.fitnessapp.sensor.finall.GyroscopeRepository
-import com.codecamp.fitnessapp.sensor.pushup.PushUpRepository
 import com.codecamp.fitnessapp.sensor.pushup.PushUpUtil
-import com.codecamp.fitnessapp.sensor.situp.SitUpRepository
 import com.codecamp.fitnessapp.sensor.situp.SitUpUtil
-import com.codecamp.fitnessapp.sensor.squat.SquatRepository
 import com.codecamp.fitnessapp.sensor.squat.SquatUtil
 import com.google.android.gms.maps.model.LatLng
-import com.patrykandpatrick.vico.core.extension.setFieldValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 import java.lang.Math.*
 import javax.inject.Inject
@@ -38,9 +33,6 @@ class WorkoutViewModel
     private val sitUpUtil: SitUpUtil,
     private val squatUtil: SquatUtil,
     private val pushUpUtil: PushUpUtil,
-    private val squatRepository: SquatRepository,
-    private val sitUpRepository: SitUpRepository,
-    private val pushUpRepository: PushUpRepository,
     private val userRepository: DefaultUserRepository,
     private val gyroscopeRepository: GyroscopeRepository,
     private val healthConnectRepository: HealthConnectRepositoryInterface,
@@ -56,11 +48,7 @@ class WorkoutViewModel
     val healthConnectBiking = healthConnectRepository.bikingExercises
     val healthConnectHikes = healthConnectRepository.hikingExercises
 
-    private val squatSensorData = squatRepository.accelerometerData
-    private val sitUpSensorData = sitUpRepository.gyroscopeData
-    private val pushUpSensorData = pushUpRepository.proximitySensorData
-
-    private val gyroscopeData = gyroscopeRepository.gyroscropeData
+    private val gyroscopeData = gyroscopeRepository.gyroscopeData
 
     private val trackList = mutableListOf<Track>()
 
@@ -81,48 +69,18 @@ class WorkoutViewModel
         }
 
         gyroscopeRepository.startListening()
-
-/*        when (workoutType) {
-            "Pushups" -> {
-                sitUpRepository.startListening()
-                //sitUpRepository.stopListening()
-                squatRepository.stopListening()
-            }
-            "Situps" -> {
-                sitUpRepository.startListening()
-                pushUpRepository.stopListening()
-                squatRepository.stopListening()
-            }
-            else -> {
-                //squatRepository.startListening()
-                //sitUpRepository.stopListening()
-                sitUpRepository.startListening()
-                pushUpRepository.stopListening()
-            }
-        }*/
     }
 
     fun stopListening() {
-/*        pushUpRepository.stopListening()
-        sitUpRepository.stopListening()
-        squatRepository.stopListening()*/
         gyroscopeRepository.stopListening()
     }
 
     fun updateRepetitions(workoutType: String) {
         repetitions.value =
             when (workoutType) {
-                "Pushups" -> {
-                    //pushUpUtil.checkPushUp(pushUpSensorData.value)
-                    pushUpUtil.checkPushUp(gyroscopeData.value)
-                }
-                "Situps" -> {
-                    sitUpUtil.checkRepetition(gyroscopeData.value)
-                }
-                else -> {
-                    //squatUtil.checkSquat(squatSensorData.value)
-                    squatUtil.checkRepetition(gyroscopeData.value)
-                }
+                "Pushups" -> { pushUpUtil.checkPushUp(gyroscopeData.value) }
+                "Situps" -> { sitUpUtil.checkRepetition(gyroscopeData.value) }
+                else -> { squatUtil.checkRepetition(gyroscopeData.value) }
             }
     }
 
@@ -373,6 +331,7 @@ class WorkoutViewModel
     }
 
     fun resetRepetitions() {
+        //set repetitions to 0 for UI reset
         pushUpUtil.repetitions.value = 0
         sitUpUtil.repetitions.value = 0
         squatUtil.repetitions.value = 0
