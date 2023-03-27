@@ -14,7 +14,7 @@ import javax.inject.Inject
  * Acts as a single source of truth. Updates the DataStore for first initialization.
  */
 interface InitializationRepository {
-    suspend fun updateFirstInit()
+    suspend fun setFirstInit(firstInit : Boolean)
     suspend fun getFirstInit() : Boolean
 }
 
@@ -25,9 +25,9 @@ class DefaultInitializationRepository
 ) : InitializationRepository {
     private val isFirstTimeLaunchKey = booleanPreferencesKey("is_first_time")
 
-    override suspend fun updateFirstInit() {
+    override suspend fun setFirstInit(firstInit : Boolean) {
         dataStore.edit { preferences ->
-            preferences[isFirstTimeLaunchKey] = false
+            preferences[isFirstTimeLaunchKey] = firstInit
         }
     }
 
