@@ -21,6 +21,7 @@ import com.codecamp.fitnessapp.sensor.situp.SitUpUtil
 import com.codecamp.fitnessapp.sensor.squat.SquatRepository
 import com.codecamp.fitnessapp.sensor.squat.SquatUtil
 import com.google.android.gms.maps.model.LatLng
+import com.patrykandpatrick.vico.core.extension.setFieldValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.last
@@ -327,11 +328,14 @@ class WorkoutViewModel
 
     fun saveOutsideWorkout(result: OutsideWorkout) {
         viewModelScope.launch {
-            workoutRepository.insertOutsideWorkout(result)
-//            for (track in trackList) {
-//                track.workoutId = result.id
-//                trackRepository.insertTrack(track)
-//            }
+            val id = workoutRepository.insertOutsideWorkout(result)
+
+            // TODO fix bug
+            Log.d("asd", "Inserted ID is: $id")
+            for (track in trackList) {
+                trackRepository.insertTrack(track.copy(workoutId = id))
+            }
+            Log.d("asd", "asdasdasd")
         }
     }
 

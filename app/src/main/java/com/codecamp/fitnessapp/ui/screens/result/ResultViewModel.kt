@@ -1,5 +1,6 @@
 package com.codecamp.fitnessapp.ui.screens.result
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.codecamp.fitnessapp.data.track.DefaultTrackRepository
 import com.codecamp.fitnessapp.model.Track
@@ -34,6 +35,7 @@ class ResultViewModel
     fun getUsedTracks(tracklist: List<Track>, id: Int): List<Track> {
         val usedTracks = mutableListOf<Track>()
         for (track in tracklist) {
+            Log.d("asd", track.toString())
             if (track.workoutId == id) {
                 usedTracks.add(track)
             }
