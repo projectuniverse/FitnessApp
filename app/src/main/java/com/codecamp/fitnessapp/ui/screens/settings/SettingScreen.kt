@@ -23,7 +23,6 @@ fun SettingScreen(
     settingViewModel: SettingsViewModel = hiltViewModel()
 ) {
     val user = settingViewModel.user.collectAsState(initial = null)
-    val hcUsageState = settingViewModel.hcPermission.collectAsState(initial = HealthConnectUsage(0, false, false))
 
     val stringSettings = stringArrayResource(R.array.settings)
     // If value is null, null.toString() returns "null" (not valid value)
@@ -68,9 +67,6 @@ fun SettingScreen(
         Button(
             modifier = Modifier.fillMaxWidth(0.9f),
             onClick = {
-                /*TODO Google Health Connect*/
-                //TODO: HC Permission
-                settingViewModel.updateHealthConnectUsage()
                 isValidValues.value = settingViewModel.checkForHealthConnectData(
                     age.value,
                     height.value,

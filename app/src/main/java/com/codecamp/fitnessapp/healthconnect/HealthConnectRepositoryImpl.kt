@@ -35,15 +35,15 @@ class HealthConnectRepositoryImpl @Inject constructor(
                     squatExercises.value += newInsideWorkout
                 }
                 ExerciseSessionRecord.EXERCISE_TYPE_BIKING -> {
-                    val newOutsideWorkout = OutsideWorkout(0, "Biking", 0.0, 0, 0.0, 0, record.endTime.epochSecond.toInt(), 0)
+                    val newOutsideWorkout = OutsideWorkout(0, "Biking", 0.0, 0, 0.0, 0, record.startTime.epochSecond.toInt(), record.endTime.epochSecond.toInt())
                     bikingExercises.value += newOutsideWorkout
                 }
                 ExerciseSessionRecord.EXERCISE_TYPE_HIKING -> {
-                    val newOutsideWorkout = OutsideWorkout(0, "Hiking", 0.0, 0, 0.0, 0, record.endTime.epochSecond.toInt(), 0)
+                    val newOutsideWorkout = OutsideWorkout(0, "Hiking", 0.0, 0, 0.0, 0, record.startTime.epochSecond.toInt(), record.endTime.epochSecond.toInt())
                     hikingExercises.value += newOutsideWorkout
                 }
                 ExerciseSessionRecord.EXERCISE_TYPE_RUNNING -> {
-                    val newOutsideWorkout = OutsideWorkout(0, "Running",0.0, 0, 0.0, 0, record.endTime.epochSecond.toInt(), 0)
+                    val newOutsideWorkout = OutsideWorkout(0, "Running",0.0, 0, 0.0, 0, record.startTime.epochSecond.toInt(), record.endTime.epochSecond.toInt())
                     runningExercises.value += newOutsideWorkout
                 }
                 else -> { }
@@ -59,7 +59,7 @@ class HealthConnectRepositoryImpl @Inject constructor(
             weight.value = weightRecords.records.last().weight.inKilograms.toInt()
         }
         if (heightRecords != null) {
-            height.value = heightRecords.records.last().height.inMeters.toInt() / 100
+            height.value = heightRecords.records.last().height.inMeters.toInt() * 100
         }
     }
 }

@@ -16,11 +16,10 @@ import javax.inject.Inject
 class HealthConnect @Inject constructor(
     private val context: Context
 ) {
-    var healthConnectClient: HealthConnectClient? = returnHealthConnectClient()
+    var healthConnectClient: HealthConnectClient? = null
     private var lastRequestedInstantExercise: Instant? = null
     private val PERMISSIONS = setOf(
-        HealthPermission.getReadPermission(StepsRecord::class),
-        HealthPermission.getReadPermission(ActiveCaloriesBurnedRecord::class),
+        HealthPermission.getReadPermission(ExerciseSessionRecord::class),
         HealthPermission.getReadPermission(WeightRecord::class),
         HealthPermission.getReadPermission(HeightRecord::class)
     )
@@ -37,28 +36,14 @@ class HealthConnect @Inject constructor(
         return false
     }
 
-    private fun returnHealthConnectClient(): HealthConnectClient? {
+    fun assignHealthConnectClient() {
         if(!HealthConnectClient.isApiSupported()) {
-            return null
+            return
         }
 
         if (HealthConnectClient.isProviderAvailable(context)) {
-            return HealthConnectClient.getOrCreate(context)
+            healthConnectClient = HealthConnectClient.getOrCreate(context)
         }
-
-        return null
-    }
-
-    suspend fun getActiveCaloriesBurnedRecords(startTime: Instant, endTime: Instant): ReadRecordsResponse<ActiveCaloriesBurnedRecord>? {
-        if (healthConnectClient == null) {
-            return null
-        }
-        return healthConnectClient!!.readRecords(
-            ReadRecordsRequest(
-                ActiveCaloriesBurnedRecord::class,
-                timeRangeFilter = TimeRangeFilter.between(startTime, endTime)
-            )
-        )
     }
 
     suspend fun getExerciseSessionRecords(): ReadRecordsResponse<ExerciseSessionRecord>? {
@@ -71,6 +56,7 @@ class HealthConnect @Inject constructor(
          *
          *      EXERCISE_TYPE_OTHER_WORKOUT = 0
          */
+        assignHealthConnectClient()
 
         if (healthConnectClient == null || !hasPermissions()) {
             return null
@@ -95,6 +81,8 @@ class HealthConnect @Inject constructor(
     }
 
     suspend fun getHeightRecords(): ReadRecordsResponse<HeightRecord>? {
+        assignHealthConnectClient()
+
         if (healthConnectClient == null || !hasPermissions()) {
             return null
         }
@@ -107,6 +95,8 @@ class HealthConnect @Inject constructor(
     }
 
     suspend fun getWeightRecords(): ReadRecordsResponse<WeightRecord>? {
+        assignHealthConnectClient()
+
         if (healthConnectClient == null || !hasPermissions()) {
             return null
         }

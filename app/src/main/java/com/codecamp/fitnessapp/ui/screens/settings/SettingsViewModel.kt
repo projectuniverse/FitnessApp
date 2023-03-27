@@ -2,7 +2,6 @@ package com.codecamp.fitnessapp.ui.screens.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.codecamp.fitnessapp.data.healthconnect.DefaultHealthConnectUsageRepository
 import com.codecamp.fitnessapp.data.user.DefaultUserRepository
 import com.codecamp.fitnessapp.healthconnect.HealthConnectRepositoryInterface
 import com.codecamp.fitnessapp.model.User
@@ -16,11 +15,9 @@ import javax.inject.Inject
 class SettingsViewModel
 @Inject constructor(
     private val userRepository: DefaultUserRepository,
-    private val hcUsageRepository: DefaultHealthConnectUsageRepository,
     private val healthConnectRepository: HealthConnectRepositoryInterface
 ) : ViewModel() {
     val user = userRepository.user
-    val hcPermission = hcUsageRepository.hcUsages
 
     val healthConnectWeight = healthConnectRepository.weight
     val healthConnectHeight = healthConnectRepository.height
@@ -42,13 +39,6 @@ class SettingsViewModel
             }
         } else {
             false
-        }
-    }
-
-    fun updateHealthConnectUsage() {
-        viewModelScope.launch {
-            //val permission = hcPermission.first().hasPermission
-            hcUsageRepository.insertHealthConnectUsage(HealthConnectUsage(0, true, true))
         }
     }
 

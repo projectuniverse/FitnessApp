@@ -3,8 +3,6 @@ package com.codecamp.fitnessapp.di
 import android.app.Application
 import android.content.Context
 import androidx.room.Room
-import com.codecamp.fitnessapp.data.healthconnect.DefaultHealthConnectUsageRepository
-import com.codecamp.fitnessapp.data.healthconnect.HealthConnectUsageDatabase
 import com.codecamp.fitnessapp.data.track.DefaultTrackRepository
 import com.codecamp.fitnessapp.data.track.TrackDatabase
 import com.codecamp.fitnessapp.data.user.DefaultUserRepository
@@ -137,22 +135,6 @@ object AppModule {
         db: TrackDatabase
     ): DefaultTrackRepository {
         return DefaultTrackRepository(db.trackDao())
-    }
-
-    @Provides
-    @Singleton
-    fun provideHCUsageDatabase(app: Application): HealthConnectUsageDatabase {
-        return Room.databaseBuilder(
-            app,
-            HealthConnectUsageDatabase::class.java,
-            "healthconnectusage_database"
-        ).fallbackToDestructiveMigration().build()
-    }
-
-    @Provides
-    @Singleton
-    fun provideHCUsageRepository(db: HealthConnectUsageDatabase) : DefaultHealthConnectUsageRepository {
-        return DefaultHealthConnectUsageRepository(db.healthConnectUsageDao())
     }
 
     @Singleton
