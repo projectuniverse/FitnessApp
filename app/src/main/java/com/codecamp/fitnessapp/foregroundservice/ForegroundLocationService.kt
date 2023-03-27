@@ -77,9 +77,9 @@ class ForegroundLocationService: Service() {
 
     private fun start() {
         val notification = NotificationCompat.Builder(this, "location")
-            .setContentTitle("Tracking location...")
-            .setContentText("Location: null")
-            .setSmallIcon(R.drawable.ic_launcher_background)
+            .setContentTitle("Fitness App")
+            .setContentText("Something went wrong. Please check permissions and start app new.")
+            .setSmallIcon(R.drawable.fitnessappicon)
             .setOngoing(true)
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -93,7 +93,7 @@ class ForegroundLocationService: Service() {
             .onEach { location ->
                 val lat = location.latitude
                 val lon = location.longitude
-                val updatedNotification = notification.setContentText("Location: $lat, $lon || ${ActivityTransitionUtil.activityNotificationText.value}")
+                val updatedNotification = notification.setContentText("Fitness App is accessing your Location.")
                 notificationManager.notify(1, updatedNotification.build())
             }
             .launchIn(serviceScope)
@@ -102,7 +102,7 @@ class ForegroundLocationService: Service() {
     }
 
     private fun stop() {
-        stopForeground(true)
+        stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
     }
 
