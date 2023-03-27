@@ -2,10 +2,14 @@ package com.codecamp.fitnessapp.ui.screens.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.codecamp.fitnessapp.data.Initialization.DefaultInitializationRepository
 import com.codecamp.fitnessapp.data.user.DefaultUserRepository
+import com.codecamp.fitnessapp.data.workout.DefaultWorkoutRepository
+import com.codecamp.fitnessapp.data.workout.WorkoutRepository
 import com.codecamp.fitnessapp.healthconnect.HealthConnectRepositoryInterface
 import com.codecamp.fitnessapp.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -13,7 +17,9 @@ import javax.inject.Inject
 class SettingsViewModel
 @Inject constructor(
     private val userRepository: DefaultUserRepository,
-    private val healthConnectRepository: HealthConnectRepositoryInterface
+    private val healthConnectRepository: HealthConnectRepositoryInterface,
+    private val workoutRepository: DefaultWorkoutRepository,
+    private val initializationRepository: DefaultInitializationRepository
 ) : ViewModel() {
     val user = userRepository.user
 
@@ -69,5 +75,13 @@ class SettingsViewModel
             }
         }
         return isValidUser(age, tempHeight.toString(), tempWeight.toString())
+    }
+
+    fun deleteData() {
+        GlobalScope.launch {
+            workoutRepository.deleteWorkouts()
+            userRepository.deleteUser()
+            initializationRepository.setFirstInit(true)
+        }
     }
 }
