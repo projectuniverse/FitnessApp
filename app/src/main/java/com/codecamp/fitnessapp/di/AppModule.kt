@@ -2,7 +2,19 @@ package com.codecamp.fitnessapp.di
 
 import android.app.Application
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
+import androidx.datastore.dataStore
+import androidx.datastore.preferences.SharedPreferencesMigration
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.preferencesDataStore
+import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
+import com.codecamp.fitnessapp.data.Initialization.DefaultInitializationRepository
+import com.codecamp.fitnessapp.data.healthconnect.DefaultHealthConnectUsageRepository
+import com.codecamp.fitnessapp.data.healthconnect.HealthConnectUsageDatabase
 import com.codecamp.fitnessapp.data.track.DefaultTrackRepository
 import com.codecamp.fitnessapp.data.track.TrackDatabase
 import com.codecamp.fitnessapp.data.user.DefaultUserRepository
@@ -20,7 +32,11 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType
 import retrofit2.Retrofit
@@ -30,9 +46,30 @@ import javax.inject.Singleton
  * Dependency injection using Hilt.
  * Used to get the respective repositories.
  */
-@Module
 @InstallIn(SingletonComponent::class)
+@Module
 object AppModule {
+    @Singleton
+    @Provides
+    fun providePreferencesDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> {
+        return PreferenceDataStoreFactory.create(
+            corruptionHandler = ReplaceFileCorruptionHandler(
+                produceNewData = { emptyPreferences() }
+            ),
+            migrations = listOf(SharedPreferencesMigration(appContext, "first_init")),
+            scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
+            produceFile = { appContext.preferencesDataStoreFile("first_init") }
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideInitializationRepository(
+        dataStore: DataStore<Preferences>
+    ): DefaultInitializationRepository {
+        return DefaultInitializationRepository(dataStore)
+    }
+
     @Provides
     @Singleton
     @kotlinx.serialization.ExperimentalSerializationApi
