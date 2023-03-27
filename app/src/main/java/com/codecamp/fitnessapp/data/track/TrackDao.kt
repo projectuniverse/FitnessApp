@@ -17,4 +17,7 @@ interface TrackDao {
 
     @Query("SELECT * FROM track")
     fun getAllTracks(): Flow<List<Track>>
+
+    @Query("DELETE FROM track")
+    fun deleteTracks()
 }
