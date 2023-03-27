@@ -1,6 +1,5 @@
 package com.codecamp.fitnessapp
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -30,12 +29,9 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val Context.dataStore by preferencesDataStore("FitnessSettings")
-
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var firstInit: Boolean? = null
 
         // start Location tracking
         Intent(applicationContext, ForegroundLocationService::class.java).apply {
@@ -44,7 +40,6 @@ class MainActivity : ComponentActivity() {
         }
 
         GlobalScope.launch {
-            firstInit = getFirstInit()
             if (HealthConnectClient.isApiSupported() && HealthConnectClient.isProviderAvailable(applicationContext)) {
                 val client = HealthConnectClient.getOrCreate(applicationContext)
                 checkPermissionsAndRun(client)
@@ -56,31 +51,14 @@ class MainActivity : ComponentActivity() {
             0
         )
 
-        // Show Logo until data has arrived
-        while (firstInit == null) {}
-
         setContent {
             FitnessAppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colorScheme.surface) {
-                    FitnessApp(firstInit = firstInit!!)
+                    FitnessApp()
                 }
             }
         }
-    }
-
-    private suspend fun getFirstInit(): Boolean {
-        val isFirstTimeLaunchKey = booleanPreferencesKey("is_first_time_launch4")
-        val isFirstTimeLaunchFlow: Flow<Boolean> = dataStore.data
-            .map { preferences -> preferences[isFirstTimeLaunchKey] ?: true }
-            .distinctUntilChanged()
-
-        return if (isFirstTimeLaunchFlow.first()) {
-            dataStore.edit { preferences ->
-                preferences[isFirstTimeLaunchKey] = false
-            }
-            true
-        } else false
     }
 
     private val PERMISSIONS = setOf(

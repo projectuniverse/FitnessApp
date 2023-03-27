@@ -1,6 +1,7 @@
 package com.codecamp.fitnessapp.ui
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.annotation.StringRes
@@ -12,18 +13,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.res.stringResource
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.codecamp.fitnessapp.FitnessAppViewModel
 import com.codecamp.fitnessapp.R
-import com.codecamp.fitnessapp.data.user.DefaultUserRepository
 import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.OutsideWorkout
-import com.codecamp.fitnessapp.model.User
 import com.codecamp.fitnessapp.ui.screens.StartButton
 import com.codecamp.fitnessapp.ui.screens.TopBar
 import com.codecamp.fitnessapp.ui.screens.dashboard.DashboardScreen
@@ -31,8 +30,6 @@ import com.codecamp.fitnessapp.ui.screens.inside.InsideScreen
 import com.codecamp.fitnessapp.ui.screens.outside.OutsideScreen
 import com.codecamp.fitnessapp.ui.screens.result.ResultScreen
 import com.codecamp.fitnessapp.ui.screens.settings.SettingScreen
-import com.codecamp.fitnessapp.ui.screens.settings.SettingsViewModel
-import javax.inject.Inject
 
 enum class AppScreen(@StringRes val title: Int) {
     Dashboard(title = R.string.Dashboard),
@@ -48,69 +45,74 @@ enum class AppScreen(@StringRes val title: Int) {
 fun FitnessApp(
     navController: NavHostController = rememberNavController(),
     fitnessAppViewModel: FitnessAppViewModel = hiltViewModel(),
-    firstInit: Boolean
 ) {
+    val firstInit = fitnessAppViewModel.firstInit.collectAsState(initial = null)
     val user = fitnessAppViewModel.user.collectAsState(initial = null)
-    val _firstInit = if (user.value != null) {
-        false
-    } else {
-        firstInit
-    }
-    val firstScreen = if(_firstInit) {
-        AppScreen.Settings.name
-    } else {
-        AppScreen.Dashboard.name
-    }
-    var title by remember { mutableStateOf(firstScreen) }
-    var workoutName = ""
-    var insideWorkout: InsideWorkout? = null
-    var outsideWorkout: OutsideWorkout? = null
+    Log.d("TEST", "RECOMPOSE ${firstInit.value}")
 
-    /*
-    * Costum onBackPressed function, that overrides the standard onBackPressed
-    * */
-    val onBackPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
-    if (onBackPressedDispatcher != null) {
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (title.contains(AppScreen.Result.name)) {
-                    navController.navigate(AppScreen.Dashboard.name)
-                } else if (title != AppScreen.Dashboard.name) {
-                    navController.popBackStack()
-                }
-            }
+    if (firstInit.value != null) {
+        val _firstInit = if (user.value != null) {
+            fitnessAppViewModel.updateFirstInit()
+            false
+        } else {
+            firstInit.value!!
         }
-        onBackPressedDispatcher.addCallback(LocalLifecycleOwner.current, callback)
-        navController.setLifecycleOwner(LocalLifecycleOwner.current)
-        navController.setOnBackPressedDispatcher(onBackPressedDispatcher)
-    }
+        val firstScreen = if (_firstInit) {
+            AppScreen.Settings.name
+        } else {
+            AppScreen.Dashboard.name
+        }
+        var title by remember { mutableStateOf(firstScreen) }
+        var workoutName = ""
+        var insideWorkout: InsideWorkout? = null
+        var outsideWorkout: OutsideWorkout? = null
 
-    /*
-    * In this Scaffold sits the whole UI of the App
-    * In every screen is a topbar and only in the dashboard a floatingActionButton
-    * The navigation is implemented with a NavHost and NavController
-    * The title of the topbar switches when entering a screen
-    * */
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            TopBar(
-                title,
-                showSettings = {
-                    navController.navigate(AppScreen.Settings.name)
-                    title = AppScreen.Settings.name
-                               },
-                navigateBack = {
+        /*
+         * Costum onBackPressed function, that overrides the standard onBackPressed
+         */
+        val onBackPressedDispatcher =
+            LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+        if (onBackPressedDispatcher != null) {
+            val callback = object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
                     if (title.contains(AppScreen.Result.name)) {
                         navController.navigate(AppScreen.Dashboard.name)
-                    } else {
+                    } else if (title != AppScreen.Dashboard.name) {
                         navController.popBackStack()
                     }
-                },
-                _firstInit
-            )
-        },
-        floatingActionButton = {
+                }
+            }
+            onBackPressedDispatcher.addCallback(LocalLifecycleOwner.current, callback)
+            navController.setLifecycleOwner(LocalLifecycleOwner.current)
+            navController.setOnBackPressedDispatcher(onBackPressedDispatcher)
+        }
+
+        /*
+         * In this Scaffold sits the whole UI of the App
+         * In every screen is a topbar and only in the dashboard a floatingActionButton
+         * The navigation is implemented with a NavHost and NavController
+         * The title of the topbar switches when entering a screen
+         */
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            topBar = {
+                TopBar(
+                    title,
+                    showSettings = {
+                        navController.navigate(AppScreen.Settings.name)
+                        title = AppScreen.Settings.name
+                    },
+                    navigateBack = {
+                        if (title.contains(AppScreen.Result.name)) {
+                            navController.navigate(AppScreen.Dashboard.name)
+                        } else {
+                            navController.popBackStack()
+                        }
+                    },
+                    _firstInit
+                )
+            },
+            floatingActionButton = {
                 StartButton(
                     title,
                     startNewInside = { name ->
@@ -122,64 +124,69 @@ fun FitnessApp(
                         navController.navigate(AppScreen.Outside.name)
                     }
                 )
-        },
-        floatingActionButtonPosition = FabPosition.Center
-    ) { innerPadding ->
-        NavHost(
-            // This line is necessary for the top bar to not overlay the content below it
-            // See: https://www.youtube.com/watch?v=hQJpd78RUVg
-            modifier = Modifier.padding(top = innerPadding.calculateTopPadding()),
-            navController = navController,
-            startDestination = firstScreen
-        ) {
-            composable(route = AppScreen.Dashboard.name) {
-                title = navController.currentDestination?.route.toString()
-                DashboardScreen(
-                    showOldInside = { oldInside ->
-                        insideWorkout = oldInside
-                        outsideWorkout = null
-                        workoutName = oldInside.name
-                        navController.navigate(AppScreen.Result.name)},
-                    showOldOutside = { oldOutside ->
-                        outsideWorkout = oldOutside
-                        insideWorkout = null
-                        workoutName = oldOutside.name
-                        navController.navigate(AppScreen.Result.name)}
-                )
-            }
+            },
+            floatingActionButtonPosition = FabPosition.Center
+        ) { innerPadding ->
+            NavHost(
+                // This line is necessary for the top bar to not overlay the content below it
+                // See: https://www.youtube.com/watch?v=hQJpd78RUVg
+                modifier = Modifier.padding(top = innerPadding.calculateTopPadding()),
+                navController = navController,
+                startDestination = firstScreen
+            ) {
+                composable(route = AppScreen.Dashboard.name) {
+                    title = navController.currentDestination?.route.toString()
+                    DashboardScreen(
+                        showOldInside = { oldInside ->
+                            insideWorkout = oldInside
+                            outsideWorkout = null
+                            workoutName = oldInside.name
+                            navController.navigate(AppScreen.Result.name)
+                        },
+                        showOldOutside = { oldOutside ->
+                            outsideWorkout = oldOutside
+                            insideWorkout = null
+                            workoutName = oldOutside.name
+                            navController.navigate(AppScreen.Result.name)
+                        }
+                    )
+                }
 
-            composable(route = AppScreen.Settings.name) {
-                SettingScreen()
-            }
+                composable(route = AppScreen.Settings.name) {
+                    SettingScreen()
+                }
 
-            composable(route = AppScreen.Inside.name) {
-                outsideWorkout = null
-                title = workoutName
-                InsideScreen(
-                    title,
-                    stopWorkout = { newInside ->
-                    insideWorkout = newInside
-                    navController.navigate(AppScreen.Result.name)}
-                )
-            }
+                composable(route = AppScreen.Inside.name) {
+                    outsideWorkout = null
+                    title = workoutName
+                    InsideScreen(
+                        title,
+                        stopWorkout = { newInside ->
+                            insideWorkout = newInside
+                            navController.navigate(AppScreen.Result.name)
+                        }
+                    )
+                }
 
-            composable(route = AppScreen.Outside.name) {
-                insideWorkout = null
-                title = workoutName
-                OutsideScreen(
-                    title,
-                    stopWorkout = { newOutside ->
-                    outsideWorkout = newOutside
-                    navController.navigate(AppScreen.Result.name)}
-                )
-            }
+                composable(route = AppScreen.Outside.name) {
+                    insideWorkout = null
+                    title = workoutName
+                    OutsideScreen(
+                        title,
+                        stopWorkout = { newOutside ->
+                            outsideWorkout = newOutside
+                            navController.navigate(AppScreen.Result.name)
+                        }
+                    )
+                }
 
-            composable(route = AppScreen.Result.name) {
-                title = navController.currentDestination?.route.toString() + ": " + workoutName
-                ResultScreen(
-                    insideWorkout = insideWorkout,
-                    outsideWorkout = outsideWorkout
-                )
+                composable(route = AppScreen.Result.name) {
+                    title = navController.currentDestination?.route.toString() + ": " + workoutName
+                    ResultScreen(
+                        insideWorkout = insideWorkout,
+                        outsideWorkout = outsideWorkout
+                    )
+                }
             }
         }
     }
