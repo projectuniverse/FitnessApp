@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
             FitnessAppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colorScheme.surface) {
-                    FitnessApp()
+                    FitnessApp(applicationContext)
                 }
             }
         }
