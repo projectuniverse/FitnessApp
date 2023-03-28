@@ -12,7 +12,8 @@ import com.codecamp.fitnessapp.model.OutsideWorkout
 @Composable
 fun ResultScreen(
     insideWorkout: InsideWorkout?,
-    outsideWorkout: OutsideWorkout?
+    outsideWorkout: OutsideWorkout?,
+    new: Boolean
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -23,7 +24,7 @@ fun ResultScreen(
         * In dependence of which workout is done, the outside or inside workout are displayed
         * */
         if (outsideWorkout != null) {
-            OutsideResult(outsideWorkout)
+            OutsideResult(outsideWorkout,new = new)
         } else if (insideWorkout != null) {
             InsideResult(insideWorkout)
         }

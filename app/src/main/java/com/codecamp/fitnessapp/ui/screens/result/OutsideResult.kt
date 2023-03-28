@@ -17,12 +17,13 @@ import com.codecamp.fitnessapp.model.OutsideWorkout
 @Composable
 fun OutsideResult(
     outsideWorkout: OutsideWorkout,
-    resultViewModel: ResultViewModel = hiltViewModel()
+    resultViewModel: ResultViewModel = hiltViewModel(),
+    new: Boolean
 ) {
     val workoutStats = stringArrayResource(R.array.WorkoutStats)
 
     val savedOutsideWorkouts = resultViewModel.workouts.collectAsState(initial = mutableListOf()).value
-    val latestOutsideWorkoutId = if (outsideWorkout.id == Int.MAX_VALUE && savedOutsideWorkouts.isNotEmpty()) savedOutsideWorkouts.last().id
+    val latestOutsideWorkoutId = if (new) savedOutsideWorkouts.last().id
     else outsideWorkout.id
 
     val tracklist = resultViewModel.tracklist.collectAsState(initial = mutableListOf()).value
