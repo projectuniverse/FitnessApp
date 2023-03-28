@@ -1,7 +1,7 @@
-package com.codecamp.fitnessapp.sensor
+package com.codecamp.fitnessapp.di
 
-import com.codecamp.fitnessapp.sensor.finall.GyroscopeRepository
-import com.codecamp.fitnessapp.sensor.finall.GyroscopeRepositoryImpl
+import com.codecamp.fitnessapp.sensor.repository.GyroscopeRepository
+import com.codecamp.fitnessapp.sensor.GyroscopeRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

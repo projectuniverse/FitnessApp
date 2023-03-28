@@ -14,10 +14,10 @@ import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.OutsideWorkout
 import com.codecamp.fitnessapp.model.Track
 import com.codecamp.fitnessapp.model.User
-import com.codecamp.fitnessapp.sensor.finall.GyroscopeRepository
-import com.codecamp.fitnessapp.sensor.pushup.PushUpUtil
-import com.codecamp.fitnessapp.sensor.situp.SitUpUtil
-import com.codecamp.fitnessapp.sensor.squat.SquatUtil
+import com.codecamp.fitnessapp.sensor.repository.GyroscopeRepository
+import com.codecamp.fitnessapp.ui.viewmodel.insideutil.PushUpUtil
+import com.codecamp.fitnessapp.ui.viewmodel.insideutil.SitUpUtil
+import com.codecamp.fitnessapp.ui.viewmodel.insideutil.SquatUtil
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
