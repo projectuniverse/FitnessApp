@@ -50,13 +50,6 @@ fun AltitudeResult(
             contentColor = MaterialTheme.colorScheme.onSurface,
         )
     ) {
-
-//        val values: MutableList<Pair<Int, Float>> = mutableListOf()
-//        val start = 1677633370
-//        for (i in 0 until 180) {
-//            values.add(start + i*10 to (167..300).random().toFloat())
-//        }
-
         class Entry(
             val time: Int,
             override val x: Float,
