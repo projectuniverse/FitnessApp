@@ -1,6 +1,8 @@
 package com.codecamp.fitnessapp.ui
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
@@ -21,6 +23,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.codecamp.fitnessapp.R
+import com.codecamp.fitnessapp.foregroundservice.ForegroundLocationService
 import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.OutsideWorkout
 import com.codecamp.fitnessapp.ui.screens.StartButton
@@ -43,6 +46,7 @@ enum class AppScreen(@StringRes val title: Int) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FitnessApp(
+    context: Context,
     navController: NavHostController = rememberNavController(),
     fitnessAppViewModel: FitnessAppViewModel = hiltViewModel(),
 ) {
@@ -122,6 +126,11 @@ fun FitnessApp(
                     startNewOutside = { name ->
                         workoutName = name
                         navController.navigate(AppScreen.Outside.name)
+                        //stop background tracking while explicitly starting workout
+                        Intent(context, ForegroundLocationService::class.java).apply {
+                            action = ForegroundLocationService.ACTION_STOP
+                            context.startService(this)
+                        }
                     }
                 )
             },
@@ -176,6 +185,11 @@ fun FitnessApp(
                         stopWorkout = { newOutside ->
                             outsideWorkout = newOutside
                             navController.navigate(AppScreen.Result.name)
+                            //when workout stops, restart automatic activity tracking
+                            Intent(context, ForegroundLocationService::class.java).apply {
+                                action = ForegroundLocationService.ACTION_START
+                                context.startService(this)
+                            }
                         }
                     )
                 }

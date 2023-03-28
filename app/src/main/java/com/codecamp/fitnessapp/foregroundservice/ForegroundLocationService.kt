@@ -64,7 +64,9 @@ class ForegroundLocationService: Service() {
     }
 
     private fun getPendingIntent(): PendingIntent {
-        val newIntent = Intent(applicationContext, ActivityTransitionReceiver::class.java)
+        val newIntent = Intent(applicationContext, ActivityTransitionReceiver::class.java). apply {
+
+        }
         return PendingIntent.getBroadcast(
             applicationContext,
             0,
@@ -110,6 +112,7 @@ class ForegroundLocationService: Service() {
     }
 
     private fun stop() {
+        removeUpdates()
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
     }
