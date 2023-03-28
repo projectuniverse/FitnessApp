@@ -1,5 +1,6 @@
 package com.codecamp.fitnessapp.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
@@ -12,14 +13,18 @@ import androidx.room.PrimaryKey
  * as well as the altitude profile and pace per km.
  */
 
+/*
 @Entity(tableName = "track",
-    foreignKeys = [ForeignKey(
+    foreignKeys = arrayOf(ForeignKey(
         entity = OutsideWorkout::class,
-        parentColumns = ["id"],
-        childColumns = ["workoutId"],
+        parentColumns = arrayOf("id"),
+        childColumns = arrayOf("workoutId"),
         onDelete = CASCADE
-    )]
+    ))
 )
+
+ */
+@Entity(tableName = "track")
 data class Track(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
@@ -28,7 +33,7 @@ data class Track(
      * If outsideWorkout is deleted, all Tracks with this workoutId automatically
      * get deleted.
      */
-    var workoutId: Int,
+    val workoutId: Int,
     // lat and long must later manually be converted to LatLng for using google maps
     // Also used for calculating pace per km in combination with timestamp
     val lat: Double,

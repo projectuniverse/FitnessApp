@@ -3,6 +3,7 @@ package com.codecamp.fitnessapp.ui.screens.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.codecamp.fitnessapp.data.Initialization.DefaultInitializationRepository
+import com.codecamp.fitnessapp.data.track.DefaultTrackRepository
 import com.codecamp.fitnessapp.data.user.DefaultUserRepository
 import com.codecamp.fitnessapp.data.workout.DefaultWorkoutRepository
 import com.codecamp.fitnessapp.data.workout.WorkoutRepository
@@ -19,7 +20,8 @@ class SettingsViewModel
     private val userRepository: DefaultUserRepository,
     private val healthConnectRepository: HealthConnectRepositoryInterface,
     private val workoutRepository: DefaultWorkoutRepository,
-    private val initializationRepository: DefaultInitializationRepository
+    private val initializationRepository: DefaultInitializationRepository,
+    private val trackRepository: DefaultTrackRepository
 ) : ViewModel() {
     val user = userRepository.user
 
@@ -81,6 +83,7 @@ class SettingsViewModel
         GlobalScope.launch {
             workoutRepository.deleteWorkouts()
             userRepository.deleteUser()
+            trackRepository.deleteTracks()
             initializationRepository.setFirstInit(true)
         }
     }

@@ -9,8 +9,6 @@ import com.codecamp.fitnessapp.model.*
 /*
  * Acts as the Room database for outside workout data
  */
-// TODO nochmal gucken was exportSchema ist und ob man noch was anpassen muss wegen Daten ändern und so:
-// TODO Kann es conflicts geben??
 @Database(entities = [OutsideWorkout::class], version = 1, exportSchema = false)
 abstract class OutsideWorkoutDatabase : RoomDatabase() {
     abstract fun outsideWorkoutDao(): OutsideWorkoutDao
@@ -21,7 +19,6 @@ abstract class OutsideWorkoutDatabase : RoomDatabase() {
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(context, OutsideWorkoutDatabase::class.java, "outside_workout_database")
                     .fallbackToDestructiveMigration()
-                    //TODO hier gucken muss was mit der Migration angepasst werden
                     .build()
                     .also { Instance = it}
             }

@@ -9,7 +9,7 @@ import com.codecamp.fitnessapp.model.*
 /*
  * Acts as the Room database for track data
  */
-@Database(entities = [Track::class, OutsideWorkout::class], version = 1, exportSchema = false)
+@Database(entities = [Track::class, OutsideWorkout::class], version = 2, exportSchema = false)
 abstract class TrackDatabase : RoomDatabase() {
     abstract fun trackDao(): TrackDao
     companion object {
