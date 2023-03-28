@@ -84,12 +84,12 @@ fun OutsideScreen(
                         workoutViewModel.createNewTrack()
                     }
                     else if(workoutState == "active") {
+                        workoutViewModel.createNewTrack()
                         workoutViewModel.switchWorkingOut()
                         workoutState = "stopped"
                         buttontext = workoutStats[9]
                     }
                     else if (workoutState == "stopped") {
-                        workoutViewModel.createNewTrack()
                         val result = workoutViewModel.createOutsideWorkout(workoutName, currentUser.value)
                         workoutViewModel.saveOutsideWorkout(result)
                         stopWorkout(result)

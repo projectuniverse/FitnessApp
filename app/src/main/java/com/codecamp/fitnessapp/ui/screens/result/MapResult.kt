@@ -33,7 +33,11 @@ fun MapResult(latlngList: List<LatLng>) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             val zoom = 17f
-            val start = LatLng(51.3204621,9.4886897)
+            var start = if (latlngList.isNotEmpty()) {
+                latlngList.last()
+            } else {
+                LatLng(51.3204621,9.4886897)
+            }
 
             val cameraPositionState = rememberCameraPositionState {
                 position = CameraPosition.fromLatLngZoom(start, zoom)
