@@ -67,6 +67,7 @@ fun FitnessApp(
             AppScreen.Dashboard.name
         }
         var title by remember { mutableStateOf(firstScreen) }
+        var new by remember { mutableStateOf(true) }
         var workoutName = ""
         var insideWorkout: InsideWorkout? = null
         var outsideWorkout: OutsideWorkout? = null
@@ -155,12 +156,14 @@ fun FitnessApp(
                             insideWorkout = oldInside
                             outsideWorkout = null
                             workoutName = oldInside.name
+                            new = false
                             navController.navigate(AppScreen.Result.name)
                         },
                         showOldOutside = { oldOutside ->
                             outsideWorkout = oldOutside
                             insideWorkout = null
                             workoutName = oldOutside.name
+                            new = false
                             navController.navigate(AppScreen.Result.name)
                         }
                     )
@@ -176,6 +179,7 @@ fun FitnessApp(
                     InsideScreen(
                         title,
                         stopWorkout = { newInside ->
+                            new = true
                             insideWorkout = newInside
                             navController.navigate(AppScreen.Result.name)
                         }
@@ -188,6 +192,7 @@ fun FitnessApp(
                     OutsideScreen(
                         title,
                         stopWorkout = { newOutside ->
+                            new = true
                             outsideWorkout = newOutside
                             navController.navigate(AppScreen.Result.name)
                             //when workout stops, restart automatic activity tracking
@@ -203,7 +208,8 @@ fun FitnessApp(
                     title = navController.currentDestination?.route.toString() + ": " + workoutName
                     ResultScreen(
                         insideWorkout = insideWorkout,
-                        outsideWorkout = outsideWorkout
+                        outsideWorkout = outsideWorkout,
+                        new = new
                     )
                 }
             }

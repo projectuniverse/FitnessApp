@@ -255,7 +255,7 @@ class OutsideViewModel
 
     fun saveOutsideWorkout(result: OutsideWorkout) {
         viewModelScope.launch {
-            val out = result.copy(id = 0, pace = 22.0)
+            val out = result.copy(pace = 22.0)
             val id = async { workoutRepository.insertOutsideWorkout(out) }.await()
 
             for (track in trackList) {
@@ -292,7 +292,6 @@ class OutsideViewModel
         }
 
         return OutsideWorkout(
-            id = Int.MAX_VALUE,
             name = workoutName,
             pace = pace,
             steps = steps,
