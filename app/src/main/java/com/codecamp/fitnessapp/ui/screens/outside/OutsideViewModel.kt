@@ -2,7 +2,6 @@ package com.codecamp.fitnessapp.ui.screens.outside
 
 import android.location.Location
 import android.util.Log
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -44,6 +43,7 @@ class OutsideViewModel
     val pace: MutableLiveData<String> by lazy { MutableLiveData("00:00") }
     val paceKm: MutableLiveData<String> by lazy { MutableLiveData("00:00") }
 
+    private val simulation = false
 
     init {
         viewModelScope.launch {
@@ -98,7 +98,7 @@ class OutsideViewModel
     /*
     * calculates from a given start and end time the format: hh:mm:ss
     * */
-    fun getElapsedTime(endTime: Int, startTime: Int): String {
+    private fun getElapsedTime(endTime: Int, startTime: Int): String {
         val elapsedSeconds = endTime - startTime
         val elapsedMinutes = elapsedSeconds / 60
         val elapsedHours = elapsedMinutes / 60
@@ -126,7 +126,7 @@ class OutsideViewModel
         viewModelScope.launch {
             locationTracker.getLocation()
         }
-        return if (location != null)
+        return if (location != null && !simulation)
             LatLng(location.latitude, location.longitude)
         else
             LatLng(51.3204621, 9.4886897)
@@ -136,9 +136,8 @@ class OutsideViewModel
         viewModelScope.launch {
             var newTrack: Track? = null
             val currentTime = System.currentTimeMillis()
-            val debugOn = false
 
-            if (!debugOn) {
+            if (!simulation) {
                 val location = locationTracker.getLocation()
                 if (location != null) {
                     newTrack = Track(
@@ -167,7 +166,9 @@ class OutsideViewModel
                     timestamp = currentTime
                 )
             }
-            trackList.add(newTrack!!)
+            if (newTrack != null) {
+                trackList.add(newTrack)
+            }
             updateRunningData()
         }
     }
@@ -232,7 +233,7 @@ class OutsideViewModel
             lastTrack = trackList[i]
         }
         if (km == 0.0) {
-            return t
+            return 0.0
         }
         return t / km
     }
@@ -255,18 +256,11 @@ class OutsideViewModel
         viewModelScope.launch {
             val out = result.copy(pace = 22.0)
             val id = async { workoutRepository.insertOutsideWorkout(out) }.await()
-            //val o = workoutRepository.getLastOutsideWorkoutId(1)
-            //Log.d("asd", "GOT OUTSIDE WORKOUT ${o.id}")
 
-            // TODO fix bug
-            Log.d("asd", "Inserted ID is: $id")
             for (track in trackList) {
-                Log.d("asd", "1. Track with: ${track.id} ${track.workoutId}")
                 val tr = track.copy(workoutId = id)
-                Log.d("asd", "2. Track with: ${tr.id} ${tr.workoutId}")
                 trackRepository.insertTrack(tr)
             }
-            Log.d("asd", "asdasdasd")
         }
     }
 
