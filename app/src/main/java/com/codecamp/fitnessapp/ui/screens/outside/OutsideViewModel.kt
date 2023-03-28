@@ -15,6 +15,7 @@ import com.codecamp.fitnessapp.model.Track
 import com.codecamp.fitnessapp.model.User
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.roundToInt
@@ -229,7 +230,9 @@ class OutsideViewModel
             }
             lastTrack = trackList[i]
         }
-
+        if (km == 0.0) {
+            return t
+        }
         return t / km
     }
 
@@ -237,10 +240,11 @@ class OutsideViewModel
         if (trackList.size > 1) {
             val dis = calculateDistance() // distance in km
             distance.postValue(String.format("%.2f", dis))
-
             val elapsedTime = (trackList.last().timestamp.toDouble() - startTime) / (1000 * 60)
-            pace.postValue(formatTime(elapsedTime / dis))
 
+            if (dis != 0.0) {
+                pace.postValue(formatTime(elapsedTime / dis))
+            }
             val _paceKm = calculateTimeForLastKm()
             paceKm.postValue(formatTime(_paceKm))
         }
@@ -279,7 +283,11 @@ class OutsideViewModel
 
         val kcal = calculateKCalOutside(workoutName, dis, (elapsedTime / 60), user)
 
-        val pace = elapsedTime / dis
+        val pace = if (dis != 0.0) {
+            elapsedTime / dis
+        } else {
+            0.0
+        }
 
         return OutsideWorkout(
             name = workoutName,
