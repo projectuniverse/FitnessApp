@@ -79,9 +79,19 @@ class ForegroundLocationService: Service() {
         when(intent?.action) {
             ACTION_START -> start()
             ACTION_STOP -> stop()
+            ACTION_START_ACTIVITY_TRACKING -> startUpdates()
+            ACTION_STOP_ACTIVITY_TRACKING -> stopUpdates()
         }
 
         return super.onStartCommand(intent, flags, startId)
+    }
+
+    private fun startUpdates() {
+        requestUpdates()
+    }
+
+    private fun stopUpdates() {
+        removeUpdates()
     }
 
     // Varaible isactiveworkout und wenn das der fall ist bei dem oneach track objekt erstellen
@@ -125,5 +135,7 @@ class ForegroundLocationService: Service() {
     companion object {
         const val ACTION_START = "ACTION_START"
         const val ACTION_STOP = "ACTION_STOP"
+        const val ACTION_START_ACTIVITY_TRACKING = "START_ACTIVITY_TRACKING"
+        const val ACTION_STOP_ACTIVITY_TRACKING = "STOP_ACTIVITY_TRACKING"
     }
 }

@@ -111,6 +111,11 @@ fun FitnessApp(
                             navController.navigate(AppScreen.Dashboard.name)
                         } else {
                             navController.popBackStack()
+                            //restart background activity tracking
+                            Intent(context, ForegroundLocationService::class.java).apply {
+                                action = ForegroundLocationService.ACTION_START_ACTIVITY_TRACKING
+                                context.startService(this)
+                            }
                         }
                     },
                     _firstInit
@@ -128,7 +133,7 @@ fun FitnessApp(
                         navController.navigate(AppScreen.Outside.name)
                         //stop background tracking while explicitly starting workout
                         Intent(context, ForegroundLocationService::class.java).apply {
-                            action = ForegroundLocationService.ACTION_STOP
+                            action = ForegroundLocationService.ACTION_STOP_ACTIVITY_TRACKING
                             context.startService(this)
                         }
                     }
@@ -187,7 +192,7 @@ fun FitnessApp(
                             navController.navigate(AppScreen.Result.name)
                             //when workout stops, restart automatic activity tracking
                             Intent(context, ForegroundLocationService::class.java).apply {
-                                action = ForegroundLocationService.ACTION_START
+                                action = ForegroundLocationService.ACTION_START_ACTIVITY_TRACKING
                                 context.startService(this)
                             }
                         }

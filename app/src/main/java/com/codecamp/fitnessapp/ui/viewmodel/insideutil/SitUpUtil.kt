@@ -1,4 +1,4 @@
-package com.codecamp.fitnessapp.sensor.situp
+package com.codecamp.fitnessapp.ui.viewmodel.insideutil
 
 import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.flow.MutableStateFlow

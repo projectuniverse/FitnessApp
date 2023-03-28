@@ -1,6 +1,6 @@
-package com.codecamp.fitnessapp.sensor.finall
+package com.codecamp.fitnessapp.sensor
 
-import com.codecamp.fitnessapp.sensor.Gyroscope
+import com.codecamp.fitnessapp.sensor.repository.GyroscopeRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 

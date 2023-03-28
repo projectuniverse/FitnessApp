@@ -1,4 +1,4 @@
-package com.codecamp.fitnessapp.sensor.finall
+package com.codecamp.fitnessapp.sensor.repository
 
 import kotlinx.coroutines.flow.MutableStateFlow
 
