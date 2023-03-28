@@ -3,9 +3,9 @@ package com.codecamp.fitnessapp.di
 import android.app.Application
 import com.codecamp.fitnessapp.sensor.Gyroscope
 import com.codecamp.fitnessapp.sensor.GyroscopeRepositoryImpl
-import com.codecamp.fitnessapp.ui.viewmodel.insideutil.PushUpUtil
-import com.codecamp.fitnessapp.ui.viewmodel.insideutil.SitUpUtil
-import com.codecamp.fitnessapp.ui.viewmodel.insideutil.SquatUtil
+import com.codecamp.fitnessapp.ui.screens.inside.insideutil.PushUpUtil
+import com.codecamp.fitnessapp.ui.screens.inside.insideutil.SitUpUtil
+import com.codecamp.fitnessapp.ui.screens.inside.insideutil.SquatUtil
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

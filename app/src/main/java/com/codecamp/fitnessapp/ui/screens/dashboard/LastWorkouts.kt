@@ -11,7 +11,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.OutsideWorkout
-import com.codecamp.fitnessapp.ui.viewmodel.WorkoutViewModel
 
 /*
 * The last workouts are diplayed in order when they were done,
@@ -21,7 +20,7 @@ import com.codecamp.fitnessapp.ui.viewmodel.WorkoutViewModel
 fun LastWorkouts(
     showOldInside: (insideWorkout: InsideWorkout) -> Unit,
     showOldOutside: (outsideWorkout: OutsideWorkout) -> Unit,
-    workoutViewModel: WorkoutViewModel = hiltViewModel()
+    workoutViewModel: DashboardViewModel = hiltViewModel()
 ) {
     val oldOutsides = workoutViewModel.oldOutsideWorkouts.collectAsState(initial = mutableListOf()).value +
                         workoutViewModel.healthConnectBiking.collectAsState().value +

@@ -17,14 +17,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.OutsideWorkout
 import com.codecamp.fitnessapp.model.User
-import com.codecamp.fitnessapp.ui.viewmodel.WorkoutViewModel
 
 
 @Composable
 fun OutsideScreen(
     workoutName: String,
     stopWorkout: (newOutside: OutsideWorkout) -> Unit,
-    workoutViewModel: WorkoutViewModel = hiltViewModel()
+    workoutViewModel: OutsideViewModel = hiltViewModel()
 ) {
     val workoutStats = stringArrayResource(R.array.WorkoutStats)
     val timerDefaultText = stringResource(R.string.timer)

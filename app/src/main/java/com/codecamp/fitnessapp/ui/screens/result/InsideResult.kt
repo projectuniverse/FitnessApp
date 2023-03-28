@@ -9,12 +9,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.InsideWorkout
-import com.codecamp.fitnessapp.ui.viewmodel.WorkoutViewModel
 
 @Composable
 fun InsideResult(
     insideWorkout: InsideWorkout,
-    workoutViewModel: WorkoutViewModel = hiltViewModel()
+    workoutViewModel: ResultViewModel = hiltViewModel()
 ) {
     val workoutStats = stringArrayResource(R.array.WorkoutStats)
     val time = workoutViewModel.getElapsedTime(insideWorkout.endTime, insideWorkout.startTime)

@@ -1,4 +1,4 @@
-package com.codecamp.fitnessapp.ui.screens.dashboard
+package com.codecamp.fitnessapp.ui.screens.dashboard.weather
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
