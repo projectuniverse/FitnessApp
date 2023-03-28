@@ -23,7 +23,7 @@ fun OutsideResult(
     val workoutStats = stringArrayResource(R.array.WorkoutStats)
 
     val savedOutsideWorkouts = resultViewModel.workouts.collectAsState(initial = mutableListOf()).value
-    val latestOutsideWorkoutId = if (new) savedOutsideWorkouts.last().id
+    val latestOutsideWorkoutId = if (new && savedOutsideWorkouts.isNotEmpty()) savedOutsideWorkouts.last().id
     else outsideWorkout.id
 
     val tracklist = resultViewModel.tracklist.collectAsState(initial = mutableListOf()).value
