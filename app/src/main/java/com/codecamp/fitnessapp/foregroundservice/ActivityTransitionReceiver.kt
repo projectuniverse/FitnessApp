@@ -28,6 +28,8 @@ class ActivityTransitionReceiver : BroadcastReceiver() {
                     when(event.activityType) {
                         DetectedActivity.WALKING -> {
                             //TODO: starte hiking workout //
+                            //TODO Fang an und hör auf track punkte zu erstellen
+
                          }
                         DetectedActivity.RUNNING -> {
                             //TODO: starte running workout //

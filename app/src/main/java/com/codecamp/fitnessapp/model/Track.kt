@@ -12,7 +12,6 @@ import androidx.room.PrimaryKey
  * as well as the altitude profile and pace per km.
  */
 
-//TODO Neuer track für jeden Datenpunkt
 @Entity(tableName = "track",
     foreignKeys = [ForeignKey(
         entity = OutsideWorkout::class,

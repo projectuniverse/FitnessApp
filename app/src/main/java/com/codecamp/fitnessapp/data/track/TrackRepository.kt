@@ -10,6 +10,7 @@ import com.codecamp.fitnessapp.model.User
  */
 interface TrackRepository {
     suspend fun insertTrack(track: Track)
+    suspend fun deleteTracks()
 }
 
 @kotlinx.serialization.ExperimentalSerializationApi
@@ -23,4 +24,5 @@ class DefaultTrackRepository(
     val tracks = trackDao.getAllTracks()
 
     override suspend fun insertTrack(track: Track) = trackDao.insert(track)
+    override suspend fun deleteTracks() = trackDao.deleteTracks()
 }

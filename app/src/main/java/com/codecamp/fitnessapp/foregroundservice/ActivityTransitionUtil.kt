@@ -17,6 +17,7 @@ import com.google.android.gms.location.DetectedActivity
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
+// TODO in classe umwandeln --> 2 instanzen
 object ActivityTransitionUtil {
 
     var activityNotificationText = mutableStateOf("Null - Null")
