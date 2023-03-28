@@ -1,5 +1,6 @@
 package com.codecamp.fitnessapp.ui.screens.result
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
@@ -20,10 +21,17 @@ fun OutsideResult(
 ) {
     val workoutStats = stringArrayResource(R.array.WorkoutStats)
 
+    val savedOutsideWorkouts = resultViewModel.workouts.collectAsState(initial = mutableListOf()).value
+    val latestOutsideWorkoutId = if (outsideWorkout.id == Int.MAX_VALUE && savedOutsideWorkouts.isNotEmpty()) savedOutsideWorkouts.last().id
+    else outsideWorkout.id
+
     val tracklist = resultViewModel.tracklist.collectAsState(initial = mutableListOf()).value
-    val usedTracks = resultViewModel.getUsedTracks(tracklist, outsideWorkout.id)
+    Log.d("TAG", "OutsideResult: " + tracklist.size)
+    val usedTracks = resultViewModel.getUsedTracks(tracklist, latestOutsideWorkoutId)
+    Log.d("TAG", "OutsideResult: " + usedTracks.size)
     val latlngList = resultViewModel.getLatlngList(usedTracks)
     val altitudeList = resultViewModel.getAltitudeList(usedTracks)
+
 
     /*
     * All information from the workout is displayed.

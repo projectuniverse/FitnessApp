@@ -3,6 +3,7 @@ package com.codecamp.fitnessapp.ui.screens.result
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.codecamp.fitnessapp.data.track.DefaultTrackRepository
+import com.codecamp.fitnessapp.data.workout.DefaultWorkoutRepository
 import com.codecamp.fitnessapp.model.Track
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,10 +13,11 @@ import javax.inject.Inject
 @HiltViewModel
 class ResultViewModel
 @Inject constructor(
+    private val workoutRepository: DefaultWorkoutRepository,
     private val trackRepository: DefaultTrackRepository
 ) : ViewModel() {
     val tracklist = trackRepository.tracks
-
+    val workouts = workoutRepository.outsideWorkouts
     fun getLatlngList(tracklist: List<Track>): List<LatLng> {
         val latlngList = mutableListOf<LatLng>()
         for (track in tracklist) {
@@ -35,9 +37,9 @@ class ResultViewModel
     fun getUsedTracks(tracklist: List<Track>, id: Int): List<Track> {
         val usedTracks = mutableListOf<Track>()
         for (track in tracklist) {
-            Log.d("asd", track.toString())
             if (track.workoutId == id) {
-                usedTracks.add(track)
+                usedTracks.add(track.copy(timestamp = track.timestamp/1000))
+                Log.d("MYTA", "getUsedTracks: ${track.timestamp} : ${track.altitude}")
             }
         }
         return usedTracks

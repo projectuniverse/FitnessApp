@@ -50,9 +50,7 @@ fun AltitudeResult(
             contentColor = MaterialTheme.colorScheme.onSurface,
         )
     ) {
-//        /*
-//         * TODO: Sample data set. Replace with the data set given in constructor.
-//         */
+
 //        val values: MutableList<Pair<Int, Float>> = mutableListOf()
 //        val start = 1677633370
 //        for (i in 0 until 180) {
@@ -73,7 +71,7 @@ fun AltitudeResult(
                 .mapIndexed { index, (time, height) ->
                     if (index == 0) {
                         startTime = time
-                        Entry(0, index.toFloat(), height)
+                        Entry(0,0f, height)
                     }
                     else {
                         Entry(time - startTime, index.toFloat(), height)
