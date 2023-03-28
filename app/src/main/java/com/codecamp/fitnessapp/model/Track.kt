@@ -40,6 +40,6 @@ data class Track(
     val long: Double,
     // Used for calculating altitude profile in combination with timestamp
     val altitude: Double,
-    // UTC time
+    // UTC time in millis
     val timestamp: Long
 )
