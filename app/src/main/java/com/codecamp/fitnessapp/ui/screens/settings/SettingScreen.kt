@@ -81,7 +81,6 @@ fun SettingScreen(
             )
         }
         Spacer(modifier = Modifier.height(10.dp))
-        // TODO remove button at firstinit
         if (!firstInit) {
             Button(
                 modifier = Modifier.fillMaxWidth(0.9f),

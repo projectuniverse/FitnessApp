@@ -1,9 +1,6 @@
 package com.codecamp.fitnessapp.data.track
 
-import com.codecamp.fitnessapp.model.InsideWorkout
-import com.codecamp.fitnessapp.model.OutsideWorkout
 import com.codecamp.fitnessapp.model.Track
-import com.codecamp.fitnessapp.model.User
 
 /*
  * Acts as a single source of truth. Returns track data.
