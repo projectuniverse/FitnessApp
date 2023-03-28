@@ -69,7 +69,7 @@ fun OutsideScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Map(latlngList)
+            Map(latlngList, workoutViewModel.getCurrentLocation())
         }
 
         Row(
@@ -82,6 +82,7 @@ fun OutsideScreen(
                         workoutViewModel.switchWorkingOut()
                         buttontext = workoutStats[8]
                         workoutState = "active"
+                        workoutViewModel.createNewTrack()
                     }
                     else if(workoutState == "active") {
                         workoutViewModel.switchWorkingOut()
@@ -89,6 +90,7 @@ fun OutsideScreen(
                         buttontext = workoutStats[9]
                     }
                     else if (workoutState == "stopped") {
+                        workoutViewModel.createNewTrack()
                         val result = workoutViewModel.createOutsideWorkout(workoutName, currentUser.value)
                         workoutViewModel.saveOutsideWorkout(result)
                         stopWorkout(result)
