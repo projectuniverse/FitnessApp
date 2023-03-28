@@ -17,6 +17,7 @@ import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import kotlin.math.roundToInt
 import kotlin.random.Random
@@ -122,12 +123,12 @@ class OutsideViewModel
     }
 
     fun getCurrentLocation(): LatLng {
-        val location: Location? = null
-        viewModelScope.launch {
-            locationTracker.getLocation()
+        var location: Location? = null
+        runBlocking {
+            location = locationTracker.getLocation()
         }
         return if (location != null && !simulation)
-            LatLng(location.latitude, location.longitude)
+            LatLng(location!!.latitude, location!!.longitude)
         else
             LatLng(51.3204621, 9.4886897)
     }
@@ -153,7 +154,7 @@ class OutsideViewModel
                 var long = 9.4886897
                 var alt = 0.0
 
-                if (trackList.isNotEmpty() && trackList.last() != null) {
+                if (trackList.isNotEmpty()) {
                     lat = trackList.last().lat + 0.0005 * (3 * Random.nextDouble() + 0.1)
                     long = trackList.last().long + 0.0005 * (3 * Random.nextDouble() + 0.1)
                     alt = trackList.last().altitude + (0.5 * Random.nextDouble()) - 0.25
