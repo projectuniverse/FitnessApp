@@ -120,9 +120,9 @@ class WorkoutViewModel
     * */
     fun calculateKCalInside(workoutName: String, repetitions: Int, user: User): Int {
         val kCal:Double = when (workoutName) {
-            "Squats" -> {repetitions/25.0 * user.weight * 0.0175 * 5.5} // oder 6 * user.weight * timeInHours
-            "Pushups" -> {repetitions * user.weight * 0.2906} // 8 * user.weight * timeInHours
-            else -> {repetitions * 0.5 * user.weight/150} // 8 * user.weight * timeInHours
+            "Squats" -> {repetitions/25.0 * user.weight * 0.0175 * 5.5}
+            "Pushups" -> {repetitions * user.weight * 0.2906}
+            else -> {repetitions * 0.5 * user.weight/150}
         }
         return kCal.toInt()
     }
@@ -132,7 +132,7 @@ class WorkoutViewModel
     * */
     private fun calculateKCalOutside(workoutName: String, distance: Double, timeInHours: Double, user: User): Int {
         val kCal:Double = when (workoutName) {
-            "Running" -> { (0.75 * distance * user.weight) + (timeInHours * 60 * 8 * user.weight)}
+            "Running" -> { (0.75 * distance * user.weight) + (timeInHours * 8 * user.weight)}
             "Biking" -> { (timeInHours * (distance / timeInHours) * 3.5 * user.weight) / 200 }
             else -> { (0.5 * distance * user.weight) }
         }
