@@ -82,6 +82,7 @@ class ForegroundLocationService: Service() {
         return super.onStartCommand(intent, flags, startId)
     }
 
+    // Varaible isactiveworkout und wenn das der fall ist bei dem oneach track objekt erstellen
     private fun start() {
         val notification = NotificationCompat.Builder(this, "location")
             .setContentTitle("Fitness App")

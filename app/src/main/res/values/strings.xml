@@ -64,5 +64,6 @@
     <string name="Inside">Inside</string>
     <string name="Outside">Outside</string>
     <string name="Result">Result</string>
+    <string name="reset">Reset</string>
 
 </resources>

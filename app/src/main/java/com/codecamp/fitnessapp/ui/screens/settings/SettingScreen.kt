@@ -8,15 +8,18 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.codecamp.fitnessapp.R
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun SettingScreen(
+    firstInit : Boolean,
     settingViewModel: SettingsViewModel = hiltViewModel()
 ) {
     val user = settingViewModel.user.collectAsState(initial = null)
@@ -76,6 +79,22 @@ fun SettingScreen(
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center
             )
+        }
+        Spacer(modifier = Modifier.height(10.dp))
+        // TODO remove button at firstinit
+        if (!firstInit) {
+            Button(
+                modifier = Modifier.fillMaxWidth(0.9f),
+                onClick = {
+                    settingViewModel.deleteData()
+                }
+            ) {
+                Text(
+                    text = stringResource(R.string.reset),
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
 }

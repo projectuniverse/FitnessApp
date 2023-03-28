@@ -20,4 +20,7 @@ interface UserDao {
 
     @Query("SELECT EXISTS(SELECT * FROM user)")
     fun userExists(): Flow<Boolean>
+
+    @Query("DELETE FROM user")
+    fun deleteUser()
 }

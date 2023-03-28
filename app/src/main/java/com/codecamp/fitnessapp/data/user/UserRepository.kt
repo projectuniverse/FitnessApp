@@ -7,6 +7,7 @@ import com.codecamp.fitnessapp.model.User
  */
 interface UserRepository {
     suspend fun insertUser(user: User)
+    suspend fun deleteUser()
 }
 
 @kotlinx.serialization.ExperimentalSerializationApi
@@ -20,4 +21,5 @@ class DefaultUserRepository(
     val user = userDao.getUser()
 
     override suspend fun insertUser(user: User) = userDao.insert(user)
+    override suspend fun deleteUser() = userDao.deleteUser()
 }

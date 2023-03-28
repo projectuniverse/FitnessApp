@@ -24,9 +24,9 @@ class FitnessAppViewModel
         }
     }
 
-    fun updateFirstInit() {
+    fun setFirstInit(firstInit : Boolean) {
         viewModelScope.launch {
-            initializationRepository.updateFirstInit()
+            initializationRepository.setFirstInit(firstInit)
         }
     }
 }
