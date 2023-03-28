@@ -1,5 +1,6 @@
 package com.codecamp.fitnessapp.ui.viewmodel
 
+import android.location.Location
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -170,6 +171,57 @@ class WorkoutViewModel
         return points
     }
 
+    fun getCurrentLocation(): LatLng {
+        val location: Location? = null
+        viewModelScope.launch {
+            locationTracker.getLocation()
+        }
+        return if (location != null)
+            LatLng(location.latitude, location.longitude)
+        else
+            LatLng(51.3204621, 9.4886897)
+    }
+
+    fun createNewTrack() {
+        viewModelScope.launch {
+            var newTrack: Track? = null
+            val currentTime = System.currentTimeMillis()
+            val debugOn = false
+
+            if (!debugOn) {
+                val location = locationTracker.getLocation()
+                if (location != null) {
+                    newTrack = Track(
+                        workoutId = 0,
+                        lat = location.latitude,
+                        long = location.longitude,
+                        altitude = location.altitude,
+                        timestamp = currentTime
+                    )
+                }
+            } else {
+                var lat = 51.3204621
+                var long = 9.4886897
+                var alt = 0.0
+
+                if (trackList.isNotEmpty() && trackList.last() != null) {
+                    lat = trackList.last().lat + 0.0005 * (3 * Random.nextDouble() + 0.1)
+                    long = trackList.last().long + 0.0005 * (3 * Random.nextDouble() + 0.1)
+                }
+
+                newTrack = Track(
+                    workoutId = 0,
+                    lat = lat,
+                    long = long,
+                    altitude = alt,
+                    timestamp = currentTime
+                )
+            }
+            trackList.add(newTrack!!)
+            updateRunningData()
+        }
+    }
+
     fun updateTracks() {
         if (!workingOut) return
 
@@ -181,45 +233,7 @@ class WorkoutViewModel
         val difference = (currentTime - lastTrackTime)
 
         if (difference >= 10000) {
-            // create new Track and add it to track list
-            viewModelScope.launch {
-                val debugOn = true
-
-                if (!debugOn) {
-                    val location = locationTracker.getLocation()
-                    if (location != null) {
-                        var newTrack = Track(
-                            workoutId = 0,
-                            lat = location.latitude,
-                            long = location.longitude,
-                            altitude = location.altitude,
-                            timestamp = currentTime
-                        )
-                        trackList.add(newTrack)
-                    }
-                }
-                else {
-                    var lat = 51.3204621
-                    var long = 9.4886897
-                    var alt = 0.0
-
-                    if (trackList.isNotEmpty() && trackList.last() != null) {
-                        lat = trackList.last().lat + 0.0005 * (3 * Random.nextDouble() + 0.1)
-                        long = trackList.last().long + 0.0005 * (3 * Random.nextDouble() + 0.1)
-                    }
-
-                    var newTrack = Track(
-                        workoutId = 0,
-                        lat = lat,
-                        long = long,
-                        altitude = alt,
-                        timestamp = currentTime
-                    )
-                    trackList.add(newTrack)
-                }
-
-                updateRunningData()
-            }
+            createNewTrack()
         }
     }
 
