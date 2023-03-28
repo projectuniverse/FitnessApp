@@ -156,6 +156,7 @@ class OutsideViewModel
                 if (trackList.isNotEmpty() && trackList.last() != null) {
                     lat = trackList.last().lat + 0.0005 * (3 * Random.nextDouble() + 0.1)
                     long = trackList.last().long + 0.0005 * (3 * Random.nextDouble() + 0.1)
+                    alt = trackList.last().altitude + (0.5 * Random.nextDouble()) - 0.25
                 }
 
                 newTrack = Track(
@@ -254,7 +255,7 @@ class OutsideViewModel
 
     fun saveOutsideWorkout(result: OutsideWorkout) {
         viewModelScope.launch {
-            val out = result.copy(pace = 22.0)
+            val out = result.copy(id = 0, pace = 22.0)
             val id = async { workoutRepository.insertOutsideWorkout(out) }.await()
 
             for (track in trackList) {
@@ -291,6 +292,7 @@ class OutsideViewModel
         }
 
         return OutsideWorkout(
+            id = Int.MAX_VALUE,
             name = workoutName,
             pace = pace,
             steps = steps,

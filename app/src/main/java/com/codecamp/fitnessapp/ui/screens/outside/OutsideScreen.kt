@@ -84,7 +84,6 @@ fun OutsideScreen(
                         workoutViewModel.createNewTrack()
                     }
                     else if(workoutState == "active") {
-                        workoutViewModel.createNewTrack()
                         workoutViewModel.switchWorkingOut()
                         workoutState = "stopped"
                         buttontext = workoutStats[9]
