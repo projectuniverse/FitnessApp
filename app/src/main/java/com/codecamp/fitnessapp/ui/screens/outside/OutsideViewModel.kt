@@ -33,6 +33,7 @@ class OutsideViewModel
 ) : ViewModel() {
     val user = userRepository.user
 
+    val locationFlow = locationTracker.getLocationFlow(1)
     private val trackList = mutableListOf<Track>()
 
     val timePassed: MutableLiveData<String> by lazy { MutableLiveData("00:00:00") }
@@ -120,17 +121,6 @@ class OutsideViewModel
             points.add(LatLng(track.lat, track.long))
         }
         return points
-    }
-
-    fun getCurrentLocation(): LatLng {
-        var location: Location? = null
-        runBlocking {
-            location = locationTracker.getLocation()
-        }
-        return if (location != null && !simulation)
-            LatLng(location!!.latitude, location!!.longitude)
-        else
-            LatLng(51.3204621, 9.4886897)
     }
 
     fun createNewTrack() {
