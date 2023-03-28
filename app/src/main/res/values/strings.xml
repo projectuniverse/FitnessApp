@@ -35,7 +35,7 @@
 
     <string name="settingWarning">Warning: Invalid values. Please change them.</string>
     <string name="weatherWarning">Warning! No current Weather available!
-        Please consider restarting or give permissions to the app.</string>
+        Please consider restarting or check your internet connection.</string>
     <string name="workoutWarning">No workouts done yet.
         Start your first workout by clicking the button below.</string>
 

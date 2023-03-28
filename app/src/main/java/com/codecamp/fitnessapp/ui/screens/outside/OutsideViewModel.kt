@@ -1,4 +1,4 @@
-package com.codecamp.fitnessapp.ui.viewmodel
+package com.codecamp.fitnessapp.ui.screens.outside
 
 import android.location.Location
 import android.util.Log
@@ -10,97 +10,63 @@ import com.codecamp.fitnessapp.data.user.DefaultUserRepository
 import com.codecamp.fitnessapp.data.workout.DefaultWorkoutRepository
 import com.codecamp.fitnessapp.healthconnect.HealthConnectRepositoryInterface
 import com.codecamp.fitnessapp.location.LocationTrackerInterface
-import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.OutsideWorkout
 import com.codecamp.fitnessapp.model.Track
 import com.codecamp.fitnessapp.model.User
-import com.codecamp.fitnessapp.sensor.repository.GyroscopeRepository
-import com.codecamp.fitnessapp.ui.viewmodel.insideutil.PushUpUtil
-import com.codecamp.fitnessapp.ui.viewmodel.insideutil.SitUpUtil
-import com.codecamp.fitnessapp.ui.viewmodel.insideutil.SquatUtil
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.lang.Math.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
 @HiltViewModel
-class WorkoutViewModel
+class OutsideViewModel
 @Inject constructor(
     private val workoutRepository: DefaultWorkoutRepository,
-    private val sitUpUtil: SitUpUtil,
-    private val squatUtil: SquatUtil,
-    private val pushUpUtil: PushUpUtil,
     private val userRepository: DefaultUserRepository,
-    private val gyroscopeRepository: GyroscopeRepository,
     private val healthConnectRepository: HealthConnectRepositoryInterface,
     private val trackRepository: DefaultTrackRepository,
     private val locationTracker: LocationTrackerInterface
 ) : ViewModel() {
-    val oldInsideWorkouts = workoutRepository.insideWorkouts
-    val oldOutsideWorkouts = workoutRepository.outsideWorkouts
     val user = userRepository.user
-
-    val healthConnectSquats = healthConnectRepository.squatExercises
-    val healthConnectRuns = healthConnectRepository.runningExercises
-    val healthConnectBiking = healthConnectRepository.bikingExercises
-    val healthConnectHikes = healthConnectRepository.hikingExercises
-
-    private val gyroscopeData = gyroscopeRepository.gyroscopeData
 
     private val trackList = mutableListOf<Track>()
 
     val timePassed: MutableLiveData<String> by lazy { MutableLiveData("00:00:00") }
-    var workingOut = false
-    var timerRunning = true
-    var startTime = 0L
+    private var workingOut = false
+    private var timerRunning = true
+    private var startTime = 0L
 
     val distance: MutableLiveData<String> by lazy { MutableLiveData("0.00") }
     val pace: MutableLiveData<String> by lazy { MutableLiveData("00:00") }
     val paceKm: MutableLiveData<String> by lazy { MutableLiveData("00:00") }
 
-    val repetitions: MutableLiveData<Int> by lazy { MutableLiveData(0) }
 
-    fun startListening(workoutType: String) {
+    init {
         viewModelScope.launch {
-            delay(3000L)
+            healthConnectRepository.loadExercises()
         }
+        viewModelScope.launch {
+            /*
+            * starts the timer thread
+            * */
+            Thread {
+                run {
+                    while (timerRunning) {
+                        if(workingOut){
+                            timePassed.postValue(
+                                getElapsedTime(
+                                    (System.currentTimeMillis()/1000).toInt(),
+                                    (startTime/1000).toInt()
+                                ))
+                        }
 
-        gyroscopeRepository.startListening()
-    }
-
-    fun stopListening() {
-        gyroscopeRepository.stopListening()
-    }
-
-    fun updateRepetitions(workoutType: String) {
-        repetitions.value =
-            when (workoutType) {
-                "Pushups" -> { pushUpUtil.checkPushUp(gyroscopeData.value) }
-                "Situps" -> { sitUpUtil.checkRepetition(gyroscopeData.value) }
-                else -> { squatUtil.checkRepetition(gyroscopeData.value) }
-            }
-    }
-
-    /*
-    * returns the sorted sequence in which order the old Workouts need to be displayed
-    * */
-    fun getSortedSequenz(oldInsides: List<InsideWorkout>, oldOutsides: List<OutsideWorkout>): List<Int> {
-        val sequence = mutableListOf<Int>()
-
-        for (inside in oldInsides) {
-            sequence.add(inside.endTime)
+                        Thread.sleep(200)
+                    }
+                }
+            }.start()
         }
-        for (outside in oldOutsides) {
-            sequence.add(outside.endTime)
-        }
-
-        sequence.sortDescending()
-
-        return sequence
     }
 
     /*
@@ -116,18 +82,6 @@ class WorkoutViewModel
     }
 
     /*
-    * calculates the burned calories of the inside workouts
-    * */
-    fun calculateKCalInside(workoutName: String, repetitions: Int, user: User): Int {
-        val kCal:Double = when (workoutName) {
-            "Squats" -> {repetitions/25.0 * user.weight * 0.0175 * 5.5}
-            "Pushups" -> {repetitions * user.weight * 0.2906}
-            else -> {repetitions * 0.5 * user.weight/150}
-        }
-        return kCal.toInt()
-    }
-
-    /*
     * calculates the burned calories of the outside workouts
     * */
     private fun calculateKCalOutside(workoutName: String, distance: Double, timeInHours: Double, user: User): Int {
@@ -137,12 +91,6 @@ class WorkoutViewModel
             else -> { (0.5 * distance * user.weight) }
         }
         return kCal.toInt()
-    }
-
-    fun saveInsideWorkout(result: InsideWorkout) {
-        viewModelScope.launch {
-            workoutRepository.insertInsideWorkout(result)
-        }
     }
 
     /*
@@ -242,7 +190,7 @@ class WorkoutViewModel
         val latDistance = Math.toRadians(lat2 - lat1)
         val lonDistance = Math.toRadians(lon2 - lon1)
         val a = kotlin.math.sin(latDistance / 2) * kotlin.math.sin(latDistance / 2) +
-                kotlin.math.cos(toRadians(lat1)) * kotlin.math.cos(toRadians(lat2)) *
+                kotlin.math.cos(Math.toRadians(lat1)) * kotlin.math.cos(Math.toRadians(lat2)) *
                 kotlin.math.sin(lonDistance / 2) * kotlin.math.sin(lonDistance / 2)
         val c = 2 * kotlin.math.atan2(kotlin.math.sqrt(a), kotlin.math.sqrt(1 - a))
         return r * c
@@ -282,9 +230,6 @@ class WorkoutViewModel
             lastTrack = trackList[i]
         }
 
-        if (km == 0.0) {
-            return t
-        }
         return t / km
     }
 
@@ -292,10 +237,10 @@ class WorkoutViewModel
         if (trackList.size > 1) {
             val dis = calculateDistance() // distance in km
             distance.postValue(String.format("%.2f", dis))
+
             val elapsedTime = (trackList.last().timestamp.toDouble() - startTime) / (1000 * 60)
-            if (dis != 0.0) {
-                pace.postValue(formatTime(elapsedTime / dis))
-            }
+            pace.postValue(formatTime(elapsedTime / dis))
+
             val _paceKm = calculateTimeForLastKm()
             paceKm.postValue(formatTime(_paceKm))
         }
@@ -334,11 +279,7 @@ class WorkoutViewModel
 
         val kcal = calculateKCalOutside(workoutName, dis, (elapsedTime / 60), user)
 
-        val pace = if (dis != 0.0) {
-            elapsedTime / dis
-        } else {
-            0.0
-        }
+        val pace = elapsedTime / dis
 
         return OutsideWorkout(
             name = workoutName,
@@ -350,38 +291,4 @@ class WorkoutViewModel
             startTime = (trackList.first().timestamp / 1000).toInt()
         )
     }
-
-    fun resetRepetitions() {
-        //set repetitions to 0 for UI reset
-        pushUpUtil.repetitions.value = 0
-        sitUpUtil.repetitions.value = 0
-        squatUtil.repetitions.value = 0
-    }
-
-    init {
-        viewModelScope.launch {
-            healthConnectRepository.loadExercises()
-        }
-        viewModelScope.launch {
-            /*
-            * starts the timer thread
-            * */
-            Thread {
-                run {
-                    while (timerRunning) {
-                        if(workingOut){
-                            timePassed.postValue(
-                                getElapsedTime(
-                                    (System.currentTimeMillis()/1000).toInt(),
-                                    (startTime/1000).toInt()
-                            ))
-                        }
-
-                        Thread.sleep(200)
-                    }
-                }
-            }.start()
-        }
-    }
-
 }

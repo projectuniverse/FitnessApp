@@ -1,4 +1,4 @@
-package com.codecamp.fitnessapp.ui.viewmodel.insideutil
+package com.codecamp.fitnessapp.ui.screens.inside.insideutil
 
 import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.flow.MutableStateFlow

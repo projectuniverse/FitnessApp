@@ -16,13 +16,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.InsideWorkout
 import com.codecamp.fitnessapp.model.User
-import com.codecamp.fitnessapp.ui.viewmodel.WorkoutViewModel
 
 @Composable
 fun InsideScreen(
     workoutName: String,
     stopWorkout: (newInside: InsideWorkout) -> Unit,
-    workoutViewModel: WorkoutViewModel = hiltViewModel()
+    workoutViewModel: InsideViewModel = hiltViewModel()
 ) {
     val workoutStats = stringArrayResource(R.array.WorkoutStats)
     val timerDefaultText = stringResource(R.string.timer)

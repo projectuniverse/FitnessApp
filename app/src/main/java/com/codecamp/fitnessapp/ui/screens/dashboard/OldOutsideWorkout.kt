@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.codecamp.fitnessapp.R
 import com.codecamp.fitnessapp.model.OutsideWorkout
-import com.codecamp.fitnessapp.ui.viewmodel.WorkoutViewModel
 
 
 /*
@@ -27,7 +26,7 @@ import com.codecamp.fitnessapp.ui.viewmodel.WorkoutViewModel
 fun OldOutsideWorkout(
     outsideWorkout: OutsideWorkout,
     showOldWorkout: (outsideWorkout: OutsideWorkout) -> Unit,
-    workoutViewModel: WorkoutViewModel = hiltViewModel()
+    workoutViewModel: DashboardViewModel = hiltViewModel()
 ) {
 
     val workoutNames = stringArrayResource(R.array.outsideActivities)
