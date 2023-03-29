@@ -33,7 +33,7 @@ fun OutsideScreen(
     val distanceDefaultText = stringResource(R.string.distance)
     val paceDefaultText = stringResource(R.string.pace)
     val paceKmDefaultText = stringResource(R.string.paceKm)
-    val currentUser = workoutViewModel.user.collectAsState(initial = User(0, 0, 0, 0))
+    val currentUser = workoutViewModel.user.collectAsState(initial = null)
 
     val loc = Location("")
     loc.latitude = 51.3204621
@@ -86,23 +86,25 @@ fun OutsideScreen(
         ) {
             Button(
                 onClick = {
-                    if (workoutState == "ready") {
-                        workoutViewModel.switchWorkingOut()
-                        buttontext = workoutStats[8]
-                        workoutState = "active"
-                        workoutViewModel.createNewTrack()
+                    if (currentUser.value != null) {
+                        if (workoutState == "ready") {
+                            workoutViewModel.switchWorkingOut()
+                            buttontext = workoutStats[8]
+                            workoutState = "active"
+                            workoutViewModel.createNewTrack()
+                        } else if (workoutState == "active") {
+                            workoutViewModel.switchWorkingOut()
+                            workoutState = "stopped"
+                            buttontext = workoutStats[9]
+                        } else if (workoutState == "stopped") {
+                            val result = workoutViewModel.createOutsideWorkout(
+                                workoutName,
+                                currentUser.value!!
+                            )
+                            workoutViewModel.saveOutsideWorkout(result)
+                            stopWorkout(result)
+                        }
                     }
-                    else if(workoutState == "active") {
-                        workoutViewModel.switchWorkingOut()
-                        workoutState = "stopped"
-                        buttontext = workoutStats[9]
-                    }
-                    else if (workoutState == "stopped") {
-                        val result = workoutViewModel.createOutsideWorkout(workoutName, currentUser.value)
-                        workoutViewModel.saveOutsideWorkout(result)
-                        stopWorkout(result)
-                    }
-
                 },
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier.padding(3.dp)
