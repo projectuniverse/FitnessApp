@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
@@ -39,9 +40,7 @@ fun MapResult(latlngList: List<LatLng>) {
                 LatLng(51.3204621,9.4886897)
             }
 
-            val cameraPositionState = rememberCameraPositionState {
-                position = CameraPosition.fromLatLngZoom(start, zoom)
-            }
+            val cameraPositionState = CameraPositionState(position = CameraPosition(start, zoom, 0f, 0f))
 
             GoogleMap(
                 modifier = Modifier
