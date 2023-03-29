@@ -4,10 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 /*
@@ -15,7 +12,7 @@ import javax.inject.Inject
  */
 interface InitializationRepository {
     suspend fun setFirstInit(firstInit : Boolean)
-    suspend fun getFirstInit() : Boolean
+    suspend fun getFirstInit()
 }
 
 @kotlinx.serialization.ExperimentalSerializationApi
@@ -25,16 +22,19 @@ class DefaultInitializationRepository
 ) : InitializationRepository {
     private val isFirstTimeLaunchKey = booleanPreferencesKey("is_first_time")
 
+    var firstInit = MutableStateFlow<Boolean?>(null)
+
     override suspend fun setFirstInit(firstInit : Boolean) {
         dataStore.edit { preferences ->
             preferences[isFirstTimeLaunchKey] = firstInit
         }
+        this.firstInit.value = firstInit
     }
 
-    override suspend fun getFirstInit(): Boolean {
+    override suspend fun getFirstInit() {
         val isFirstTimeLaunchFlow: Flow<Boolean> = dataStore.data
             .map { preferences -> preferences[isFirstTimeLaunchKey] ?: true }
             .distinctUntilChanged()
-        return isFirstTimeLaunchFlow.first()
+        firstInit.value = isFirstTimeLaunchFlow.first()
     }
 }

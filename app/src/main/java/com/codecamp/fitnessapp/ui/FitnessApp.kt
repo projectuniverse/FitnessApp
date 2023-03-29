@@ -50,7 +50,7 @@ fun FitnessApp(
     navController: NavHostController = rememberNavController(),
     fitnessAppViewModel: FitnessAppViewModel = hiltViewModel(),
 ) {
-    val firstInit = fitnessAppViewModel.firstInit.collectAsState(initial = null)
+    val firstInit = fitnessAppViewModel.firstInit.collectAsState()
     val user = fitnessAppViewModel.user.collectAsState(initial = null)
     Log.d("TEST", "RECOMPOSE ${firstInit.value}")
 

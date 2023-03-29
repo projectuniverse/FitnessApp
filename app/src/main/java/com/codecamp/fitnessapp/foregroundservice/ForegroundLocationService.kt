@@ -10,8 +10,10 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.codecamp.fitnessapp.R
+import com.codecamp.fitnessapp.data.track.DefaultTrackRepository
 import com.codecamp.fitnessapp.location.LocationTrackerImplementation
 import com.codecamp.fitnessapp.location.LocationTrackerInterface
+import com.codecamp.fitnessapp.model.Track
 import com.google.android.gms.location.ActivityRecognition
 import com.google.android.gms.location.ActivityRecognitionClient
 import com.google.android.gms.location.LocationServices
@@ -22,6 +24,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import javax.inject.Inject
 
 class ForegroundLocationService: Service() {
 
@@ -94,7 +97,6 @@ class ForegroundLocationService: Service() {
         removeUpdates()
     }
 
-    // Varaible isactiveworkout und wenn das der fall ist bei dem oneach track objekt erstellen
     private fun start() {
         val notification = NotificationCompat.Builder(this, "location")
             .setContentTitle("Fitness App")
@@ -113,6 +115,16 @@ class ForegroundLocationService: Service() {
             .onEach { location ->
                 val lat = location.latitude
                 val lon = location.longitude
+                if (ActivityTransitionUtil.isActiveWorkout) {
+                    ActivityTransitionUtil.trackList.add(
+                        Track(workoutId = 0,
+                            lat = lat,
+                            long = lon,
+                            altitude = location.altitude,
+                            timestamp = System.currentTimeMillis()
+                        )
+                    )
+                }
                 val updatedNotification = notification.setContentText("Fitness App is accessing your Location.")
                 notificationManager.notify(1, updatedNotification.build())
             }

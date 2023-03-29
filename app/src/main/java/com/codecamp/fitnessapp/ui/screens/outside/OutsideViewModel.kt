@@ -246,7 +246,6 @@ class OutsideViewModel
 
     fun saveOutsideWorkout(result: OutsideWorkout) {
         viewModelScope.launch {
-            //val out = result.copy(pace = 22.0)
             val id = async { workoutRepository.insertOutsideWorkout(result) }.await()
             for (track in trackList) {
                 val tr = track.copy(workoutId = id)
@@ -271,7 +270,6 @@ class OutsideViewModel
 
         var dis = calculateDistance()
         var steps = kmToSteps(dis, workoutName)
-
 
         val kcal = calculateKCalOutside(workoutName, dis, (elapsedTime / 60), user)
 
