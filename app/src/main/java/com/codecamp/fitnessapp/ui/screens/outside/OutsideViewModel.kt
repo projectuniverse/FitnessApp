@@ -264,7 +264,7 @@ class OutsideViewModel
     fun createOutsideWorkout(workoutName: String, user: User): OutsideWorkout {
         val endTime = System.currentTimeMillis()
         val startTime = trackList.first().timestamp
-        val elapsedTime = (endTime - startTime).toDouble() / (1000 * 60)
+        val elapsedTime = (endTime - startTime).toDouble() / (1000 * 60) //in min
 
         var dis = calculateDistance()
         var steps = kmToSteps(dis, workoutName)
