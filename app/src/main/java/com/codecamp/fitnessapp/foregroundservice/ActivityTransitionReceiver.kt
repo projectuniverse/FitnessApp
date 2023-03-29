@@ -39,8 +39,8 @@ class ActivityTransitionReceiver : BroadcastReceiver() {
                 ActivityTransitionUtil.updateNotificationText(info)
                 if (event.transitionType == ActivityTransition.ACTIVITY_TRANSITION_EXIT && event.activityType != DetectedActivity.STILL) {
                     ActivityTransitionUtil.isActiveWorkout = false
-                    val endTime = (System.currentTimeMillis() / 1000).toInt()
-                    val elapsedTime = (endTime - ActivityTransitionUtil.startTime).toDouble() / (1000 * 60)
+                    val endTime = System.currentTimeMillis()
+                    val elapsedTime = (endTime - ActivityTransitionUtil.startTime).toDouble() / (1000 * 60) //min
                     val dis = ActivityTransitionUtil.calculateDistance()
                     val steps = ActivityTransitionUtil.kmToSteps(dis, ActivityTransitionUtil.name)
                     val pace = if (dis != 0.0) {
@@ -57,8 +57,8 @@ class ActivityTransitionReceiver : BroadcastReceiver() {
                             steps = steps,
                             distance = (dis * 100).roundToInt().toDouble() / 100,
                             kcal = kcal,
-                            startTime = ActivityTransitionUtil.startTime,
-                            endTime = endTime
+                            startTime = (ActivityTransitionUtil.startTime / 1000).toInt(),
+                            endTime = (endTime / 1000).toInt()
                         )
                         val id = async { workoutRepository.insertOutsideWorkout(outsideWorkout) }.await()
                         for (track in ActivityTransitionUtil.trackList) {
@@ -73,17 +73,17 @@ class ActivityTransitionReceiver : BroadcastReceiver() {
                         DetectedActivity.WALKING -> {
                             ActivityTransitionUtil.isActiveWorkout = true
                             ActivityTransitionUtil.name = "Hiking"
-                            ActivityTransitionUtil.startTime = (System.currentTimeMillis() / 1000).toInt()
+                            ActivityTransitionUtil.startTime = System.currentTimeMillis()
                          }
                         DetectedActivity.RUNNING -> {
                             ActivityTransitionUtil.isActiveWorkout = true
                             ActivityTransitionUtil.name = "Running"
-                            ActivityTransitionUtil.startTime = (System.currentTimeMillis() / 1000).toInt()
+                            ActivityTransitionUtil.startTime = System.currentTimeMillis()
                         }
                         DetectedActivity.ON_BICYCLE -> {
                             ActivityTransitionUtil.isActiveWorkout = true
                             ActivityTransitionUtil.name = "Biking"
-                            ActivityTransitionUtil.startTime = (System.currentTimeMillis() / 1000).toInt()
+                            ActivityTransitionUtil.startTime = System.currentTimeMillis()
                         }
                     }
                 }

@@ -25,7 +25,7 @@ object ActivityTransitionUtil {
     var isActiveWorkout = false
     var trackList = mutableListOf<Track>()
     lateinit var name: String
-    var startTime: Int = 0
+    var startTime: Long = 0
 
     var activityNotificationText = mutableStateOf("Null - Null")
 

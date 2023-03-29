@@ -122,7 +122,7 @@ class ForegroundLocationService: Service() {
                             lat = lat,
                             long = lon,
                             altitude = location.altitude,
-                            timestamp = System.currentTimeMillis()
+                            timestamp = System.currentTimeMillis() //millis
                         )
                     )
                 }
