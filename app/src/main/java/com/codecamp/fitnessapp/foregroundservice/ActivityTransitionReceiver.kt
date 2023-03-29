@@ -39,6 +39,8 @@ class ActivityTransitionReceiver : BroadcastReceiver() {
                 ActivityTransitionUtil.updateNotificationText(info)
                 if (event.transitionType == ActivityTransition.ACTIVITY_TRANSITION_EXIT && event.activityType != DetectedActivity.STILL) {
                     ActivityTransitionUtil.isActiveWorkout = false
+                    val name = ActivityTransitionUtil.name
+                    val startTime = ActivityTransitionUtil.startTime
                     val endTime = System.currentTimeMillis()
                     val elapsedTime = (endTime - ActivityTransitionUtil.startTime).toDouble() / (1000 * 60) //min
                     val dis = ActivityTransitionUtil.calculateDistance()
@@ -49,24 +51,25 @@ class ActivityTransitionReceiver : BroadcastReceiver() {
                         0.0
                     }
                     GlobalScope.launch {
+                        val trackListCopy = ActivityTransitionUtil.trackList.toMutableList()
                         val user = userRepository.user.first()
-                        val kcal = ActivityTransitionUtil.calculateKCalOutside(ActivityTransitionUtil.name, dis, (elapsedTime / 60), user)
+                        val kcal = ActivityTransitionUtil.calculateKCalOutside(name, dis, (elapsedTime / 60), user)
                         val outsideWorkout = OutsideWorkout(
-                            name = ActivityTransitionUtil.name,
+                            name = name,
                             pace = pace,
                             steps = steps,
                             distance = (dis * 100).roundToInt().toDouble() / 100,
                             kcal = kcal,
-                            startTime = (ActivityTransitionUtil.startTime / 1000).toInt(),
+                            startTime = (startTime / 1000).toInt(),
                             endTime = (endTime / 1000).toInt()
                         )
                         val id = async { workoutRepository.insertOutsideWorkout(outsideWorkout) }.await()
-                        for (track in ActivityTransitionUtil.trackList) {
+                        for (track in trackListCopy) {
                             val tr = track.copy(workoutId = id)
                             trackRepository.insertTrack(tr)
                         }
-                        ActivityTransitionUtil.trackList.clear()
                     }
+                    ActivityTransitionUtil.trackList.clear()
                 }
                 if (event.transitionType == ActivityTransition.ACTIVITY_TRANSITION_ENTER) {
                     when(event.activityType) {
