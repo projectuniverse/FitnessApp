@@ -141,7 +141,7 @@ class OutsideViewModel
             } else {
                 var lat = 51.3204621
                 var long = 9.4886897
-                var alt = 0.0
+                var alt = 1.0
 
                 if (trackList.isNotEmpty()) {
                     lat = trackList.last().lat + 0.0005 * (3 * Random.nextDouble() + 0.1)
