@@ -44,6 +44,8 @@ class OutsideViewModel
     val pace: MutableLiveData<String> by lazy { MutableLiveData("00:00") }
     val paceKm: MutableLiveData<String> by lazy { MutableLiveData("00:00") }
 
+    private var newTrackIndex = 1.0
+
     // Set to true to draw sample/demonstration point on map (like during the presentation)
     private val simulation = false
 
@@ -167,16 +169,16 @@ class OutsideViewModel
 
     fun updateTracks() {
         if (!workingOut) return
-
-        val currentTime = System.currentTimeMillis()
-        var lastTrackTime: Long = 0
         if (trackList.isNotEmpty()) {
-            lastTrackTime = trackList.last().timestamp
-        }
-        val difference = (currentTime - lastTrackTime)
+            val currentTime = System.currentTimeMillis()
+            val firstTrackTime = trackList.first().timestamp
+            val difference2 = currentTime - firstTrackTime
 
-        if (difference >= 10000) {
-            createNewTrack()
+            if ((difference2 / 10000.0) >= newTrackIndex) {
+                Log.d("test3", "NEW")
+                newTrackIndex += 1.0
+                createNewTrack()
+            }
         }
     }
 
