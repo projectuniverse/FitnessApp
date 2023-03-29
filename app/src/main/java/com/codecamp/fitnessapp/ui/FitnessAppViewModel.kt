@@ -16,11 +16,11 @@ class FitnessAppViewModel
     private val userRepository: DefaultUserRepository
 ) : ViewModel() {
     val user = userRepository.user
-    var firstInit = MutableStateFlow<Boolean?>(null)
+    var firstInit = initializationRepository.firstInit
 
     init {
         viewModelScope.launch {
-            firstInit.value = initializationRepository.getFirstInit()
+            initializationRepository.getFirstInit()
         }
     }
 
