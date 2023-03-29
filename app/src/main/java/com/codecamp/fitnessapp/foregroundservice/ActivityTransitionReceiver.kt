@@ -65,8 +65,8 @@ class ActivityTransitionReceiver : BroadcastReceiver() {
                             val tr = track.copy(workoutId = id)
                             trackRepository.insertTrack(tr)
                         }
+                        ActivityTransitionUtil.trackList.clear()
                     }
-                    ActivityTransitionUtil.trackList.clear()
                 }
                 if (event.transitionType == ActivityTransition.ACTIVITY_TRANSITION_ENTER) {
                     when(event.activityType) {
