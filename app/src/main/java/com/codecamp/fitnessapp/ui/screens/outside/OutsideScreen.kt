@@ -1,6 +1,7 @@
 package com.codecamp.fitnessapp.ui.screens.outside
 
 import android.location.Location
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -37,7 +38,8 @@ fun OutsideScreen(
     val loc = Location("")
     loc.latitude = 51.3204621
     loc.longitude = 9.4886897
-    val location by workoutViewModel.locationFlow.collectAsState(initial = loc)
+    val location = workoutViewModel.locationFlow.collectAsState(initial = loc)
+    Log.d("Test2", "${loc.latitude} ${loc.longitude}")
 
     var workoutState by remember { mutableStateOf("ready") }
     var buttontext by remember { mutableStateOf(workoutStats[7]) }
@@ -75,7 +77,7 @@ fun OutsideScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Map(latlngList, LatLng(location.latitude, location.longitude))
+            Map(latlngList, LatLng(location.value.latitude, location.value.longitude))
         }
 
         Row(

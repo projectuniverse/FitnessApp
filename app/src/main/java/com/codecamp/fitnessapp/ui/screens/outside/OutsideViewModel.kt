@@ -32,7 +32,6 @@ class OutsideViewModel
     private val locationTracker: LocationTrackerInterface
 ) : ViewModel() {
     val user = userRepository.user
-
     val locationFlow = locationTracker.getLocationFlow(1)
     private val trackList = mutableListOf<Track>()
 
@@ -216,9 +215,8 @@ class OutsideViewModel
         for (i in trackList.size - 1 downTo 0) {
             if (lastTrack != null) {
                 km += calculateTrackDistance(lastTrack.lat, lastTrack.long, trackList[i].lat, trackList[i].long)
-
                 if (km > 1) {
-                    val t = (trackList.last().timestamp.toDouble() - trackList[i].timestamp) / (1000 * 60)
+                    t = (trackList.last().timestamp.toDouble() - trackList[i].timestamp) / (1000 * 60)
                     break
                 }
             }
@@ -264,7 +262,7 @@ class OutsideViewModel
     }
 
     fun createOutsideWorkout(workoutName: String, user: User): OutsideWorkout {
-        val endTime = trackList.last().timestamp
+        val endTime = System.currentTimeMillis()
         val startTime = trackList.first().timestamp
         val elapsedTime = (endTime - startTime).toDouble() / (1000 * 60)
 
@@ -285,8 +283,8 @@ class OutsideViewModel
             steps = steps,
             distance = (dis * 100).roundToInt().toDouble() / 100,
             kcal = kcal,
-            endTime = (trackList.last().timestamp / 1000).toInt(),
-            startTime = (trackList.first().timestamp / 1000).toInt()
+            endTime = (endTime / 1000).toInt(),
+            startTime = (startTime / 1000).toInt()
         )
     }
 }

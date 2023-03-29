@@ -117,7 +117,8 @@ class ForegroundLocationService: Service() {
                 val lon = location.longitude
                 if (ActivityTransitionUtil.isActiveWorkout) {
                     ActivityTransitionUtil.trackList.add(
-                        Track(workoutId = 0,
+                        Track(
+                            workoutId = 0,
                             lat = lat,
                             long = lon,
                             altitude = location.altitude,
