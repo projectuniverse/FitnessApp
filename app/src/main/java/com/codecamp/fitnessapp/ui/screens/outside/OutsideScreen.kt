@@ -39,7 +39,7 @@ fun OutsideScreen(
     loc.latitude = 51.3204621
     loc.longitude = 9.4886897
     val location = workoutViewModel.locationFlow.collectAsState(initial = loc)
-    Log.d("Test2", "${loc.latitude} ${loc.longitude}")
+    Log.d("Test2", "${location.value.latitude} ${location.value.longitude}")
 
     var workoutState by remember { mutableStateOf("ready") }
     var buttontext by remember { mutableStateOf(workoutStats[7]) }

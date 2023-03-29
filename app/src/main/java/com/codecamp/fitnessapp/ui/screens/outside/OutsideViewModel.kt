@@ -32,7 +32,7 @@ class OutsideViewModel
     private val locationTracker: LocationTrackerInterface
 ) : ViewModel() {
     val user = userRepository.user
-    val locationFlow = locationTracker.getLocationFlow(1)
+    val locationFlow = locationTracker.getLocationFlow(10000L)
     private val trackList = mutableListOf<Track>()
 
     val timePassed: MutableLiveData<String> by lazy { MutableLiveData("00:00:00") }
@@ -44,6 +44,7 @@ class OutsideViewModel
     val pace: MutableLiveData<String> by lazy { MutableLiveData("00:00") }
     val paceKm: MutableLiveData<String> by lazy { MutableLiveData("00:00") }
 
+    // Set to true to draw sample/demonstration point on map (like during the presentation)
     private val simulation = false
 
     init {

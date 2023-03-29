@@ -17,9 +17,7 @@ fun Map (
 ) {
     val zoom = 17f
 
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(start, zoom)
-    }
+    val cameraPositionState = CameraPositionState(position = CameraPosition(start, zoom, 0f, 0f))
 
     GoogleMap(
         modifier = Modifier
