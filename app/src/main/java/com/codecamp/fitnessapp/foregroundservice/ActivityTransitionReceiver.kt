@@ -38,6 +38,7 @@ class ActivityTransitionReceiver : BroadcastReceiver() {
                 Log.d("ACTIVITY_TRANSITION", info)
                 ActivityTransitionUtil.updateNotificationText(info)
                 if (event.transitionType == ActivityTransition.ACTIVITY_TRANSITION_EXIT && event.activityType != DetectedActivity.STILL) {
+                    ActivityTransitionUtil.isActiveWorkout = false
                     val endTime = (System.currentTimeMillis() / 1000).toInt()
                     val elapsedTime = (endTime - ActivityTransitionUtil.startTime).toDouble() / (1000 * 60)
                     val dis = ActivityTransitionUtil.calculateDistance()
@@ -70,14 +71,17 @@ class ActivityTransitionReceiver : BroadcastReceiver() {
                 if (event.transitionType == ActivityTransition.ACTIVITY_TRANSITION_ENTER) {
                     when(event.activityType) {
                         DetectedActivity.WALKING -> {
+                            ActivityTransitionUtil.isActiveWorkout = true
                             ActivityTransitionUtil.name = "Hiking"
                             ActivityTransitionUtil.startTime = (System.currentTimeMillis() / 1000).toInt()
                          }
                         DetectedActivity.RUNNING -> {
+                            ActivityTransitionUtil.isActiveWorkout = true
                             ActivityTransitionUtil.name = "Running"
                             ActivityTransitionUtil.startTime = (System.currentTimeMillis() / 1000).toInt()
                         }
                         DetectedActivity.ON_BICYCLE -> {
+                            ActivityTransitionUtil.isActiveWorkout = true
                             ActivityTransitionUtil.name = "Biking"
                             ActivityTransitionUtil.startTime = (System.currentTimeMillis() / 1000).toInt()
                         }
