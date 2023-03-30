@@ -50,8 +50,8 @@ class ActivityTransitionReceiver : BroadcastReceiver() {
                     } else {
                         0.0
                     }
+                    val trackListCopy = ActivityTransitionUtil.trackList.toMutableList()
                     GlobalScope.launch {
-                        val trackListCopy = ActivityTransitionUtil.trackList.toMutableList()
                         val user = userRepository.user.first()
                         val kcal = ActivityTransitionUtil.calculateKCalOutside(name, dis, (elapsedTime / 60), user)
                         val outsideWorkout = OutsideWorkout(
